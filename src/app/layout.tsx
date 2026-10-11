@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { NavCajero } from "../components/NavCajero";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,9 +21,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <NavCajero userName="John Doe" userRole="Cajero" />
         {children}
       </body>
     </html>
