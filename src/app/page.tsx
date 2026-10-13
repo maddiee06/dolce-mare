@@ -2,7 +2,7 @@ import { CuentasAbiertas } from "../components/CuentasAbiertas";
 import { createClient } from "../utils/supabase/server";
 import { cookies } from "next/headers";
 import styles from "./page.module.scss"; 
-
+import SeleccionCategoria from '../components/SeleccionCategoria';
 export const instant = false;
 
 type RelacionNombre = {
@@ -50,7 +50,8 @@ export default async function Home() {
           ======================================= */}
       <div className={styles.columnaIzquierda}>
         
-       
+        {/* ¡AQUÍ ESTÁ EL COMPONENTE NUEVO QUE FALTABA! */}
+        <SeleccionCategoria />
 
         {error && (
           <p role="alert">
@@ -62,8 +63,7 @@ export default async function Home() {
           <p>No se encontraron pedidos en la base de datos.</p>
         )}
 
-        {/* He dejado tu código de prueba de pedidos aquí. 
-            Luego lo reemplazarás por las tarjetas de Helados, Cremoladas, etc. */}
+        {/* Lista de pedidos */}
         {pedidos?.map((pedido) => (
           <div key={pedido.id_pedido} style={{ border: '1px solid #eee9e2', padding: '16px', borderRadius: '12px', marginBottom: '12px' }}>
             <p>
