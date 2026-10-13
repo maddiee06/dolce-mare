@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { NavCajero } from "../components/NavCajero";
+import { NavCajero } from "../components/cajero/NavCajero";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
