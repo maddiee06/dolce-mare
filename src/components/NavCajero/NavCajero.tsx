@@ -13,7 +13,6 @@ export function NavCajero({ userName, userRole }: NavCajeroProps) {
   const [time, setTime] = useState<string>("");
   const [date, setDate] = useState<string>("");
 
-  // Estado para controlar el menú móvil
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -43,7 +42,6 @@ export function NavCajero({ userName, userRole }: NavCajeroProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // Función para abrir/cerrar el menú
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -206,8 +204,8 @@ export function NavCajero({ userName, userRole }: NavCajeroProps) {
                 className={styles.arrowDropdown}
                 src="/chevron-down.svg"
                 alt="Desplegar menú"
-                width={16}
-                height={16}
+                width={24}
+                height={24}
               />
             </div>
           </div>
