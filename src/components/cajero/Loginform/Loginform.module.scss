@@ -1,0 +1,237 @@
+$bg: #FAF8F5;
+$card: #FDFCFB;
+$field-bg: #F5F2EE;
+$blue: #2F4F94;
+$orange: #E8956A;
+$peach: #FAE6DC;
+$text: #2B2B2B;
+$muted: #8A8A8A;
+
+$desktop: 1024px;
+
+.loginform {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100dvh;
+  padding: 16px 12px;
+  background-color: $bg;
+
+  @media (min-width: $desktop) {
+    display: grid;
+    grid-template-columns: 1fr 360px 1fr;
+    gap: 28px;
+    align-items: center;
+    align-content: center;
+    padding: 40px;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+
+  img {
+    width: 181px;
+    height: auto;
+  }
+
+  @media (min-width: $desktop) {
+    grid-column: 1 / -1;
+    grid-row: 1;
+
+    img {
+      width: 220px;
+    }
+  }
+}
+
+.images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  @media (min-width: $desktop) {
+    display: contents;
+  }
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 165 / 120;
+  border-radius: 18px;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+
+  @media (min-width: $desktop) {
+    aspect-ratio: 2 / 3;
+    grid-row: 2;
+
+    &:first-child {
+      grid-column: 1;
+    }
+
+    &:last-child {
+      grid-column: 3;
+    }
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 16px;
+  background-color: $card;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+
+  @media (min-width: $desktop) {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 32px 24px;
+  }
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $text;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: $muted;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background-color: $field-bg;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+
+  label {
+    font-size: 0.8rem;
+    color: $muted;
+  }
+
+  input {
+    padding: 4px 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: $text;
+  }
+
+  &:focus-within {
+    border-color: $blue;
+  }
+}
+
+.fieldText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.btncajero,
+.btnadmin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.btncajero {
+  background-color: $orange;
+  color: $text;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: darken($orange, 6%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba($orange, 0.4);
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $blue;
+    outline-offset: 2px;
+  }
+}
+
+.btnadmin {
+  background-color: $peach;
+  color: $blue;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: darken($peach, 5%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba($blue, 0.15);
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $blue;
+    outline-offset: 2px;
+  }
+}
+
+.description {
+  text-align: center;
+  font-size: 0.8rem;
+  color: $muted;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: auto;
+  font-size: 0.75rem;
+  color: $muted;
+
+  @media (min-width: $desktop) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 0;
+  }
+}
+
+.location {
+  font-weight: 600;
+  color: $blue;
+}
+
+.version {
+  color: $muted;
+}
