@@ -1,7 +1,7 @@
-import { CuentasAbiertas } from "../components/CuentasAbiertas";
+import { CuentasAbiertas } from "../components/cajero/CuentasAbiertas";
 import { createClient } from "../utils/supabase/server";
 import { cookies } from "next/headers";
-import styles from "./page.module.scss"; 
+import styles from "./page.module.scss";
 
 export const instant = false;
 
@@ -10,7 +10,7 @@ type RelacionNombre = {
 };
 
 function obtenerNombre(
-  relacion: RelacionNombre | RelacionNombre[] | null
+  relacion: RelacionNombre | RelacionNombre[] | null,
 ): string {
   if (Array.isArray(relacion)) {
     return relacion[0]?.nombre ?? "";
@@ -24,7 +24,8 @@ export default async function Home() {
 
   const { data: pedidos, error } = await supabase
     .from("pedidos")
-    .select(`
+    .select(
+      `
       id_pedido,
       total,
       fecha_pedido,
@@ -34,7 +35,8 @@ export default async function Home() {
         cantidad,
         productos(nombre)
       )
-    `)
+    `,
+    )
     .order("fecha_pedido", { ascending: false })
     .limit(50);
 
@@ -44,18 +46,12 @@ export default async function Home() {
 
   return (
     <main className={styles.layoutPrincipal}>
-      
       {/* =======================================
           COLUMNA IZQUIERDA: Contenido Principal
           ======================================= */}
       <div className={styles.columnaIzquierda}>
-        
-       
-
         {error && (
-          <p role="alert">
-            Error al consultar pedidos: {error.message}
-          </p>
+          <p role="alert">Error al consultar pedidos: {error.message}</p>
         )}
 
         {!error && pedidos && pedidos.length === 0 && (
@@ -65,7 +61,15 @@ export default async function Home() {
         {/* He dejado tu código de prueba de pedidos aquí. 
             Luego lo reemplazarás por las tarjetas de Helados, Cremoladas, etc. */}
         {pedidos?.map((pedido) => (
-          <div key={pedido.id_pedido} style={{ border: '1px solid #eee9e2', padding: '16px', borderRadius: '12px', marginBottom: '12px' }}>
+          <div
+            key={pedido.id_pedido}
+            style={{
+              border: "1px solid #eee9e2",
+              padding: "16px",
+              borderRadius: "12px",
+              marginBottom: "12px",
+            }}
+          >
             <p>
               <strong>Pedido #{pedido.id_pedido}</strong> — S/{" "}
               {Number(pedido.total ?? 0).toFixed(2)}
@@ -87,7 +91,6 @@ export default async function Home() {
       <aside className={styles.columnaDerecha}>
         {!error && <CuentasAbiertas pedidos={pedidos ?? []} />}
       </aside>
-
     </main>
   );
 }

@@ -1,13 +1,12 @@
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NavCajero } from "../components/cajero/NavCajero";
+import { Loginform } from "../components/cajero/Loginform";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-
 });
 
 const geistMono = Geist_Mono({
@@ -28,8 +27,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NavCajero userName="John Doe" userRole="Cajero" />
+        <NavCajero userName="Bradley" userRole="Cajero" />
         {children}
+        <Loginform />
       </body>
     </html>
   );
