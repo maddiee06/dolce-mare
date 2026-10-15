@@ -156,16 +156,53 @@ $desktop: 1024px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .btncajero {
   background-color: $orange;
   color: $text;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: darken($orange, 6%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba($orange, 0.4);
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $blue;
+    outline-offset: 2px;
+  }
 }
 
 .btnadmin {
   background-color: $peach;
   color: $blue;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: darken($peach, 5%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba($blue, 0.15);
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $blue;
+    outline-offset: 2px;
+  }
 }
 
 .description {
