@@ -1,41 +1,53 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image'; 
 
 const categorias = [
   {
     id: 1,
     titulo: 'Helados',
     descripcion: '+20 sabores artesanales',
-    precio: '9.00'
+    precio: '9.00',
+    imagen: '/categorias/heladito.jpg' 
   },
   {
     id: 2,
     titulo: 'Cremoladas',
     descripcion: 'Fruta fresca, puro sabor',
-    precio: '6.00'
+    precio: '6.00',
+    imagen: '/categorias/cremolada.jpg'
   },
   {
     id: 3,
     titulo: 'Postres',
     descripcion: 'Pequeños grandes antojos',
-    precio: '20.00'
+    precio: '20.00',
+    imagen: '/categorias/postres.jpg'
   },
   {
     id: 4,
     titulo: 'Bebidas',
     descripcion: 'El complemento perfecto',
-    precio: '5.00'
+    precio: '5.00',
+    imagen: '/categorias/bebidas.jpg'
   }
 ];
 
-const CategoriaCard = ({ titulo, descripcion, precio }: { titulo: string, descripcion: string, precio: string }) => {
+// 3. RECIBIR LA PROPIEDAD 'imagen' EN EL COMPONENTE
+const CategoriaCard = ({ titulo, descripcion, precio, imagen }: { titulo: string, descripcion: string, precio: string, imagen: string }) => {
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex flex-col">
       
-      {/* Espacio temporal en lugar de la imagen */}
-      <div className="w-full h-40 bg-gray-100 flex items-center justify-center">
-        <span className="text-gray-400 text-sm">Imagen pendiente</span>
+      {/* 4. REEMPLAZAR EL ESPACIO GRIS POR LA IMAGEN DE NEXT.JS */}
+      <div className="relative w-full h-40">
+        <Image 
+          src={imagen} 
+          alt={titulo} 
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
       </div>
 
       <div className="p-4 flex flex-col flex-grow justify-between">
@@ -45,9 +57,7 @@ const CategoriaCard = ({ titulo, descripcion, precio }: { titulo: string, descri
         </div>
         <div className="flex justify-between items-center">
           <p className="text-gray-500 text-sm">{descripcion}</p>
-          <svg className="w-4 h-4 text-[#3b4b86]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
-          </svg>
+          
         </div>
       </div>
     </div>
@@ -90,6 +100,7 @@ export default function SeleccionCategoria() {
             titulo={categoria.titulo}
             descripcion={categoria.descripcion}
             precio={categoria.precio}
+            imagen={categoria.imagen} // <-- NO OLVIDES PASAR LA IMAGEN AQUÍ TAMBIÉN
           />
         ))}
       </div>

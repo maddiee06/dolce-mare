@@ -1,6 +1,6 @@
-
 "use client";
 
+import { useState } from "react";
 import styles from "./CuentasAbiertas.module.scss";
 
 interface RelacionNombre {
@@ -35,19 +35,15 @@ function obtenerNombre(
   if (Array.isArray(relacion)) {
     return relacion[0]?.nombre ?? "";
   }
-
   return relacion?.nombre ?? "";
 }
 
 function obtenerHora(fecha: string | null): string {
   if (!fecha) return "--:--";
-
   const fechaValida = new Date(fecha);
-
   if (Number.isNaN(fechaValida.getTime())) {
     return "--:--";
   }
-
   return fechaValida.toLocaleTimeString("es-PE", {
     hour: "2-digit",
     minute: "2-digit",
@@ -68,6 +64,8 @@ function obtenerProductos(detalles: DetallePedido[] | null | undefined) {
 }
 
 export function CuentasAbiertas({ pedidos, error }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const cuentas = pedidos.filter(
     (pedido) => obtenerNombre(pedido.estado).toLowerCase() === "abierto"
   );
@@ -77,8 +75,27 @@ export function CuentasAbiertas({ pedidos, error }: Props) {
     0
   );
 
+  const togglePanel = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <aside className={styles.panel}>
+    <aside className={`${styles.panel} ${isOpen ? styles.open : ""}`}>
+      {/* Botón desplegable visible solo en mobile */}
+      <button 
+        className={styles.toggleMobileBtn} 
+        onClick={togglePanel}
+        aria-label="Abrir o cerrar cuentas abiertas"
+      >
+        <span className={styles.toggleInfo}>
+          <span className={styles.toggleTitle}>Cuentas Abiertas</span>
+          <span className={styles.toggleBadge}>{cuentas.length}</span>
+        </span>
+        <span className={`${styles.triangulo} ${isOpen ? styles.rotado : ""}`}>
+          ▼
+        </span>
+      </button>
+
       <div className={styles.encabezado}>
         <h2>Cuentas Abiertas</h2>
         <span className={styles.contador}>{cuentas.length}</span>

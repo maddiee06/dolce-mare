@@ -1,18 +1,28 @@
 .panel {
   width: 100%;
   min-width: 0;
-  min-height: 0;
+  height: calc(100vh - 120px);
+  min-height: 400px;
   max-height: calc(100vh - 120px);
   padding: 18px;
+
   display: flex;
   flex-direction: column;
+
   background: #ffffff;
   border: 1px solid #eee9e2;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(52, 44, 34, 0.06);
+
   box-sizing: border-box;
   overflow-y: auto;
   scrollbar-width: thin;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ocultar botón desplegable en pantallas grandes */
+.toggleMobileBtn {
+  display: none;
 }
 
 .encabezado {
@@ -69,6 +79,7 @@
   flex-direction: column;
   gap: 25px;
   flex: 1;
+  min-height: 0;
   min-width: 0;
 }
 
@@ -150,19 +161,24 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+
   width: 100%;
   min-height: 44px;
   flex-shrink: 0;
-  margin-top: 25px;
+
+  margin-top: auto;
   padding: 12px;
+
   border: none;
   border-radius: 11px;
   background: #fae8dc;
   color: #526b8c;
+
   font-size: 12px;
   font-weight: 700;
   text-align: center;
   text-decoration: none;
+
   box-sizing: border-box;
   transition: background 0.2s ease;
 
@@ -176,10 +192,79 @@
   }
 }
 
+/* 📱 Estilos Responsive: Bottom Sheet / Desplegable desde abajo para móviles */
 @media (max-width: 768px) {
   .panel {
-    max-height: none;
-    padding: 14px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 75vh;
+    max-height: 80vh;
+    min-height: auto;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    /* Por defecto se muestra colapsado dejando ver solo la barra superior */
+    transform: translateY(calc(100% - 60px)); 
+    background: #ffffff;
+    padding: 14px 16px 24px 16px;
+  }
+
+  /* Cuando está abierto */
+  .panel.open {
+    transform: translateY(0);
+  }
+
+  /* Mostrar botón interactivo en la barra superior del panel móvil */
+  .toggleMobileBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0 0 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f0ece6;
+  }
+
+  .toggleInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toggleTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: #526b8c;
+  }
+
+  .toggleBadge {
+    background: #fae9db;
+    color: #a87552;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+
+  .triangulo {
+    font-size: 10px;
+    color: #526b8c;
+    transition: transform 0.3s ease;
+    
+    &.rotado {
+      transform: rotate(180deg);
+    }
+  }
+
+  /* Ocultar el encabezado original duplicado en versión móvil para usar la barra superior */
+  .encabezado {
+    display: none;
   }
 
   .listaCuentas {
@@ -192,10 +277,6 @@
 }
 
 @media (max-width: 380px) {
-  .encabezado h2 {
-    font-size: 16px;
-  }
-
   .resumen {
     padding: 14px;
   }

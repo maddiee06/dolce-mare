@@ -104,7 +104,7 @@ export function NavCajero({ userName, userRole }: NavCajeroProps) {
           <div className={styles.avatarContainer}>
             <img
               className={styles.avatarImage}
-              src="https://ui-avatars.com/api/?background=random&name=John+Doe"
+              src="https://ui-avatars.com/api/?background=7FA3EB&name=John+Doe"
               alt={`Avatar de ${userName}`}
               width={40}
               height={40}
