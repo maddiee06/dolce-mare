@@ -235,3 +235,18 @@ $desktop: 1024px;
 .version {
   color: $muted;
 }
+
+.error {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background-color: #F9EBE9;
+  color: #B3392B;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.btncajero:disabled,
+.btnadmin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
