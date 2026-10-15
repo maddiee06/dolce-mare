@@ -1,0 +1,210 @@
+.panel {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: calc(100vh - 120px);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #eee9e2;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(52, 44, 34, 0.06);
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 18px;
+
+  h2 {
+    margin: 0;
+    color: #526b8c;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fae9db;
+  color: #a87552;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.resumen {
+  padding: 17px 16px;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  background: #f7f4ef;
+
+  p {
+    margin: 0 0 6px;
+    color: #99938c;
+    font-size: 12px;
+  }
+
+  strong {
+    color: #292929;
+    font-size: 27px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+  }
+}
+
+.listaCuentas {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cuenta {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    color: #383838;
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+}
+
+.filaPrincipal {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 7px;
+
+  strong {
+    flex-shrink: 0;
+    color: #3b3b3b;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+.filaDetalle {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 9px;
+  color: #99938c;
+  font-size: 11px;
+
+  span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  time {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+.estadoPendiente {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 20px;
+  color: #98762e;
+  background: #fbf0d5;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.punto {
+  font-size: 7px;
+}
+
+.mensaje {
+  margin: 0;
+  padding: 20px 8px;
+  color: #99938c;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.botonGuardadas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  flex-shrink: 0;
+  margin-top: 25px;
+  padding: 12px;
+  border: none;
+  border-radius: 11px;
+  background: #fae8dc;
+  color: #526b8c;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f4d7c5;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #526b8c;
+    outline-offset: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .panel {
+    max-height: none;
+    padding: 14px;
+  }
+
+  .listaCuentas {
+    gap: 20px;
+  }
+
+  .resumen strong {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .encabezado h2 {
+    font-size: 16px;
+  }
+
+  .resumen {
+    padding: 14px;
+  }
+
+  .filaPrincipal {
+    flex-wrap: wrap;
+  }
+
+  .filaDetalle {
+    flex-wrap: wrap;
+  }
+}

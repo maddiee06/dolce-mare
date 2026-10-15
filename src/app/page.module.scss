@@ -1,0 +1,35 @@
+.layoutPrincipal {
+  display: grid;
+  /* El 1fr ocupa todo el espacio restante para la izquierda, y 360px fijos para la derecha */
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  padding: 24px;
+  align-items: start; /* Importante para que los bloques no se estiren verticalmente */
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.columnaIzquierda {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.columnaDerecha {
+  /* position sticky hace que el panel acompañe a la pantalla si el usuario hace scroll hacia abajo en la izquierda */
+  position: sticky;
+  top: 24px; 
+}
+
+/* Para pantallas medianas y móviles: apila el diseño en una sola columna */
+@media (max-width: 1024px) {
+  .layoutPrincipal {
+    grid-template-columns: 1fr;
+  }
+
+  .columnaDerecha {
+    position: relative;
+    top: 0;
+  }
+}
