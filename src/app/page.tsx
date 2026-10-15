@@ -2,7 +2,7 @@ import { CuentasAbiertas } from "../components/cajero/CuentasAbiertas";
 import { createClient } from "../utils/supabase/server";
 import { cookies } from "next/headers";
 import styles from "./page.module.scss";
-
+import SeleccionCategoria from "../components/SeleccionCategoria";
 export const instant = false;
 
 type RelacionNombre = {
@@ -50,6 +50,9 @@ export default async function Home() {
           COLUMNA IZQUIERDA: Contenido Principal
           ======================================= */}
       <div className={styles.columnaIzquierda}>
+        {/* ¡AQUÍ ESTÁ EL COMPONENTE NUEVO QUE FALTABA! */}
+        <SeleccionCategoria />
+
         {error && (
           <p role="alert">Error al consultar pedidos: {error.message}</p>
         )}
@@ -58,8 +61,7 @@ export default async function Home() {
           <p>No se encontraron pedidos en la base de datos.</p>
         )}
 
-        {/* He dejado tu código de prueba de pedidos aquí. 
-            Luego lo reemplazarás por las tarjetas de Helados, Cremoladas, etc. */}
+        {/* Lista de pedidos */}
         {pedidos?.map((pedido) => (
           <div
             key={pedido.id_pedido}
