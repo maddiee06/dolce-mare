@@ -5,7 +5,10 @@ import { Usuario, RolNombre } from "../../models/Usuario";
 export class UsuarioDAO implements IUsuarioDAO {
   constructor(private readonly supabase: SupabaseClient) {}
 
-  async verificarCredenciales(usuario: string, password: string): Promise<Usuario | null> {
+  async verificarCredenciales(
+    usuario: string,
+    password: string,
+  ): Promise<Usuario | null> {
     const { data, error } = await this.supabase.rpc("verificar_login", {
       p_usuario: usuario,
       p_password: password,

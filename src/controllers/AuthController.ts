@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { SignJWT } from "jose";
-import { createClient } from "../../utils/supabase/server";
+import { createClient } from "../utils/supabase/server";
 import { UsuarioDAO } from "../dao/supabase/UsuarioDAO";
 import { AuthService } from "../services/AuthService";
 
@@ -13,7 +13,10 @@ export class AuthController {
     try {
       body = await request.json();
     } catch {
-      return NextResponse.json({ error: "Solicitud inválida." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Solicitud inválida." },
+        { status: 400 },
+      );
     }
 
     const usuario = typeof body.usuario === "string" ? body.usuario.trim() : "";
@@ -22,7 +25,7 @@ export class AuthController {
     if (!usuario || !password) {
       return NextResponse.json(
         { error: "Completa usuario y contraseña." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -33,7 +36,10 @@ export class AuthController {
     const resultado = await service.login(usuario, password);
 
     if (!resultado.ok) {
-      return NextResponse.json({ error: resultado.error }, { status: resultado.status });
+      return NextResponse.json(
+        { error: resultado.error },
+        { status: resultado.status },
+      );
     }
 
     const token = await new SignJWT({
