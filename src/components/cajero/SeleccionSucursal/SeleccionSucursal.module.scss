@@ -1,0 +1,269 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-fondo);
+  padding: 2rem;
+}
+
+.cardContainer {
+  background-color: var(--color-nav);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  .logoTitle {
+    color: var(--color-text-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.05em;
+  }
+  
+  .logoSubtitle {
+    color: var(--color-text-primary);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+}
+
+.titles {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  .mainTitle {
+    color: var(--color-text-primary);
+    font-size: 2.5rem;
+    font-weight: 400;
+    font-family: serif;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+  }
+}
+
+.gridSucursales {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.sucursalCard {
+  border: 1.5px solid #eaeaea;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--color-nav);
+
+  &:hover {
+    border-color: var(--color-border-1);
+  }
+
+  &.selected {
+    border-color: var(--color-border-1);
+    background-color: #f7f9fc;
+  }
+}
+
+.imageContainer {
+  width: 140px;
+  flex-shrink: 0;
+  
+  .imagePlaceholder {
+    width: 100%;
+    height: 220px;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background-color: var(--color-middle);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+
+  .checkIcon {
+    margin-bottom: 1rem;
+    display: flex;
+    
+    svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+      background-color: var(--color-botton-primary);
+      border-radius: 50%;
+      padding: 6px;
+    }
+
+    .emptyCircle {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--color-text-primary);
+      border-radius: 50%;
+    }
+  }
+
+  .nombre {
+    color: var(--color-text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .direccion {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    white-space: pre-line;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+
+  .btnSeleccionar {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    background-color: var(--color-seleccion);
+    color: var(--color-text-secondary);
+    transition: background-color 0.2s;
+
+    &.btnActive {
+      background-color: var(--color-botton-primary);
+      color: white;
+    }
+  }
+}
+
+.btnContinuar {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-botton-primary);
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+
+
+
+@media (max-width: 992px) {
+  .cardContainer {
+    padding: 2.5rem;
+    max-width: 90%;
+  }
+
+  .imageContainer {
+    width: 120px; 
+    .imagePlaceholder {
+      height: 180px;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 1rem;
+  }
+
+  .cardContainer {
+    padding: 1.5rem;
+    border-radius: 1.2rem;
+  }
+
+  .titles {
+    margin-bottom: 2rem;
+
+    .mainTitle {
+      font-size: 2rem;
+    }
+  }
+
+  .gridSucursales {
+    grid-template-columns: 1fr; 
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .sucursalCard {
+    flex-direction: column; 
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .imageContainer {
+    width: 100%; 
+    
+    .imagePlaceholder {
+      height: 160px; 
+    }
+  }
+
+  .infoContainer {
+    align-items: center;
+    text-align: center;
+
+    .checkIcon {
+      justify-content: center;
+    }
+  }
+}
+
+
+@media (max-width: 480px) {
+  .header .logoTitle {
+    font-size: 1.75rem;
+  }
+
+  .titles .mainTitle {
+    font-size: 1.75rem;
+  }
+
+  .titles .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .btnContinuar {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+}
