@@ -1,39 +1,24 @@
-$desktop: 1024px;
-
 .login {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  background-color: var(--color-fondo);
-
-  @media (min-width: $desktop) {
-    padding: 40px;
-  }
-}
-
-.container {
-  display: flex;
   flex-direction: column;
-  width: 100%;
   min-height: 100dvh;
+  width: 100%;
   background-color: var(--color-fondo);
-  overflow: hidden;
 
-  @media (min-width: $desktop) {
+  @media (min-width: 1024px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 0;
-    max-width: 1100px;
-    height: 640px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    height: 100dvh;
+    overflow: hidden;
   }
 }
 
+/* Lado izquierdo */
 .hero {
   position: relative;
-  min-height: 220px;
+  width: 100%;
+  min-height: 240px;
+  overflow: hidden;
 
   img {
     object-fit: cover;
@@ -43,56 +28,84 @@ $desktop: 1024px;
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 60%);
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 35%,
+      transparent 65%
+    );
   }
 
-  @media (min-width: $desktop) {
-    min-height: 0;
+  @media (min-width: 1024px) {
+    height: 100%;
+    min-height: 100dvh;
+    min-width: 0;
   }
 }
 
 .heroText {
   position: absolute;
-  left: 24px;
-  right: 24px;
   bottom: 24px;
-  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
   color: #ffffff;
+  text-align: center;
+  width: 90%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  @media (min-width: $desktop) {
-    left: 48px;
+  @media (min-width: 1024px) {
     bottom: 40px;
   }
 }
 
 .heroTitle {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 
-  @media (min-width: $desktop) {
-    font-size: 2.2rem;
+  @media (min-width: 1024px) {
+    font-size: 2.1rem;
   }
 }
 
 .heroSubtitle {
-  margin-top: 4px;
+  margin: 8px 0 0;
   font-size: 0.95rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
 }
 
+/* Lado derecho */
 .panel {
   display: flex;
-  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 32px 24px;
+  background-color: var(--color-fondo);
+
+  @media (min-width: 1024px) {
+    height: 100dvh;
+    overflow-y: auto;
+    min-width: 0;
+    padding: 40px;
+  }
+}
+
+.panelContent {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 32px 24px 24px;
-  background-color: var(--color-fondo);
-
-  @media (min-width: $desktop) {
-    padding: 40px 56px 28px;
-  }
+  width: 100%;
+  max-width: 420px;
+  min-height: 520px;
 }
 
 .form {
@@ -100,7 +113,6 @@ $desktop: 1024px;
   flex-direction: column;
   gap: 18px;
   width: 100%;
-  max-width: 400px;
 }
 
 .header {
@@ -147,9 +159,12 @@ $desktop: 1024px;
   padding: 0 14px;
   height: 50px;
   background-color: var(--color-nav);
-  border: 1px solid color-mix(in srgb, var(--color-text-placeholder) 55%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-placeholder) 55%, transparent);
   border-radius: 10px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 
   input {
     flex: 1;
@@ -168,7 +183,8 @@ $desktop: 1024px;
 
   &:focus-within {
     border-color: var(--color-border-2);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-border-2) 20%, transparent);
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--color-border-2) 20%, transparent);
   }
 }
 
@@ -208,12 +224,20 @@ $desktop: 1024px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 14px color-mix(in srgb, var(--color-text-primary) 30%, transparent);
-  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 14px
+    color-mix(in srgb, var(--color-text-primary) 30%, transparent);
+  transition:
+    background-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
 
   @media (hover: hover) {
     &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, var(--color-text-primary) 88%, black);
+      background-color: color-mix(
+        in srgb,
+        var(--color-text-primary) 88%,
+        black
+      );
       transform: translateY(-2px);
     }
   }
@@ -238,4 +262,5 @@ $desktop: 1024px;
   font-size: 0.8rem;
   text-align: center;
   color: var(--color-text-disabled);
+  margin-top: 16px;
 }

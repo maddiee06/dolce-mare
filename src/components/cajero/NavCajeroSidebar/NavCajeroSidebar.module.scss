@@ -1,0 +1,94 @@
+// Fondo oscuro borroso con fade suave
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(45, 42, 38, 0.45);
+  z-index: 1098;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease-in-out;
+
+  &.backdropActive {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+// Panel lateral con transición de deslizamiento
+.sidebarContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 82%;
+  max-width: 320px;
+  height: 100vh;
+  background-color: var(--color-fondo);
+  z-index: 1099;
+  display: flex;
+  flex-direction: column;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.12);
+
+  // Estado cerrado: oculto hacia la izquierda
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    visibility 0.3s ease-in-out;
+
+  // Estado abierto: entra con suavidad controlada
+  &.sidebarOpen {
+    transform: translateX(0);
+    visibility: visible;
+  }
+}
+
+// Elementos de cabecera y perfil
+.avatarImg {
+  border-color: var(--color-border-1);
+}
+
+.cajaIndicator {
+  background-color: var(--color-success);
+}
+
+.userName {
+  color: var(--color-text-secondary);
+}
+
+.userRole {
+  color: var(--color-text-placeholder);
+}
+
+// Badges de sede y estado en cabecera
+.sedeBadge {
+  background-color: var(--color-nav);
+  border-color: var(--color-border-1);
+  color: var(--color-text-primary);
+}
+
+.cajaBadge {
+  background-color: var(--color-success);
+}
+
+// Enlaces y botones de navegación
+.navBtnActive {
+  background-color: var(--color-seleccion);
+  color: var(--color-text-primary);
+}
+
+.activeIndicator {
+  background-color: var(--color-botton-primary);
+}
+
+.navBtnInactive {
+  color: var(--color-text-secondary);
+}
+
+.countBadge {
+  background-color: var(--color-nav);
+  border-color: var(--color-border-1);
+  color: var(--color-text-secondary);
+}

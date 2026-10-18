@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { SignJWT } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import { createClient } from "../utils/supabase/server";
 import { UsuarioDAO } from "../dao/supabase/UsuarioDAO";
 import { AuthService } from "../services/AuthService";
@@ -67,5 +67,28 @@ export class AuthController {
         rol: resultado.usuario.rol,
       },
     });
+  }
+
+  async obtenerPerfil(request: Request) {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("session")?.value;
+
+    if (!sessionToken) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+
+    try {
+      const { payload } = await jwtVerify(sessionToken, secret);
+      return NextResponse.json({
+        id: payload.sub,
+        rol: payload.rol,
+        nombre: payload.nombre,
+      });
+    } catch {
+      return NextResponse.json(
+        { error: "Sesión inválida o expirada" },
+        { status: 401 },
+      );
+    }
   }
 }
