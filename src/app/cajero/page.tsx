@@ -7,31 +7,22 @@ const PEDIDOS_INICIALES = [
   {
     id_pedido: 101,
     total: 28.5,
-    fecha_pedido: new Date().toISOString(),
+    fecha_pedido: "2026-10-18T16:37:00.000Z",
     estado: { nombre: "Abierto" },
     entrega: { nombre: "Mesa 3" },
     detalle_pedido: [
-      {
-        cantidad: 2,
-        productos: { nombre: "Helado Artesanal Doble" },
-      },
-      {
-        cantidad: 1,
-        productos: { nombre: "Cremolada de Mango" },
-      },
+      { cantidad: 2, productos: { nombre: "Helado Artesanal Doble" } },
+      { cantidad: 1, productos: { nombre: "Cremolada de Mango" } },
     ],
   },
   {
     id_pedido: 102,
     total: 18.0,
-    fecha_pedido: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+    fecha_pedido: "2026-10-18T16:22:00.000Z",
     estado: { nombre: "Abierto" },
     entrega: { nombre: "Delivery" },
     detalle_pedido: [
-      {
-        cantidad: 1,
-        productos: { nombre: "Postre Tres Leches" },
-      },
+      { cantidad: 1, productos: { nombre: "Postre Tres Leches" } },
     ],
   },
 ];

@@ -1,5 +1,14 @@
 "use client";
 import React, { useEffect } from "react";
+import {
+  Store,
+  Clock,
+  History,
+  Package,
+  Settings,
+  Lock,
+  LockOpen,
+} from "lucide-react";
 import styles from "./NavCajeroSidebar.module.scss";
 import { RolNombre } from "../../../models/Usuario";
 
@@ -9,6 +18,7 @@ export type NavCajeroSidebarProps = {
   avatarUrl?: string;
   userName: string;
   userRole: RolNombre;
+  isCajaAbierta?: boolean;
 };
 
 const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
@@ -17,6 +27,7 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
   avatarUrl = "/avatar.png",
   userName = "Usuario",
   userRole = "Cajero",
+  isCajaAbierta = false,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -59,7 +70,7 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
           <img src="/nav/close.svg" alt="Caja" width={20} height={20} />
         </button>
 
-        {/* Cabecera: Avatar, Usuario, Sede y Estado */}
+        {/* Cabecera: Avatar, Usuario y Estado */}
         <div className="pt-8 px-6 pb-6 pr-14 border-b border-stone-200/100">
           <div className="flex items-start gap-3.5">
             <div className="relative w-12 h-12 shrink-0">
@@ -84,20 +95,6 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
               >
                 {userRole}
               </p>
-
-              {/* Sede y Estado */}
-              <div className="flex items-center gap-1.5 mt-2">
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${styles.sedeBadge}`}
-                >
-                  Miraflores
-                </span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full text-white ${styles.cajaBadge}`}
-                >
-                  Caja Abierta
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -112,7 +109,9 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
                 <span
                   className={`w-1.5 h-4 rounded-full ${styles.activeIndicator}`}
                 />
-                <span className="w-5 h-5 flex items-center justify-center text-current opacity-80" />
+                <span className="w-5 h-5 flex items-center justify-center text-current opacity-80">
+                  <Store size={18} strokeWidth={2} />
+                </span>
                 <span>Caja</span>
               </div>
             </button>
@@ -122,7 +121,9 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
             >
               <div className="flex items-center gap-3">
                 <span className="w-1.5 h-4 rounded-full opacity-0" />
-                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70" />
+                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70">
+                  <Clock size={18} strokeWidth={2} />
+                </span>
                 <span>Pendientes</span>
               </div>
               <span
@@ -137,7 +138,9 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
             >
               <div className="flex items-center gap-3">
                 <span className="w-1.5 h-4 rounded-full opacity-0" />
-                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70" />
+                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70">
+                  <History size={18} strokeWidth={2} />
+                </span>
                 <span>Historial</span>
               </div>
             </button>
@@ -147,7 +150,9 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
             >
               <div className="flex items-center gap-3">
                 <span className="w-1.5 h-4 rounded-full opacity-0" />
-                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70" />
+                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70">
+                  <Package size={18} strokeWidth={2} />
+                </span>
                 <span>Inventario</span>
               </div>
             </button>
@@ -159,7 +164,9 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
             >
               <div className="flex items-center gap-3">
                 <span className="w-1.5 h-4 rounded-full opacity-0" />
-                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70" />
+                <span className="w-5 h-5 flex items-center justify-center text-current opacity-70">
+                  <Settings size={18} strokeWidth={2} />
+                </span>
                 <span>Ajustes</span>
               </div>
             </button>

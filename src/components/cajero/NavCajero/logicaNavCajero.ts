@@ -1,4 +1,3 @@
-// src/components/nav/logicaNavCajero.ts
 "use client";
 import { useState, useEffect } from "react";
 import { getAvatarUrl } from "../../../utils/avatar";

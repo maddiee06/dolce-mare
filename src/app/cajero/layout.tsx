@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { jwtVerify } from "jose";
 import { NavCajero } from "../../components/cajero/NavCajero";
 import { RolNombre } from "../../models/Usuario";
+import { BienvenidaWrapper } from "@/src/components/cajero/BienvenidaModal/BienvenidaWrapper";
 
 export const instant = false;
 
@@ -42,10 +43,11 @@ export default async function CajeroLayout({
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-50">
+      <BienvenidaWrapper userName={userName} />
       <NavCajero
         userName={userName}
         userRole={userRole}
-        isCajaAbierta={true}
+        isCajaAbierta={false}
         pendingCount={0}
       />
       <main className="flex-1 overflow-hidden">{children}</main>

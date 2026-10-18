@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { Store, Clock, History, Package, Lock, LockOpen } from "lucide-react";
 import { useNavCajero } from "./logicaNavCajero";
 import { NavCajeroSidebar } from "../NavCajeroSidebar";
 import { RolNombre } from "../../../models/Usuario";
@@ -15,7 +16,7 @@ export interface NavCajeroProps {
 export function NavCajero({
   userName,
   userRole,
-  isCajaAbierta = true,
+  isCajaAbierta = false,
   pendingCount = 0,
 }: NavCajeroProps) {
   const { time, isMobileMenuOpen, toggleMobileMenu, avatarUrl } =
@@ -47,26 +48,23 @@ export function NavCajero({
           />
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  isCajaAbierta ? "animate-pulse" : ""
-                }`}
-                style={{
-                  backgroundColor: isCajaAbierta
-                    ? "var(--color-success)"
-                    : "var(--color-error)",
-                }}
-              />
+            <div className="flex items-center gap-1.5">
+              {isCajaAbierta ? (
+                <LockOpen
+                  size={15}
+                  strokeWidth={2}
+                  color="var(--color-success)"
+                />
+              ) : (
+                <Lock size={15} strokeWidth={2} color="#DC2626" />
+              )}
               <span
                 className="text-[11px] font-semibold"
                 style={{
-                  color: isCajaAbierta
-                    ? "var(--color-success)"
-                    : "var(--color-text-secondary)",
+                  color: isCajaAbierta ? "var(--color-success)" : "#DC2626",
                 }}
               >
-                {isCajaAbierta ? "Caja Abierta" : "Cerrada"}
+                {isCajaAbierta ? "Caja abierta" : "Caja cerrada"}
               </span>
             </div>
 
@@ -121,16 +119,10 @@ export function NavCajero({
             <li className="relative h-full flex items-center">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
-                style={{ color: "var(--color-text-disabled)" }}
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
               >
                 <span className="w-5 h-5 flex items-center justify-center">
-                  <Image
-                    src="/nav/cash_register.svg"
-                    alt="Caja"
-                    width={20}
-                    height={20}
-                  />
+                  <Store size={20} strokeWidth={2} />
                 </span>
                 <span>Caja</span>
               </button>
@@ -140,16 +132,10 @@ export function NavCajero({
             <li className="relative h-full flex items-center">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
-                style={{ color: "var(--color-text-disabled" }}
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
               >
                 <span className="w-5 h-5 flex items-center justify-center">
-                  <Image
-                    src="/nav/clock.svg"
-                    alt="Pendientes"
-                    width={20}
-                    height={20}
-                  />
+                  <Clock size={20} strokeWidth={2} />
                 </span>
                 <span>Pendientes</span>
 
@@ -171,16 +157,10 @@ export function NavCajero({
             <li className="relative h-full flex items-center">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
-                style={{ color: "var(--color-text-disabled)" }}
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
               >
                 <span className="w-5 h-5 flex items-center justify-center">
-                  <Image
-                    src="/nav/history.svg"
-                    alt="Historial"
-                    width={20}
-                    height={20}
-                  />
+                  <History size={20} strokeWidth={2} />
                 </span>
                 <span>Historial</span>
               </button>
@@ -190,16 +170,10 @@ export function NavCajero({
             <li className="relative h-full flex items-center">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
-                style={{ color: "var(--color-text-disabled)" }}
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
               >
                 <span className="w-5 h-5 flex items-center justify-center">
-                  <Image
-                    src="/nav/inventory.svg"
-                    alt="Inventario"
-                    width={20}
-                    height={20}
-                  />
+                  <Package size={20} strokeWidth={2} />
                 </span>
                 <span>Inventario</span>
               </button>
@@ -209,32 +183,29 @@ export function NavCajero({
 
         {/* Zona derecha: Estado de Caja, Hora y Perfil */}
         <div className="flex items-center gap-5">
-          {/* Indicador de Caja Abierta */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
-            <span
-              className={`w-2.5 h-2.5 rounded-full ${
-                isCajaAbierta ? "animate-pulse" : ""
-              }`}
-              style={{
-                backgroundColor: isCajaAbierta
-                  ? "var(--color-success)"
-                  : "var(--color-error)",
-              }}
-            />
+          {/* Indicador de Caja */}
+          <div className="flex items-center gap-1.5">
+            {isCajaAbierta ? (
+              <LockOpen
+                size={16}
+                strokeWidth={2}
+                color="var(--color-success)"
+              />
+            ) : (
+              <Lock size={16} strokeWidth={2} color="#DC2626" />
+            )}
             <span
               className="text-xs font-bold"
               style={{
-                color: isCajaAbierta
-                  ? "var(--color-success)"
-                  : "var(--color-text-secondary)",
+                color: isCajaAbierta ? "var(--color-success)" : "#DC2626",
               }}
             >
-              {isCajaAbierta ? "Caja Abierta" : "Caja Cerrada"}
+              {isCajaAbierta ? "Caja abierta" : "Caja cerrada"}
             </span>
           </div>
 
           {/* Reloj */}
-          <div className="flex flex-col text-right leading-none">
+          <div className="flex items-center gap-1.5">
             <span
               className="text-sm font-bold"
               style={{ color: "var(--color-text-secondary)" }}
