@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { NavCajero } from "../components/cajero/NavCajero";
-import { Loginform } from "../components/cajero/Loginform";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -14,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dolce Mare | Panel de Cajero",
+  title: "Dolce Mare | Inicio de Sesión",
   description: "Sistema de gestión de pedidos y cuentas abiertas de Dolce Mare",
 };
 
@@ -26,9 +25,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NavCajero userName="Bradley" userRole="Cajero" />
         {children}
-        <Loginform />
       </body>
     </html>
   );
