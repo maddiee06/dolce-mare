@@ -1,4 +1,4 @@
-export type RolNombre = "ADMIN" | "CAJERO";
+export type RolNombre = "Admin" | "Cajero";
 
 export interface Usuario {
   id: string;

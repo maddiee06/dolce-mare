@@ -1,6 +1,6 @@
 export const instant = false;
 import { redirect } from "next/navigation";
 
-export default async function Home() {
-  return redirect("/login");
+export default function Home() {
+  redirect("/login");
 }

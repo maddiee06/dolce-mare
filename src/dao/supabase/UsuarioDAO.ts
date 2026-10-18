@@ -24,4 +24,26 @@ export class UsuarioDAO implements IUsuarioDAO {
       rol: String(data.rol).toUpperCase() as RolNombre,
     };
   }
+
+  async obtenerPorId(id: string): Promise<Usuario | null> {
+    const { data, error } = await this.supabase
+      .from("usuarios")
+      .select("id_usuario, nombres, apellidos, usuario, roles(nombre)")
+      .eq("id_usuario", id)
+      .single();
+
+    if (error || !data) return null;
+
+    const rolExtraido = Array.isArray(data.roles)
+      ? data.roles[0]?.nombre
+      : (data.roles as { nombre: string } | null)?.nombre;
+
+    return {
+      id: String(data.id_usuario),
+      nombres: data.nombres,
+      apellidos: data.apellidos,
+      usuario: data.usuario,
+      rol: String(rolExtraido).toUpperCase() as RolNombre,
+    };
+  }
 }

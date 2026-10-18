@@ -17,7 +17,9 @@
   box-sizing: border-box;
   overflow-y: auto;
   scrollbar-width: thin;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* Ocultar botón desplegable en pantallas grandes */
@@ -193,7 +195,7 @@
 }
 
 /* 📱 Estilos Responsive: Bottom Sheet / Desplegable desde abajo para móviles */
-@media (max-width: 768px) {
+@media (max-width: 1020px) {
   .panel {
     position: fixed;
     bottom: 0;
@@ -207,7 +209,7 @@
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     /* Por defecto se muestra colapsado dejando ver solo la barra superior */
-    transform: translateY(calc(100% - 60px)); 
+    transform: translateY(calc(100% - 60px));
     background: #ffffff;
     padding: 14px 16px 24px 16px;
   }
@@ -256,7 +258,7 @@
     font-size: 10px;
     color: #526b8c;
     transition: transform 0.3s ease;
-    
+
     &.rotado {
       transform: rotate(180deg);
     }
