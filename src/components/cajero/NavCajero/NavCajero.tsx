@@ -1,78 +1,92 @@
 "use client";
-import { useState, useEffect } from "react";
 import React from "react";
-import styles from "./NavCajero.module.scss";
 import Image from "next/image";
+import { useNavCajero } from "./logicaNavCajero";
+import { NavCajeroSidebar } from "../NavCajeroSidebar";
 
-interface NavCajeroProps {
+export interface NavCajeroProps {
   userName: string;
   userRole: string;
+  isCajaAbierta?: boolean;
+  pendingCount?: number;
 }
 
-export function NavCajero({ userName, userRole }: NavCajeroProps) {
-  const [time, setTime] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-
-      const timeString = now.toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-
-      const dateString = now
-        .toLocaleDateString("es-ES", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-        .replace(".", "");
-
-      setTime(timeString);
-      setDate(dateString);
-    };
-
-    updateDateTime();
-    const timer = setInterval(updateDateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+export function NavCajero({
+  userName,
+  userRole,
+  isCajaAbierta = true,
+  pendingCount = 0,
+}: NavCajeroProps) {
+  const { time, isMobileMenuOpen, toggleMobileMenu, avatarUrl } =
+    useNavCajero(userName);
 
   return (
     <>
-      <div className={styles.navCajeroMobile}>
-        <div className={styles.mobileTopBar}>
+      {/* ───────────────── SIDEBAR MÓVIL (COMPONENTE IMPORTADO) ───────────────── */}
+      <NavCajeroSidebar
+        isOpen={isMobileMenuOpen}
+        onClose={toggleMobileMenu}
+        avatarUrl={avatarUrl}
+        userName={userName}
+        userRole={userRole}
+      />
+
+      {/* ───────────────── BARRA SUPERIOR MÓVIL (< 1000px) ───────────────── */}
+      <div className="block lg:hidden">
+        <div
+          className="flex justify-between items-center w-full h-[76px] px-6 py-4 border-b border-[var(--color-text-placeholder)]/25"
+          style={{ backgroundColor: "var(--color-nav)" }}
+        >
           <Image
-            className={styles.logo}
+            className="object-contain"
             src="/logo_vertical.svg"
             alt="Logo Dolce Mare"
-            width={140}
-            height={60}
+            width={120}
+            height={50}
             priority
           />
 
-          <div className={styles.timeContainer}>
-            {time && date ? (
-              <div className={styles.dateTime}>
-                <span className={styles.time}>{time}</span>
-                <span className={styles.date}>{date}</span>
-              </div>
-            ) : (
-              <div className={styles.dateTime} style={{ visibility: "hidden" }}>
-                <span className={styles.time}>00:00</span>
-                <span className={styles.date}>00 aaa 0000</span>
-              </div>
-            )}
+          <div className="flex items-center gap-3">
+            {/* Indicador Caja Abierta compacto */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isCajaAbierta ? "animate-pulse" : ""
+                }`}
+                style={{
+                  backgroundColor: isCajaAbierta
+                    ? "var(--color-success)"
+                    : "var(--color-error)",
+                }}
+              />
+              <span
+                className="text-[11px] font-semibold"
+                style={{
+                  color: isCajaAbierta
+                    ? "var(--color-success)"
+                    : "var(--color-text-secondary)",
+                }}
+              >
+                {isCajaAbierta ? "Caja Abierta" : "Cerrada"}
+              </span>
+            </div>
 
-            <button className={styles.hamburgerBtn} onClick={toggleMobileMenu}>
+            {/* Hora */}
+            <div className="text-right">
+              <span
+                className="text-sm font-bold"
+                style={{ color: "var(--color-text-secondary)" }}
+              >
+                {time || "00:00"}
+              </span>
+            </div>
+
+            {/* Botón hamburguesa que abre el sidebar */}
+            <button
+              className="p-1.5 cursor-pointer hover:opacity-80 transition"
+              onClick={toggleMobileMenu}
+              aria-label="Abrir menú"
+            >
               <Image
                 src="/burger.svg"
                 alt="Abrir menú"
@@ -82,135 +96,196 @@ export function NavCajero({ userName, userRole }: NavCajeroProps) {
             </button>
           </div>
         </div>
+      </div>
 
-        <div
-          className={`${styles.mobileOverlay} ${isMobileMenuOpen ? styles.open : ""}`}
-        >
-          <button className={styles.closeBtn} onClick={toggleMobileMenu}>
-            <Image src="/close.svg" alt="Cerrar menú" width={40} height={40} />
-          </button>
+      {/* ───────────────── VISTA ESCRITORIO (>= 1000px) ───────────────── */}
+      <header
+        className="hidden lg:flex justify-between items-center w-full h-[76px] px-8 border-b border-[var(--color-text-placeholder)]/25 box-border"
+        style={{ backgroundColor: "var(--color-nav)" }}
+      >
+        {/* Logo */}
+        <div className="flex items-center">
+          <Image
+            className="object-contain"
+            src="/logo_vertical.svg"
+            alt="Logo Dolce Mare"
+            width={140}
+            height={60}
+            priority
+          />
+        </div>
 
-          <ul className={styles.mobileLinks}>
-            <li>
-              <a href="#">Cuentas Guardadas</a>
+        {/* Menú de Navegación Estático */}
+        <nav className="h-full flex items-center">
+          <ul className="flex items-center gap-2 list-none m-0 p-0 h-full">
+            {/* Opción: Caja */}
+            <li className="relative h-full flex items-center">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
+                style={{ color: "var(--color-text-disabled)" }}
+              >
+                {/* Espacio para icono o imagen */}
+                <span className="w-5 h-5 flex items-center justify-center">
+                  <Image
+                    src="/nav/cash_register.svg"
+                    alt="Caja"
+                    width={20}
+                    height={20}
+                  />
+                </span>
+                <span>Caja</span>
+              </button>
             </li>
-            <li>
-              <a href="#">Historial de Ventas</a>
+
+            {/* Opción: Pendientes */}
+            <li className="relative h-full flex items-center">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
+                style={{ color: "var(--color-text-disabled" }}
+              >
+                {/* Espacio para icono o imagen */}
+                <span className="w-5 h-5 flex items-center justify-center">
+                  <Image
+                    src="/nav/clock.svg"
+                    alt="Pendientes"
+                    width={20}
+                    height={20}
+                  />
+                </span>
+                <span>Pendientes</span>
+
+                {pendingCount > 0 && (
+                  <span
+                    className="text-[11px] px-2 py-0.5 rounded-full font-bold border border-[var(--color-border-1)]"
+                    style={{
+                      backgroundColor: "var(--color-seleccion)",
+                      color: "var(--color-text-disabled)",
+                    }}
+                  >
+                    {pendingCount}
+                  </span>
+                )}
+              </button>
             </li>
-            <li>
-              <a href="#">Caja</a>
+
+            {/* Opción: Historial */}
+            <li className="relative h-full flex items-center">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
+                style={{ color: "var(--color-text-disabled)" }}
+              >
+                {/* Espacio para icono o imagen */}
+                <span className="w-5 h-5 flex items-center justify-center">
+                  <Image
+                    src="/nav/history.svg"
+                    alt="Historial"
+                    width={20}
+                    height={20}
+                  />
+                </span>
+                <span>Historial</span>
+              </button>
             </li>
-            <li>
-              <a href="#">Gestionar Inventario</a>
+
+            {/* Opción: Inventario */}
+            <li className="relative h-full flex items-center">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
+                style={{ color: "var(--color-text-disabled)" }}
+              >
+                {/* Espacio para icono o imagen */}
+                <span className="w-5 h-5 flex items-center justify-center">
+                  <Image
+                    src="/nav/inventory.svg"
+                    alt="Inventario"
+                    width={20}
+                    height={20}
+                  />
+                </span>
+                <span>Inventario</span>
+              </button>
             </li>
           </ul>
+        </nav>
 
-          <div className={styles.mobileBottomInfo}>
-            <div className={styles.profileInfo}>
-              <img
-                src="https://ui-avatars.com/api/?background=random&name=John+Doe"
-                alt={`Avatar de ${userName}`}
-                width={48}
-                height={48}
-              />
-              <div>
-                <p className={styles.name}>{userName || "Cajero"}</p>
-                <p className={styles.role}>{userRole || "Ventas"}</p>
-              </div>
-              <Image
-                className={styles.arrowDropdown}
-                src="/chevron-down.svg"
-                alt="Desplegar menú"
-                width={24}
-                height={24}
-              />
+        {/* Zona derecha: Estado de Caja, Hora y Perfil */}
+        <div className="flex items-center gap-5">
+          {/* Indicador de Caja Abierta */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
+            <span
+              className={`w-2.5 h-2.5 rounded-full ${
+                isCajaAbierta ? "animate-pulse" : ""
+              }`}
+              style={{
+                backgroundColor: isCajaAbierta
+                  ? "var(--color-success)"
+                  : "var(--color-error)",
+              }}
+            />
+            <span
+              className="text-xs font-bold"
+              style={{
+                color: isCajaAbierta
+                  ? "var(--color-success)"
+                  : "var(--color-text-secondary)",
+              }}
+            >
+              {isCajaAbierta ? "Caja Abierta" : "Caja Cerrada"}
+            </span>
+          </div>
+
+          {/* Reloj */}
+          <div className="flex flex-col text-right leading-none">
+            <span
+              className="text-sm font-bold"
+              style={{ color: "var(--color-text-secondary)" }}
+            >
+              {time || "00:00"}
+            </span>
+          </div>
+
+          {/* Divisor */}
+          <div
+            className="w-px h-8 opacity-30"
+            style={{ backgroundColor: "var(--color-text-placeholder)" }}
+          />
+
+          {/* Perfil del Cajero */}
+          <div className="flex items-center gap-3 cursor-pointer select-none group">
+            <img
+              className="w-10 h-10 rounded-full object-cover border"
+              style={{ borderColor: "var(--color-border-1)" }}
+              src={avatarUrl}
+              alt={`Avatar de ${userName || "Cajero"}`}
+            />
+            <div className="flex flex-col leading-tight">
+              <span
+                className="text-sm font-bold transition-colors group-hover:opacity-80"
+                style={{ color: "var(--color-text-secondary)" }}
+              >
+                {userName || "Cajero"}
+              </span>
+              <span
+                className="text-xs"
+                style={{ color: "var(--color-text-placeholder)" }}
+              >
+                {userRole || "Ventas"}
+              </span>
             </div>
+            <Image
+              src="/chevron-down.svg"
+              alt="Desplegar menú"
+              width={18}
+              height={18}
+              className="opacity-60 group-hover:opacity-100 transition-opacity"
+            />
           </div>
         </div>
-      </div>
-
-      <div className={styles.navCajeroDesktop}>
-        <nav className={styles.navCajero}>
-          <div className={styles.logoContainer}>
-            <div className={styles.logoText}>
-              <Image
-                className={styles.logo}
-                src="/logo_vertical.svg"
-                alt="Logo Dolce Mare"
-                width={140}
-                height={60}
-                priority
-              />
-            </div>
-          </div>
-
-          <ul className={styles.menu}>
-            <li>
-              <a href="#">
-                <span className={styles.icon}></span>
-                Cuentas Guardadas
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span className={styles.icon}></span>
-                Historial de Ventas
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span className={styles.icon}></span>
-                Caja
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span className={styles.icon}></span>
-                Gestionar Inventario
-              </a>
-            </li>
-          </ul>
-
-          <div className={styles.userInfoContainer}>
-            {time && date ? (
-              <div className={styles.dateTime}>
-                <span className={styles.time}>{time}</span>
-                <span className={styles.date}>{date}</span>
-              </div>
-            ) : (
-              <div className={styles.dateTime} style={{ visibility: "hidden" }}>
-                <span className={styles.time}>00:00</span>
-                <span className={styles.date}>00 aaa 0000</span>
-              </div>
-            )}
-
-            <div className={styles.divider}></div>
-
-            <div className={styles.profile}>
-              <div className={styles.avatarContainer}>
-                <img
-                  className={styles.avatarImage}
-                  src="https://ui-avatars.com/api/?background=random&name=John+Doe"
-                  alt={`Avatar de ${userName}`}
-                  width={40}
-                  height={40}
-                />
-              </div>
-              <div className={styles.userData}>
-                <span className={styles.userName}>{userName}</span>
-                <span className={styles.userRole}>{userRole}</span>
-              </div>
-              <Image
-                className={styles.arrowDropdown}
-                src="/chevron-down.svg"
-                alt="Desplegar menú"
-                width={24}
-                height={24}
-              />
-            </div>
-          </div>
-        </nav>
-      </div>
+      </header>
     </>
   );
 }
