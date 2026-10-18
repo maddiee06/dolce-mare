@@ -1,20 +1,21 @@
 "use client";
 import React, { useEffect } from "react";
 import styles from "./NavCajeroSidebar.module.scss";
+import { RolNombre } from "../../../models/Usuario";
 
 export type NavCajeroSidebarProps = {
   isOpen?: boolean;
-  onClose?: () => void;
+  onClose: () => void;
   avatarUrl?: string;
-  userName?: string;
-  userRole?: string;
+  userName: string;
+  userRole: RolNombre;
 };
 
 const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
   isOpen = false,
   onClose,
   avatarUrl = "/avatar.png",
-  userName = "Bradley",
+  userName = "Usuario",
   userRole = "Cajero",
 }) => {
   useEffect(() => {
@@ -55,12 +56,7 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
           className="absolute top-7 right-6 p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-black/5 transition cursor-pointer"
           aria-label="Cerrar menú"
         >
-          <img
-            src="/nav/cash_register.svg"
-            alt="Caja"
-            width={20}
-            height={20}
-          />
+          <img src="/nav/close.svg" alt="Caja" width={20} height={20} />
         </button>
 
         {/* Cabecera: Avatar, Usuario, Sede y Estado */}

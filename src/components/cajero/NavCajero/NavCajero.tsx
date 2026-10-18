@@ -3,10 +3,11 @@ import React from "react";
 import Image from "next/image";
 import { useNavCajero } from "./logicaNavCajero";
 import { NavCajeroSidebar } from "../NavCajeroSidebar";
+import { RolNombre } from "../../../models/Usuario";
 
 export interface NavCajeroProps {
   userName: string;
-  userRole: string;
+  userRole: RolNombre;
   isCajaAbierta?: boolean;
   pendingCount?: number;
 }
@@ -22,7 +23,7 @@ export function NavCajero({
 
   return (
     <>
-      {/* ───────────────── SIDEBAR MÓVIL (COMPONENTE IMPORTADO) ───────────────── */}
+      {/* Sidebar Móvil */}
       <NavCajeroSidebar
         isOpen={isMobileMenuOpen}
         onClose={toggleMobileMenu}
@@ -31,7 +32,6 @@ export function NavCajero({
         userRole={userRole}
       />
 
-      {/* ───────────────── BARRA SUPERIOR MÓVIL (< 1000px) ───────────────── */}
       <div className="block lg:hidden">
         <div
           className="flex justify-between items-center w-full h-[76px] px-6 py-4 border-b border-[var(--color-text-placeholder)]/25"
@@ -47,7 +47,6 @@ export function NavCajero({
           />
 
           <div className="flex items-center gap-3">
-            {/* Indicador Caja Abierta compacto */}
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
               <span
                 className={`w-2 h-2 rounded-full ${
@@ -98,7 +97,7 @@ export function NavCajero({
         </div>
       </div>
 
-      {/* ───────────────── VISTA ESCRITORIO (>= 1000px) ───────────────── */}
+      {/* Vista Escritorio */}
       <header
         className="hidden lg:flex justify-between items-center w-full h-[76px] px-8 border-b border-[var(--color-text-placeholder)]/25 box-border"
         style={{ backgroundColor: "var(--color-nav)" }}
@@ -125,7 +124,6 @@ export function NavCajero({
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
                 style={{ color: "var(--color-text-disabled)" }}
               >
-                {/* Espacio para icono o imagen */}
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Image
                     src="/nav/cash_register.svg"
@@ -145,7 +143,6 @@ export function NavCajero({
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
                 style={{ color: "var(--color-text-disabled" }}
               >
-                {/* Espacio para icono o imagen */}
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Image
                     src="/nav/clock.svg"
@@ -177,7 +174,6 @@ export function NavCajero({
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
                 style={{ color: "var(--color-text-disabled)" }}
               >
-                {/* Espacio para icono o imagen */}
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Image
                     src="/nav/history.svg"
@@ -197,7 +193,6 @@ export function NavCajero({
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer hover:bg-[var(--color-seleccion)]"
                 style={{ color: "var(--color-text-disabled)" }}
               >
-                {/* Espacio para icono o imagen */}
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Image
                     src="/nav/inventory.svg"
