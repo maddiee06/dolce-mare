@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NavCajero } from "../components/cajero/NavCajero";
 import { Loginform } from "../components/cajero/Loginform";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
