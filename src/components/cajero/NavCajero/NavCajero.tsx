@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { Store, Clock, History, Package, Lock, LockOpen } from "lucide-react";
-import { useNavCajero } from "./logicaNavCajero";
+import { usePerfilUsuario } from "../../../hooks/usePerfilUsuario";
 import { NavCajeroSidebar } from "../NavCajeroSidebar";
 import { RolNombre } from "../../../models/Usuario";
 
@@ -20,7 +20,7 @@ export function NavCajero({
   pendingCount = 0,
 }: NavCajeroProps) {
   const { time, isMobileMenuOpen, toggleMobileMenu, avatarUrl } =
-    useNavCajero(userName);
+    usePerfilUsuario(userName);
 
   return (
     <>
