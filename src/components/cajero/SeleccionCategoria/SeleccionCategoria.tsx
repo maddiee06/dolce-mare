@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const categorias = [
   {
@@ -10,6 +11,7 @@ const categorias = [
     descripcion: "+20 sabores artesanales",
     precio: "9.00",
     imagen: "/categorias/heladito.jpg",
+    ruta: "/cajero/envase-helado",
   },
   {
     id: 2,
@@ -17,6 +19,7 @@ const categorias = [
     descripcion: "Fruta fresca, puro sabor",
     precio: "6.00",
     imagen: "/categorias/cremolada.jpg",
+    ruta: "/cajero/envase-cremolada",
   },
   {
     id: 3,
@@ -24,6 +27,7 @@ const categorias = [
     descripcion: "Pequeños grandes antojos",
     precio: "20.00",
     imagen: "/categorias/postres.jpg",
+    ruta: "/cajero/envase-helado", // Ajusta si agregas ruta de postres luego
   },
   {
     id: 4,
@@ -31,24 +35,28 @@ const categorias = [
     descripcion: "El complemento perfecto",
     precio: "5.00",
     imagen: "/categorias/bebidas.jpg",
+    ruta: "/cajero/envase-helado", // Ajusta si agregas ruta de bebidas luego
   },
 ];
 
-// 3. RECIBIR LA PROPIEDAD 'imagen' EN EL COMPONENTE
 const CategoriaCard = ({
   titulo,
   descripcion,
   precio,
   imagen,
+  onClick,
 }: {
   titulo: string;
   descripcion: string;
   precio: string;
   imagen: string;
+  onClick: () => void;
 }) => {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100 flex flex-col">
-      {/* 4. REEMPLAZAR EL ESPACIO GRIS POR LA IMAGEN DE NEXT.JS */}
+    <div 
+      onClick={onClick}
+      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer border border-gray-100 flex flex-col active:scale-[0.99]"
+    >
       <div className="relative w-full h-40">
         <Image
           src={imagen}
@@ -75,6 +83,8 @@ const CategoriaCard = ({
 };
 
 export default function SeleccionCategoria() {
+  const router = useRouter();
+
   return (
     <div className="bg-[#FAF8F5] p-6 md:p-8 rounded-3xl w-full max-w-4xl font-sans">
       {/* Cabecera */}
@@ -115,10 +125,14 @@ export default function SeleccionCategoria() {
             titulo={categoria.titulo}
             descripcion={categoria.descripcion}
             precio={categoria.precio}
-            imagen={categoria.imagen} // <-- NO OLVIDES PASAR LA IMAGEN AQUÍ TAMBIÉN
+            imagen={categoria.imagen} 
+            onClick={() => router.push(categoria.ruta)}
           />
         ))}
       </div>
+
+      {/* ESPACIO CONTROLADO AL FINAL */}
+      <div className="h-14 w-full shrink-0" aria-hidden="true" />
     </div>
   );
 }
