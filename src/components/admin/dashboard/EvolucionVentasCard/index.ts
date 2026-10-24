@@ -1,0 +1,1 @@
+export { EvolucionVentasCard } from "./EvolucionVentasCard";

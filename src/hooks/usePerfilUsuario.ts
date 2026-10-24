@@ -1,14 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getAvatarUrl } from "../../../utils/avatar";
+import { getAvatarUrl } from "../utils/avatar";
 
-export function useNavCajero(initialUserName?: string) {
+export function usePerfilUsuario(initialUserName?: string) {
   const [userName, setUserName] = useState(initialUserName || "");
   const [userRole, setUserRole] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [time, setTime] = useState("");
 
-  // Reloj en tiempo real
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -25,7 +24,6 @@ export function useNavCajero(initialUserName?: string) {
     return () => clearInterval(interval);
   }, []);
 
-  // Cargar datos del perfil
   useEffect(() => {
     if (!initialUserName) {
       fetch("/api/auth/perfil")

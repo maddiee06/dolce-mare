@@ -5,6 +5,7 @@ import { jwtVerify } from "jose";
 import { NavCajero } from "../../components/cajero/NavCajero";
 import { RolNombre } from "../../models/Usuario";
 import { BienvenidaWrapper } from "@/src/components/cajero/BienvenidaModal/BienvenidaWrapper";
+import { Metadata } from "next";
 
 export const instant = false;
 
@@ -13,6 +14,10 @@ if (!secretKey) {
   throw new Error("Falta definir SESSION_SECRET en las variables de entorno");
 }
 const secret = new TextEncoder().encode(secretKey);
+
+export const metadata: Metadata = {
+  title: "Dolce Mare - Inicio",
+};
 
 export default async function CajeroLayout({
   children,

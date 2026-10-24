@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { listarInventario } from "../services/inventarioApi";
-import type { EstadoStock, InventarioRespuesta, TipoInventario } from "../models/Inventario";
+import type {
+  EstadoStock,
+  InventarioRespuesta,
+  TipoInventario,
+} from "../models/Inventario";
 
 export function useInventario(tipo: TipoInventario) {
   const [busqueda, setBusqueda] = useState("");
@@ -23,7 +27,8 @@ export function useInventario(tipo: TipoInventario) {
           setDatos(r);
           setError(null);
         } catch (e) {
-          if (!cancelado) setError(e instanceof Error ? e.message : "Error al cargar");
+          if (!cancelado)
+            setError(e instanceof Error ? e.message : "Error al cargar");
         } finally {
           if (!cancelado) setCargando(false);
         }

@@ -1,11 +1,20 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { Store, Clock, History, Package, Lock, LockOpen } from "lucide-react";
-import { useNavCajero } from "./logicaNavCajero";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Store,
+  Clock,
+  History,
+  Package,
+  Lock,
+  LockOpen,
+  ShelvingUnit,
+} from "lucide-react";
+import { usePerfilUsuario } from "@/src/hooks/usePerfilUsuario";
 import { NavCajeroSidebar } from "../NavCajeroSidebar";
 import { RolNombre } from "../../../models/Usuario";
-import Link from "next/link";
 
 export interface NavCajeroProps {
   userName: string;
@@ -21,7 +30,23 @@ export function NavCajero({
   pendingCount = 0,
 }: NavCajeroProps) {
   const { time, isMobileMenuOpen, toggleMobileMenu, avatarUrl } =
-    useNavCajero(userName);
+    usePerfilUsuario(userName);
+  const pathname = usePathname();
+
+  // Función para determinar si la ruta está activa
+  const isActive = (path: string) => pathname === path;
+
+  // Clases base y activas para los enlaces
+  const getLinkClasses = (path: string) => {
+    const baseClasses =
+      "inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer";
+    const activeClasses =
+      "bg-[var(--color-seleccion)] text-[var(--color-text-primary)]";
+    const inactiveClasses =
+      "text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]";
+
+    return `${baseClasses} ${isActive(path) ? activeClasses : inactiveClasses}`;
+  };
 
   return (
     <>
@@ -32,6 +57,8 @@ export function NavCajero({
         avatarUrl={avatarUrl}
         userName={userName}
         userRole={userRole}
+        isCajaAbierta={isCajaAbierta}
+        pendingCount={pendingCount}
       />
 
       <div className="block lg:hidden">
@@ -116,24 +143,34 @@ export function NavCajero({
         {/* Menú de Navegación Estático */}
         <nav className="h-full flex items-center">
           <ul className="flex items-center gap-2 list-none m-0 p-0 h-full">
-            {/* Opción: Caja */}
+            {/* Opción: Inicio */}
             <li className="relative h-full flex items-center">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
-              >
+              <Link href="/cajero" className={getLinkClasses("/cajero")}>
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Store size={20} strokeWidth={2} />
                 </span>
+                <span>Inicio</span>
+              </Link>
+            </li>
+
+            {/* Opción: Caja */}
+            <li className="relative h-full flex items-center">
+              <Link
+                href="/cajero/caja"
+                className={getLinkClasses("/cajero/caja")}
+              >
+                <span className="w-5 h-5 flex items-center justify-center">
+                  <Package size={20} strokeWidth={2} />
+                </span>
                 <span>Caja</span>
-              </button>
+              </Link>
             </li>
 
             {/* Opción: Pendientes */}
             <li className="relative h-full flex items-center">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
+              <Link
+                href="/cajero/pendientes"
+                className={getLinkClasses("/cajero/pendientes")}
               >
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Clock size={20} strokeWidth={2} />
@@ -151,30 +188,30 @@ export function NavCajero({
                     {pendingCount}
                   </span>
                 )}
-              </button>
+              </Link>
             </li>
 
             {/* Opción: Historial */}
             <li className="relative h-full flex items-center">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
+              <Link
+                href="/cajero/historial"
+                className={getLinkClasses("/cajero/historial")}
               >
                 <span className="w-5 h-5 flex items-center justify-center">
                   <History size={20} strokeWidth={2} />
                 </span>
                 <span>Historial</span>
-              </button>
+              </Link>
             </li>
 
-                        {/* Opción: Inventario */}
+            {/* Opción: Inventario */}
             <li className="relative h-full flex items-center">
               <Link
                 href="/cajero/inventario"
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
+                className={getLinkClasses("/cajero/inventario")}
               >
                 <span className="w-5 h-5 flex items-center justify-center">
-                  <Package size={20} strokeWidth={2} />
+                  <ShelvingUnit size={20} strokeWidth={2} />
                 </span>
                 <span>Inventario</span>
               </Link>
@@ -184,7 +221,6 @@ export function NavCajero({
 
         {/* Zona derecha: Estado de Caja, Hora y Perfil */}
         <div className="flex items-center gap-5">
-          {/* Indicador de Caja */}
           <div className="flex items-center gap-1.5">
             {isCajaAbierta ? (
               <LockOpen
@@ -205,7 +241,6 @@ export function NavCajero({
             </span>
           </div>
 
-          {/* Reloj */}
           <div className="flex items-center gap-1.5">
             <span
               className="text-sm font-bold"
@@ -215,13 +250,11 @@ export function NavCajero({
             </span>
           </div>
 
-          {/* Divisor */}
           <div
             className="w-px h-8 opacity-30"
             style={{ backgroundColor: "var(--color-text-placeholder)" }}
           />
 
-          {/* Perfil del Cajero */}
           <div className="flex items-center gap-3 cursor-pointer select-none group">
             <img
               className="w-10 h-10 rounded-full object-cover border"

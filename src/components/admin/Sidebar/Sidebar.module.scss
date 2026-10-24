@@ -1,0 +1,140 @@
+$navy: #2a4d8f;
+$muted: #8a8580;
+$surface: #ffffff;
+$selected: #fbe8dd;
+$page: #fbf8f4;
+// Hicimos el borde un poco más visible pero muy suave
+$edge: rgba(42, 77, 143, 0.25);
+
+$item-h: 48px;
+$gap: 4px;
+
+// Movimiento más fluido
+$ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid rgba($navy, 0.5);
+    outline-offset: 2px;
+  }
+}
+
+// Contenedor
+.sidebar {
+  background: $surface;
+  color: $navy;
+  box-shadow: 1px 0 0 $edge;
+}
+
+// Navegación
+.nav {
+  --active-index: 0;
+}
+
+// Gota que se desliza entre secciones
+.pill {
+  background: $selected;
+  border-radius: 12px;
+  transform: translateY(calc(var(--active-index) * #{$item-h + $gap}));
+  transition: transform 0.35s $ease-drop;
+  pointer-events: none;
+}
+
+// Barra en el borde del sidebar
+.pillBar {
+  left: 0;
+  width: 4px;
+  background: $navy;
+  border-radius: 12px 0 0 12px;
+}
+
+.item {
+  position: relative;
+  border-radius: 12px;
+  color: $muted;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(.itemActive) {
+    color: lighten($navy, 15%);
+    background: rgba($navy, 0.04);
+  }
+
+  @include focus-ring;
+}
+
+.itemActive {
+  color: $navy;
+  font-weight: 700;
+}
+
+.badge {
+  background: $navy;
+  color: $surface;
+  box-shadow: 0 2px 4px rgba($navy, 0.2);
+}
+
+// Pie
+.store {
+  background: $page;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: darken($page, 2%);
+    border-color: $edge;
+  }
+
+  @include focus-ring;
+}
+
+.avatar {
+  background: linear-gradient(135deg, $navy 0%, lighten($navy, 10%) 100%);
+  color: $surface;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.storeName {
+  color: $navy;
+}
+
+.storeMeta {
+  color: lighten($muted, 10%);
+}
+
+.logout {
+  color: $muted;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #d32f2f;
+    background: rgba(211, 47, 47, 0.05);
+  }
+
+  @include focus-ring;
+}
+
+// Separación
+.separacion {
+  border: none;
+  height: 1px;
+  background-color: $edge;
+  margin: 12px 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .item,
+  .store,
+  .logout {
+    transition: none;
+  }
+}

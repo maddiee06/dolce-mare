@@ -1,0 +1,37 @@
+$color-primary: #1a365d;
+$color-coral: #f27a4d;
+$color-blue-light: #5c7294;
+
+.cardTitle {
+  color: $color-primary;
+}
+
+.methodName {
+  color: $color-primary;
+}
+
+.methodAmount {
+  color: $color-primary;
+}
+
+/* Barra de progreso base */
+.barTrack {
+  background-color: #f3f4f6;
+}
+
+.barFillBase {
+  transition: width 1s ease-in-out;
+}
+
+/* Colores específicos por método de pago */
+.fillEfectivo {
+  background-color: $color-primary;
+}
+
+.fillYape {
+  background-color: $color-coral;
+}
+
+.fillTarjeta {
+  background-color: $color-blue-light;
+}

@@ -1,0 +1,50 @@
+$color-primary: #1a365d;
+$color-coral: #f27a4d;
+$color-red: #ef4444;
+
+/* Fondos muy suaves para las alertas */
+$bg-orange-alert: rgba(242, 122, 77, 0.08);
+$border-orange-alert: rgba(242, 122, 77, 0.2);
+
+$bg-red-alert: rgba(239, 68, 68, 0.08);
+$border-red-alert: rgba(239, 68, 68, 0.2);
+
+.cardTitle {
+  color: $color-primary;
+}
+
+.iconWarning {
+  color: $color-coral;
+}
+
+/* Cajas de alerta de Stock (Naranja/Coral) */
+.stockAlertBox {
+  background-color: $bg-orange-alert;
+  border: 1px solid $border-orange-alert;
+}
+
+.stockAlertName {
+  color: $color-primary;
+}
+
+.stockAlertValue {
+  color: darken($color-coral, 5%);
+}
+
+/* Cajas de alerta de Mermas (Rojo) */
+.mermaAlertBox {
+  background-color: $bg-red-alert;
+  border: 1px solid $border-red-alert;
+}
+
+.mermaAlertName {
+  color: $color-primary;
+}
+
+.mermaAlertMotivo {
+  color: lighten($color-red, 10%);
+}
+
+.mermaAlertValue {
+  color: $color-red;
+}

@@ -24,9 +24,6 @@ export default function InventarioTabs() {
           Kardex
         </Link>
       </div>
-      <Link href="/cajero" className={styles.volver}>
-        ← Volver a Caja
-      </Link>
     </nav>
   );
 }

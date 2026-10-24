@@ -1,0 +1,1 @@
+export { MetodosPagoCard } from "./MetodosPagoCard";

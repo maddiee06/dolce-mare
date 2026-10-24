@@ -1,0 +1,32 @@
+/* Variables de marca */
+$color-primary: #1a365d;
+$color-coral: #f27a4d;
+$color-coral-light: rgba(242, 122, 77, 0.1);
+
+.cardTitle {
+  color: $color-primary;
+}
+
+.saborName {
+  color: $color-primary;
+}
+
+.saborCount {
+  color: $color-primary;
+}
+
+/* Etiqueta de nivel (Premium, Clásico) */
+.badgeNivel {
+  background-color: $color-coral-light;
+  color: darken($color-coral, 10%);
+}
+
+/* Barra de progreso */
+.barTrack {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.barFill {
+  background-color: $color-coral;
+  transition: width 1s ease-in-out;
+}

@@ -1,0 +1,50 @@
+$navy: #2a4d8f;
+$navy-light: #466bb0; // Un azul un poco más claro para "GELATO ARTESANAL"
+$text-main: #1f2937; // Gris muy oscuro para el nombre
+$muted: #8a8580; // Gris para el rol y el icono
+$surface: #ffffff;
+$selected: #fbe8dd; // El tono crema/durazno para el fondo del avatar
+$edge: rgba(42, 77, 143, 0.12);
+
+.topbar {
+  background-color: $surface;
+  border-bottom: 1px solid $edge;
+}
+
+// Estilos de la marca
+.brandTitle {
+  color: $navy;
+}
+
+.brandSubtitle {
+  color: $navy-light;
+}
+
+// Botón de la campanita
+.iconButton {
+  color: $muted;
+
+  &:hover {
+    background-color: rgba($muted, 0.08);
+    color: $navy;
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba($navy, 0.5);
+    outline-offset: 2px;
+  }
+}
+
+// Avatar y textos de usuario
+.avatar {
+  background-color: $selected;
+  color: $navy;
+}
+
+.userName {
+  color: $text-main;
+}
+
+.userRole {
+  color: $muted;
+}

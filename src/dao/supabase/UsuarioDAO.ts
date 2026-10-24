@@ -21,7 +21,7 @@ export class UsuarioDAO implements IUsuarioDAO {
       nombres: data.nombres,
       apellidos: data.apellidos,
       usuario: data.usuario,
-      rol: String(data.rol).toUpperCase() as RolNombre,
+      rol: String(data.rol) as RolNombre,
     };
   }
 
