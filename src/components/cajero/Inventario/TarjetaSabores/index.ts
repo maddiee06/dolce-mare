@@ -1,0 +1,1 @@
+export { default, default as TarjetaSabores } from "./TarjetaSabores";

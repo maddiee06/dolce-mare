@@ -1,0 +1,18 @@
+.resumen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 0 8px;
+}
+
+.total {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.detalle {
+  color: color-mix(in srgb, var(--color-border-1) 55%, black);
+  font-size: 12px;
+}

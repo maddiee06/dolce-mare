@@ -1,0 +1,1 @@
+export { default, default as ResumenInventario } from "./ResumenInventario";

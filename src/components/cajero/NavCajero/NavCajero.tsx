@@ -5,6 +5,7 @@ import { Store, Clock, History, Package, Lock, LockOpen } from "lucide-react";
 import { useNavCajero } from "./logicaNavCajero";
 import { NavCajeroSidebar } from "../NavCajeroSidebar";
 import { RolNombre } from "../../../models/Usuario";
+import Link from "next/link";
 
 export interface NavCajeroProps {
   userName: string;
@@ -166,17 +167,17 @@ export function NavCajero({
               </button>
             </li>
 
-            {/* Opción: Inventario */}
+                        {/* Opción: Inventario */}
             <li className="relative h-full flex items-center">
-              <button
-                type="button"
+              <Link
+                href="/cajero/inventario"
                 className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer text-[var(--color-text-disabled)] hover:bg-[var(--color-seleccion)] hover:text-[var(--color-text-primary)]"
               >
                 <span className="w-5 h-5 flex items-center justify-center">
                   <Package size={20} strokeWidth={2} />
                 </span>
                 <span>Inventario</span>
-              </button>
+              </Link>
             </li>
           </ul>
         </nav>

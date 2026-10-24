@@ -1,0 +1,82 @@
+.tarjeta {
+  margin-bottom: 20px;
+  border-radius: 24px;
+  background: var(--color-nav);
+  overflow: hidden;
+}
+
+.cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 18px 24px 12px;
+}
+
+.titulo {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.conteo {
+  color: var(--color-text-disabled);
+  font-size: 12px;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 1fr 1.3fr 1fr;
+  align-items: center;
+  min-width: 560px;
+  gap: 8px;
+  padding: 12px 24px;
+}
+
+.encabezado {
+  background: var(--color-fondo);
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+.nombre {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.unidad {
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+.stock {
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.minimo {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.kardex {
+  justify-self: start;
+  padding: 7px 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-text-primary) 10%, var(--color-nav));
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-text-primary) 18%, var(--color-nav));
+  }
+}

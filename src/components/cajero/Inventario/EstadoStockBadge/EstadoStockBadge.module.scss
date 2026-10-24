@@ -1,0 +1,32 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.disponible {
+  background: color-mix(in srgb, var(--color-success) 16%, var(--color-nav));
+  color: color-mix(in srgb, var(--color-success) 65%, black);
+}
+
+.stock_bajo {
+  background: var(--color-warning);
+  color: color-mix(in srgb, var(--color-border-1) 55%, black);
+}
+
+.agotado {
+  background: var(--color-error);
+  color: var(--color-danger, #c0463a);
+}
