@@ -11,13 +11,15 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
   subtitle,
-  subtitleColor = "text-gray-400",
+  subtitleColor = "text-gray-500",
 }) => {
   return (
-    <div className="bg-[#1e1e24] p-5 rounded-2xl flex flex-col gap-2 border border-gray-800">
-      <h3 className="text-gray-400 text-sm font-medium">{title}</h3>
-      <span className="text-white text-3xl font-bold">{value}</span>
-      <p className={`text-xs font-medium mt-1 ${subtitleColor}`}>{subtitle}</p>
+    <div className="bg-white p-6 rounded-2xl flex flex-col h-full border border-gray-200 shadow-sm">
+      <h3 className="text-gray-500 text-sm font-medium mb-2">{title}</h3>
+      <span className="text-gray-900 text-3xl font-bold">{value}</span>
+      <p className={`text-xs font-medium mt-auto pt-2 ${subtitleColor}`}>
+        {subtitle}
+      </p>
     </div>
   );
 };

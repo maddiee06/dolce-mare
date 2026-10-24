@@ -6,4 +6,6 @@ export type LoginResultado =
 
 export interface IAuthService {
   login(usuario: string, password: string): Promise<LoginResultado>;
+  obtenerSesion(): Promise<Usuario | null>;
+  logout(): Promise<void>;
 }

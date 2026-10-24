@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { SignJWT, jwtVerify } from "jose";
 import { createClient } from "../utils/supabase/server";
 import { UsuarioDAO } from "../dao/supabase/UsuarioDAO";
 import { AuthService } from "../services/AuthService";
 
-const secret = new TextEncoder().encode(process.env.SESSION_SECRET);
-
 export class AuthController {
+  private async crearService() {
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+    return new AuthService(new UsuarioDAO(supabase));
+  }
+
   async login(request: Request) {
     let body: { usuario?: unknown; password?: unknown };
     try {
@@ -29,10 +32,7 @@ export class AuthController {
       );
     }
 
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-    const service = new AuthService(new UsuarioDAO(supabase));
-
+    const service = await this.crearService();
     const resultado = await service.login(usuario, password);
 
     if (!resultado.ok) {
@@ -42,22 +42,6 @@ export class AuthController {
       );
     }
 
-    const token = await new SignJWT({
-      sub: resultado.usuario.id,
-      rol: resultado.usuario.rol,
-      nombre: `${resultado.usuario.nombres} ${resultado.usuario.apellidos}`,
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("8h")
-      .sign(secret);
-
-    cookieStore.set("session", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 8,
-    });
 
     return NextResponse.json({
       redirect: resultado.redirect,
@@ -69,26 +53,24 @@ export class AuthController {
     });
   }
 
-  async obtenerPerfil(request: Request) {
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get("session")?.value;
+  async obtenerPerfil(_request?: Request) {
+    const service = await this.crearService();
+    const usuario = await service.obtenerSesion();
 
-    if (!sessionToken) {
+    if (!usuario) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
 
-    try {
-      const { payload } = await jwtVerify(sessionToken, secret);
-      return NextResponse.json({
-        id: payload.sub,
-        rol: payload.rol,
-        nombre: payload.nombre,
-      });
-    } catch {
-      return NextResponse.json(
-        { error: "Sesión inválida o expirada" },
-        { status: 401 },
-      );
-    }
+    return NextResponse.json({
+      id: usuario.id,
+      rol: usuario.rol,
+      nombre: `${usuario.nombres} ${usuario.apellidos}`,
+    });
+  }
+
+  async logout(_request?: Request) {
+    const service = await this.crearService();
+    await service.logout();
+    return NextResponse.json({ ok: true });
   }
 }

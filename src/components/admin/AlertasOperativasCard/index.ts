@@ -1,0 +1,1 @@
+export { AlertasOperativasCard } from "./AlertasOperativasCard";

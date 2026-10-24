@@ -13,7 +13,6 @@ import styles from "./Sidebar.module.scss";
 
 export type SidebarProps = {};
 
-// Arreglo para mapear los items y mantener el código limpio
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "inventory", label: "Inventario", icon: IceCreamBowl, badge: 4 },
@@ -23,7 +22,6 @@ const navItems = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({}) => {
-  // Estado para controlar qué elemento está activo (necesario para la animación CSS)
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
@@ -47,15 +45,12 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
       {/* Navegación */}
       <nav
         className={`${styles.nav} relative flex flex-col gap-1`}
-        // Pasamos el índice activo a CSS para que la píldora se deslice correctamente
         style={{ "--active-index": activeIndex } as React.CSSProperties}
       >
-        {/* Fondo deslizable (Pill) */}
         <span className={`${styles.pill} absolute inset-x-0 top-0 h-12`}>
           <span className={`${styles.pillBar} absolute inset-y-3`} />
         </span>
 
-        {/* Renderizado dinámico de los botones */}
         {navItems.map((item, index) => {
           const Icon = item.icon;
           const isActive = activeIndex === index;
@@ -86,28 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
 
       {/* Pie */}
       <div className="mt-auto flex flex-col gap-2.5">
-        <button
-          className={`${styles.store} flex w-full items-center gap-3 p-3 text-left`}
-        >
-          <span
-            className={`${styles.avatar} grid size-10 flex-none place-items-center font-extrabold shadow-sm`}
-          >
-            M
-          </span>
-          <span className="flex min-w-0 flex-col whitespace-nowrap">
-            <span
-              className={`${styles.storeName} text-sm font-bold leading-tight tracking-wide`}
-            >
-              Dolce Mare
-            </span>
-            <span className={`${styles.storeMeta} text-xs font-medium mt-0.5`}>
-              Administrador
-            </span>
-          </span>
-        </button>
-
         <hr className={styles.separacion} />
-
         <button
           className={`${styles.logout} flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium`}
         >

@@ -1,18 +1,107 @@
 "use client";
 import React from "react";
 import { KpiCard } from "@/src/components/admin/KpiCard";
-// import { SalesChartCard } from './SalesChartCard';
-// import { StockAlertsCard } from './StockAlertsCard';
+import { TopSaboresCard } from "@/src/components/admin/TopSaboresCard";
+import { MetodosPagoCard } from "@/src/components/admin/MetodosPagoCard";
+import { RankingPersonalCard } from "@/src/components/admin/RankingPersonalCard";
+import { AlertasOperativasCard } from "@/src/components/admin/AlertasOperativasCard";
+import { SaborData } from "@/src/components/admin/TopSaboresCard/TopSaboresCard";
+import { MetodoPagoData } from "@/src/components/admin/MetodosPagoCard/MetodosPagoCard";
+import { PersonalData } from "@/src/components/admin/RankingPersonalCard/RankingPersonalCard";
+import { EvolucionVentasCard } from "@/src/components/admin/EvolucionVentasCard";
+import {
+  MermaAlerta,
+  StockAlerta,
+} from "@/src/components/admin/AlertasOperativasCard/AlertasOperativasCard";
+import { VentaDiaData } from "@/src/components/admin/EvolucionVentasCard/EvolucionVentasCard";
 
 export default function DashboardView() {
+  // ==========================================
+  // DATOS SIMULADOS (MOCKS) - Listos para Supabase
+  // ==========================================
+
+  const mockEvolucion: VentaDiaData[] = [
+    { dia: "Sáb 03", total: 1550, esHoy: false },
+    { dia: "Dom 04", total: 1820, esHoy: false },
+    { dia: "Lun 05", total: 1680, esHoy: false },
+    { dia: "Mar 06", total: 2100, esHoy: false },
+    { dia: "Mié 07", total: 1980, esHoy: false },
+    { dia: "Jue 08", total: 2240, esHoy: false },
+    { dia: "Hoy 09", total: 1428, esHoy: true },
+  ];
+
+  const mockSabores: SaborData[] = [
+    { nombre: "Lúcuma", nivel: "Premium", cantidad: 198, porcentaje: 100 },
+    {
+      nombre: "Chocolate Belga 70%",
+      nivel: "Especial",
+      cantidad: 165,
+      porcentaje: 83,
+    },
+    {
+      nombre: "Fresa a la Crema",
+      nivel: "Clásico",
+      cantidad: 151,
+      porcentaje: 76,
+    },
+    {
+      nombre: "Vainilla Bourbon",
+      nivel: "Clásico",
+      cantidad: 112,
+      porcentaje: 56,
+    },
+    { nombre: "Pistacho", nivel: "Premium", cantidad: 98, porcentaje: 49 },
+  ];
+
+  const mockMetodos: MetodoPagoData[] = [
+    {
+      nombre: "Efectivo",
+      monto: "S/ 1,250.00",
+      porcentaje: 43.2,
+      porcentajeBarra: 100,
+      tipo: "efectivo",
+    },
+    {
+      nombre: "Yape",
+      monto: "S/ 1,148.00",
+      porcentaje: 39.7,
+      porcentajeBarra: 90,
+      tipo: "yape",
+    },
+    {
+      nombre: "Tarjeta",
+      monto: "S/ 495.00",
+      porcentaje: 17.1,
+      porcentajeBarra: 40,
+      tipo: "tarjeta",
+    },
+  ];
+
+  const mockPersonal: PersonalData[] = [
+    { id: 7, nombre: "Mariana Rojas", ventas: 31, ticket: "S/ 16.80" },
+    { id: 9, nombre: "Carla Fiestas", ventas: 38, ticket: "S/ 13.40" },
+    { id: 11, nombre: "Daniela Ruiz", ventas: 22, ticket: "S/ 10.60" },
+  ];
+
+  const mockStock: StockAlerta[] = [
+    { nombre: "Base Lúcuma 5L", minimo: "3 bidón", actual: "1 bidón" },
+    { nombre: "Base Pistacho 5L", minimo: "2 bidón", actual: "2 bidón" },
+  ];
+
+  const mockMermas: MermaAlerta[] = [
+    { nombre: "Chocolate Belga 70%", motivo: "Vencido", cantidad: "-0.5" },
+    { nombre: "Vasos medianos", motivo: "Dañado", cantidad: "-6" },
+  ];
+
   return (
-    <div className="p-6 bg-[#131316] min-h-screen text-white flex flex-col gap-5">
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="flex flex-col gap-8">
+      {/* 1. KPIs - Fila entera (4 columnas) */}
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KpiCard
           title="Ventas de hoy"
           value="S/ 1,428.00"
           subtitle="-36.3% vs. ayer a esta hora"
-          subtitleColor="text-orange-400"
+          subtitleColor="text-red-500"
         />
         <KpiCard
           title="Ventas realizadas"
@@ -28,37 +117,29 @@ export default function DashboardView() {
           title="Cuentas abiertas"
           value="4"
           subtitle="S/ 84.00 por cobrar"
-          subtitleColor="text-blue-400"
+          subtitleColor="text-blue-500"
         />
       </section>
 
-      {/* Fila 2: Gráfico (Ancho) y Alertas (Estrecho) */}
-      <section className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        {/* El gráfico ocupa 3 de las 4 columnas */}
-        <div className="lg:col-span-3 bg-[#1e1e24] rounded-2xl border border-gray-800 p-5 min-h-[350px]">
-          {/* <SalesChartCard /> */}
-          <h2 className="text-blue-200 font-semibold text-lg">
-            Evolución de ventas
-          </h2>
-          <p className="text-gray-400 text-sm">
-            Últimos 7 días · S/ 12,798.00 acumulados
-          </p>
-          {/* Aquí integrarías Recharts o Chart.js */}
-        </div>
+      {/* 2. Evolución de Ventas (Fila entera al 100% del ancho) */}
+      <section className="w-full">
+        <EvolucionVentasCard
+          datos={mockEvolucion}
+          acumulado="S/ 12,798.00"
+          rangoFechas="03–09 oct 2026"
+        />
+      </section>
 
-        {/* El inventario ocupa 1 columna */}
-        <div className="lg:col-span-1 bg-[#1e1e24] rounded-2xl border border-gray-800 p-5 min-h-[350px]">
-          {/* <StockAlertsCard /> */}
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-blue-200 font-semibold text-lg">
-              Stock por reponer
-            </h2>
-            <span className="bg-orange-500/20 text-orange-400 text-xs px-2 py-1 rounded-md font-medium">
-              3 alertas
-            </span>
-          </div>
-          {/* Aquí mapearías los ProgressBarItem */}
-        </div>
+      {/* 3. Top Sabores y Métodos de Pago - Fila compartida (Mitad y Mitad) */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TopSaboresCard sabores={mockSabores} />
+        <MetodosPagoCard metodos={mockMetodos} />
+      </section>
+
+      {/* 4. Ranking Personal y Alertas - Fila compartida (Mitad y Mitad) */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RankingPersonalCard personal={mockPersonal} />
+        <AlertasOperativasCard stockAlertas={mockStock} mermas={mockMermas} />
       </section>
     </div>
   );

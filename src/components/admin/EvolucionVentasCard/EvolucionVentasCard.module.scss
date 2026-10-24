@@ -1,0 +1,31 @@
+$color-primary: #1a365d;
+$color-coral: #f27a4d;
+$bg-coral-light: rgba(242, 122, 77, 0.15);
+
+.cardTitle {
+  color: $color-primary;
+}
+
+/* El selector de fechas superior derecho */
+.dateSelector {
+  background-color: #f9fafb; /* gray-50 */
+  color: $color-primary;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f3f4f6; /* gray-100 */
+    border-color: #e5e7eb;
+  }
+}
+
+/* Tooltip personalizado o etiqueta fija debajo del punto */
+.customLabel {
+  background-color: $bg-coral-light;
+  color: darken($color-coral, 15%);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}

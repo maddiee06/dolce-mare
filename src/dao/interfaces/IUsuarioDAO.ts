@@ -5,4 +5,10 @@ export interface IUsuarioDAO {
     usuario: string,
     password: string,
   ): Promise<Usuario | null>;
+
+  obtenerUsuarioActual(): Promise<Usuario | null>;
+
+  cerrarSesion(): Promise<void>;
+
+  obtenerPorId(id: string): Promise<Usuario | null>;
 }
