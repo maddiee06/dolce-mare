@@ -1,0 +1,1 @@
+export { default, default as FiltrosInventario } from "./FiltrosInventario";

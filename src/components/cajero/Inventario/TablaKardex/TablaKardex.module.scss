@@ -1,0 +1,142 @@
+.tarjeta {
+  border-radius: 24px;
+  background: var(--color-nav);
+  overflow: hidden;
+}
+
+.cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px 24px 14px;
+}
+
+.titulo {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.conteo {
+  color: var(--color-text-disabled);
+  font-size: 12px;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1.1fr 2.6fr 0.8fr 0.8fr 1fr 0.9fr;
+  align-items: center;
+  min-width: 760px;
+  gap: 10px;
+  padding: 14px 24px;
+}
+
+.encabezado {
+  background: var(--color-fondo);
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+.der {
+  text-align: right;
+  justify-self: end;
+}
+
+.centro {
+  justify-self: center;
+}
+
+.fecha {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.anio {
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+.motivo {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.responsable {
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+.entrada {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.salida {
+  color: var(--color-text-disabled);
+  font-size: 14px;
+}
+
+.vacioCelda {
+  color: var(--color-text-disabled);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.tipoEntrada {
+  background: color-mix(in srgb, var(--color-success) 16%, var(--color-nav));
+  color: color-mix(in srgb, var(--color-success) 65%, black);
+}
+
+.tipoSalida {
+  background: var(--color-seleccion);
+  color: color-mix(in srgb, var(--color-border-1) 55%, black);
+}
+
+.ajuste {
+  background: var(--color-middle);
+  color: var(--color-text-secondary);
+}
+
+.saldo {
+  display: inline-block;
+  min-width: 48px;
+  padding: 5px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-text-primary) 10%, var(--color-nav));
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.vacio {
+  padding: 32px;
+  color: var(--color-text-disabled);
+  text-align: center;
+}

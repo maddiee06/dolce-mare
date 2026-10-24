@@ -1,0 +1,40 @@
+.filtros {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.tarjeta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  background: var(--color-nav);
+}
+
+.etiqueta {
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+.control {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 12px;
+  outline: none;
+  background: var(--color-fondo);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px var(--color-border-2);
+  }
+}
