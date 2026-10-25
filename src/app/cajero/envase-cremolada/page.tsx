@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FlujoPasos } from "../../../components/cajero/FlujoPasos";
 import { EnvaseCard } from "../../../components/cajero/ProductosCard";
 import { CuentasAbiertas } from "../../../components/cajero/CuentasAbiertas";
@@ -9,6 +10,7 @@ const opcionesEnvaseCremolada = [
   {
     id: 1,
     titulo: "Pequeño",
+    slug: "pequeno", // Agregado para la URL
     descripcion: "Cómodo para disfrutar sin prisa.",
     nota: "240 ml · Envase incluido",
     imagen: "/envase/envasecremolada.jpg",
@@ -16,6 +18,7 @@ const opcionesEnvaseCremolada = [
   {
     id: 2,
     titulo: "1/2 Litro",
+    slug: "medio-litro", // Agregado para la URL
     descripcion: "Cómodo para disfrutar sin prisa.",
     nota: "500 ml · Envase incluido",
     imagen: "/envase/envasemedioL.jpg",
@@ -23,6 +26,7 @@ const opcionesEnvaseCremolada = [
   {
     id: 3,
     titulo: "1 Litro",
+    slug: "litro", // Agregado para la URL
     descripcion: "Cómodo para disfrutar sin prisa.",
     nota: "1000 ml · Envase incluido",
     imagen: "/envase/envaseLitro.jpg",
@@ -44,6 +48,13 @@ const PEDIDOS_INICIALES = [
 ];
 
 export default function EnvaseCremoladaPage() {
+  const router = useRouter(); // Inicializamos el router
+
+  // Función que redirige a la carpeta correcta de sabores de cremolada
+  const manejarSeleccionEnvase = (slugEnvase: string) => {
+    router.push(`/cajero/cantidad-sabores-cremolada?envase=${slugEnvase}`);
+  };
+
   return (
     <div className="flex flex-col lg:flex-row w-full h-full min-h-[calc(100vh-65px)] bg-[#FAF8F5] overflow-y-auto lg:overflow-hidden">
       
@@ -80,18 +91,18 @@ export default function EnvaseCremoladaPage() {
           </h2>
 
           {/* Tarjetas de Envase en 3 columnas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-  {opcionesEnvaseCremolada.map((envase) => (
-    <EnvaseCard
-      key={envase.id}
-      titulo={envase.titulo}
-      descripcion={envase.descripcion}
-      nota={envase.nota}
-      imagen={envase.imagen}
-      onSelect={() => console.log(`Seleccionado: ${envase.titulo}`)}
-    />
-  ))}
-</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {opcionesEnvaseCremolada.map((envase) => (
+              <EnvaseCard
+                key={envase.id}
+                titulo={envase.titulo}
+                descripcion={envase.descripcion}
+                nota={envase.nota}
+                imagen={envase.imagen}
+                onSelect={() => manejarSeleccionEnvase(envase.slug)} // Llama a la redirección
+              />
+            ))}
+          </div>
 
           <div className="h-9 w-full shrink-0" aria-hidden="true" />
 
