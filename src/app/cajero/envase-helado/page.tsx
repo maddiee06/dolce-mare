@@ -7,7 +7,6 @@ import { FlujoPasos } from "../../../components/cajero/FlujoPasos";
 import { EnvaseCard } from "../../../components/cajero/ProductosCard";
 import { CuentasAbiertas } from "../../../components/cajero/CuentasAbiertas";
 
-// Tus datos de envases actualizados con un 'slug' para la URL
 const opcionesEnvase = [
   {
     id: 1,
@@ -43,20 +42,6 @@ const opcionesEnvase = [
   },
 ];
 
-const PEDIDOS_INICIALES = [
-  {
-    id_pedido: 101,
-    total: 28.5,
-    fecha_pedido: "2026-10-18T16:37:00.000Z",
-    estado: { nombre: "Abierto" },
-    entrega: { nombre: "Mesa 3" },
-    detalle_pedido: [
-      { cantidad: 2, productos: { nombre: "Helado Artesanal Doble" } },
-      { cantidad: 1, productos: { nombre: "Cremolada de Mango" } },
-    ],
-  }
-];
-
 export default function EnvasePage() {
   const router = useRouter();
   const [cantidadCono, setCantidadCono] = useState(0);
@@ -64,9 +49,7 @@ export default function EnvasePage() {
   const incrementar = () => setCantidadCono(c => c + 1);
   const decrementar = () => setCantidadCono(c => Math.max(0, c - 1));
 
-  // Función de redirección a la vista de cantidad de sabores
   const manejarSeleccionEnvase = (slugEnvase: string) => {
-
     router.push(`/cajero/cantidad-sabores-helado?envase=${slugEnvase}`);
   };
 
@@ -76,7 +59,6 @@ export default function EnvasePage() {
       <section className="flex-1 flex justify-center p-4 md:p-8 overflow-y-auto">
         <div className="w-full max-w-[900px] flex flex-col gap-6">
           
-          {/* Enlace volver */}
           <div>
             <Link 
               href="/cajero" 
@@ -96,7 +78,6 @@ export default function EnvasePage() {
             </p>
           </div>
 
-          {/* Flujo Pasos */}
           <div className="py-2">
             <FlujoPasos pasoActual={2} />
           </div>
@@ -105,7 +86,6 @@ export default function EnvasePage() {
             HELADOS
           </h2>
 
-          {/* Tarjetas de Envase */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {opcionesEnvase.map((envase) => (
               <EnvaseCard
@@ -119,7 +99,6 @@ export default function EnvasePage() {
             ))}
           </div>
 
-          {/* SECCIÓN: CONO ADICIONAL */}
           <div className="bg-white rounded-2xl p-5 border border-transparent hover:border-[#fbe8dd] transition-colors shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
             <div className="flex items-center gap-4">
               <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
@@ -165,7 +144,8 @@ export default function EnvasePage() {
       </section>
 
       <aside className="w-full lg:w-[380px] xl:w-[420px] shrink-0 border-t lg:border-t-0 lg:border-l border-gray-200 bg-white">
-        <CuentasAbiertas pedidos={PEDIDOS_INICIALES} />
+        {/* Pasamos un arreglo vacío en lugar de datos estáticos */}
+        <CuentasAbiertas pedidos={[]} />
       </aside>
       
     </div>

@@ -2,49 +2,14 @@
 
 import { useState } from "react";
 import styles from "./CuentasAbiertas.module.scss";
+// Importamos la interfaz unificada
+import { CuentaGuardadaType } from "../CuentasGuardadas/CuentasGuardadas";
 
-interface RelacionNombre {
-  nombre: string;
-}
-
-interface DetallePedido {
-  cantidad: number | string;
-  productos:
-    | RelacionNombre
-    | RelacionNombre[]
-    | null;
-}
-
-interface Pedido {
-  id_pedido: number | string;
-  total: number | string | null;
-  fecha_pedido: string | null;
-  estado?: RelacionNombre | RelacionNombre[] | null;
-  entrega?: RelacionNombre | RelacionNombre[] | null;
-  detalle_pedido?: DetallePedido[] | null;
-}
-
-interface Props {
-  pedidos: Pedido[];
-  error?: string | null;
-}
-
-function obtenerNombre(
-  relacion: RelacionNombre | RelacionNombre[] | null | undefined
-): string {
-  if (Array.isArray(relacion)) {
-    return relacion[0]?.nombre ?? "";
-  }
-  return relacion?.nombre ?? "";
-}
-
-function obtenerHora(fecha: string | null): string {
-  if (!fecha) return "--:--";
-  const fechaValida = new Date(fecha);
-  if (Number.isNaN(fechaValida.getTime())) {
-    return "--:--";
-  }
-  return fechaValida.toLocaleTimeString("es-PE", {
+// Helper opcional para formatear la hora (porque Supabase devuelve TIMESTAMPTZ)
+function obtenerHora(fechaIso: string): string {
+  if (!fechaIso) return "--:--";
+  const fecha = new Date(fechaIso);
+  return fecha.toLocaleTimeString("es-PE", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -52,26 +17,25 @@ function obtenerHora(fecha: string | null): string {
   });
 }
 
-function obtenerProductos(detalles: DetallePedido[] | null | undefined) {
-  if (!detalles?.length) return "Sin productos registrados";
-
-  return detalles
-    .map((detalle) => {
-      const nombre = obtenerNombre(detalle.productos) || "Producto";
-      return `${nombre} × ${Number(detalle.cantidad)}`;
-    })
-    .join(", ");
+interface Props {
+  pedidos: CuentaGuardadaType[];
+  error?: string | null;
 }
 
 export function CuentasAbiertas({ pedidos, error }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const cuentas = pedidos.filter(
-    (pedido) => obtenerNombre(pedido.estado).toLowerCase() === "abierto"
-  );
+  // Filtramos solo las cuentas que están abiertas/pendientes DE FORMA SEGURA
+  const cuentas = pedidos.filter((pedido) => {
+    if (!pedido.estado || typeof pedido.estado !== "string") return false;
+    
+    const estadoMinuscula = pedido.estado.toLowerCase();
+    // Ajustado para manejar posibles variaciones del estado en la base de datos
+    return estadoMinuscula === "pendiente" || estadoMinuscula === "abierto" || estadoMinuscula === "en preparación";
+  });
 
   const totalPendiente = cuentas.reduce(
-    (total, pedido) => total + Number(pedido.total ?? 0),
+    (total, pedido) => total + Number(pedido.total),
     0
   );
 
@@ -116,48 +80,30 @@ export function CuentasAbiertas({ pedidos, error }: Props) {
         </p>
       ) : (
         <div className={styles.listaCuentas}>
-          {cuentas.map((pedido) => {
-            const tipoEntrega = obtenerNombre(pedido.entrega);
-            const esDelivery = tipoEntrega
-              .toLowerCase()
-              .includes("delivery");
+          {cuentas.map((pedido) => (
+            <article className={styles.cuenta} key={pedido.id_pedido}>
+              <div className={styles.filaPrincipal}>
+                {/* Lógica para mostrar Delivery o Cliente */}
+                <h3>{pedido.tipo_entrega?.toLowerCase() === "delivery" ? "Delivery" : pedido.cliente || `Pedido #${pedido.id_pedido}`}</h3>
+                <strong>S/ {Number(pedido.total).toFixed(2)}</strong>
+              </div>
 
-            return (
-              <article
-                className={styles.cuenta}
-                key={pedido.id_pedido}
-              >
-                <div className={styles.filaPrincipal}>
-                  <h3>
-                    {esDelivery
-                      ? "Delivery"
-                      : tipoEntrega || `Pedido #${pedido.id_pedido}`}
-                  </h3>
+              <div className={styles.filaDetalle}>
+                <span>{pedido.detalle}</span>
+                <time>{obtenerHora(pedido.fecha_pedido)}</time>
+              </div>
 
-                  <strong>
-                    S/ {Number(pedido.total ?? 0).toFixed(2)}
-                  </strong>
-                </div>
-
-                <div className={styles.filaDetalle}>
-                  <span>
-                    {obtenerProductos(pedido.detalle_pedido)}
-                  </span>
-                  <time>{obtenerHora(pedido.fecha_pedido)}</time>
-                </div>
-
-                <span className={styles.estadoPendiente}>
-                  <span className={styles.punto}>●</span>
-                  Abierto
-                </span>
-              </article>
-            );
-          })}
+              <span className={styles.estadoPendiente}>
+                <span className={styles.punto}>●</span>
+                {pedido.estado || "Abierto"}
+              </span>
+            </article>
+          ))}
         </div>
       )}
 
       <a
-        href="/cuentas-guardadas"
+        href="/cajero/cuentas-guardadas" 
         className={styles.botonGuardadas}
       >
         <span aria-hidden="true">→</span>

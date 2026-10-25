@@ -10,7 +10,7 @@ const opcionesEnvaseCremolada = [
   {
     id: 1,
     titulo: "Pequeño",
-    slug: "pequeno", // Agregado para la URL
+    slug: "pequeno", 
     descripcion: "Cómodo para disfrutar sin prisa.",
     nota: "240 ml · Envase incluido",
     imagen: "/envase/envasecremolada.jpg",
@@ -18,7 +18,7 @@ const opcionesEnvaseCremolada = [
   {
     id: 2,
     titulo: "1/2 Litro",
-    slug: "medio-litro", // Agregado para la URL
+    slug: "medio-litro", 
     descripcion: "Cómodo para disfrutar sin prisa.",
     nota: "500 ml · Envase incluido",
     imagen: "/envase/envasemedioL.jpg",
@@ -26,31 +26,16 @@ const opcionesEnvaseCremolada = [
   {
     id: 3,
     titulo: "1 Litro",
-    slug: "litro", // Agregado para la URL
+    slug: "litro", 
     descripcion: "Cómodo para disfrutar sin prisa.",
     nota: "1000 ml · Envase incluido",
     imagen: "/envase/envaseLitro.jpg",
   },
 ];
 
-const PEDIDOS_INICIALES = [
-  {
-    id_pedido: 101,
-    total: 28.5,
-    fecha_pedido: "2026-10-18T16:37:00.000Z",
-    estado: { nombre: "Abierto" },
-    entrega: { nombre: "Mesa 3" },
-    detalle_pedido: [
-      { cantidad: 2, productos: { nombre: "Helado Artesanal Doble" } },
-      { cantidad: 1, productos: { nombre: "Cremolada de Mango" } },
-    ],
-  },
-];
-
 export default function EnvaseCremoladaPage() {
-  const router = useRouter(); // Inicializamos el router
+  const router = useRouter();
 
-  // Función que redirige a la carpeta correcta de sabores de cremolada
   const manejarSeleccionEnvase = (slugEnvase: string) => {
     router.push(`/cajero/cantidad-sabores-cremolada?envase=${slugEnvase}`);
   };
@@ -61,7 +46,6 @@ export default function EnvaseCremoladaPage() {
       <section className="flex-1 flex justify-center p-4 md:p-8 overflow-y-auto">
         <div className="w-full max-w-[900px] flex flex-col gap-6">
           
-          {/* Enlace volver */}
           <div>
             <Link 
               href="/cajero" 
@@ -81,7 +65,6 @@ export default function EnvaseCremoladaPage() {
             </p>
           </div>
 
-          {/* Flujo Pasos */}
           <div className="py-2">
             <FlujoPasos pasoActual={2} />
           </div>
@@ -90,7 +73,6 @@ export default function EnvaseCremoladaPage() {
             CREMOLADAS
           </h2>
 
-          {/* Tarjetas de Envase en 3 columnas */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {opcionesEnvaseCremolada.map((envase) => (
               <EnvaseCard
@@ -99,18 +81,18 @@ export default function EnvaseCremoladaPage() {
                 descripcion={envase.descripcion}
                 nota={envase.nota}
                 imagen={envase.imagen}
-                onSelect={() => manejarSeleccionEnvase(envase.slug)} // Llama a la redirección
+                onSelect={() => manejarSeleccionEnvase(envase.slug)} 
               />
             ))}
           </div>
 
           <div className="h-9 w-full shrink-0" aria-hidden="true" />
-
         </div>
       </section>
 
       <aside className="w-full lg:w-[380px] xl:w-[420px] shrink-0 border-t lg:border-t-0 lg:border-l border-gray-200 bg-white">
-        <CuentasAbiertas pedidos={PEDIDOS_INICIALES} />
+        {/* Pasamos un arreglo vacío en lugar de datos estáticos */}
+        <CuentasAbiertas pedidos={[]} />
       </aside>
       
     </div>

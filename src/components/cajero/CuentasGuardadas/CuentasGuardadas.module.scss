@@ -1,0 +1,114 @@
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.resumenGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cardAbiertas {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.cardPendiente {
+  background-color: #fdf4f0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.tablaContenedor {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.tabla {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+
+  th {
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    color: #8a8580;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f9fafb;
+  }
+
+  tbody tr:hover {
+    background-color: rgba(249, 250, 251, 0.5);
+    transition: background-color 0.2s;
+  }
+}
+
+.badgePendiente {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #fff8e6;
+  color: #b38600;
+}
+
+.badgePreparacion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #f0f4f8;
+  color: #2a4d8f;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
