@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   LineChart,
@@ -118,7 +119,9 @@ export const EvolucionVentasCard: React.FC<EvolucionVentasCardProps> = ({
   rangoFechas,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm w-full h-full flex flex-col">
+    <div
+      className={`${styles.evolucionVentas} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm w-full h-full flex flex-col`}
+    >
       {/* Cabecera */}
       <div className="flex justify-between items-start mb-8">
         <div>

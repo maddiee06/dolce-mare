@@ -13,7 +13,7 @@ export class AuthService implements IAuthService {
     return {
       ok: true,
       usuario: user,
-      redirect: user.rol === "Admin" ? "/admin" : "/seleccionsucursal",
+      redirect: "/seleccionsucursal",
     };
   }
 }

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Award } from "lucide-react";
 import styles from "./TopSaboresCard.module.scss";
@@ -15,7 +16,9 @@ interface TopSaboresCardProps {
 
 export const TopSaboresCard: React.FC<TopSaboresCardProps> = ({ sabores }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+    <div
+      className={`${styles.topSaboresCard} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm`}
+    >
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>

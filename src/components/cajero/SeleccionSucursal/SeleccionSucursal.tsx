@@ -68,14 +68,19 @@ export default function SeleccionSucursal() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id_sede: sedeSeleccionada }),
       });
-      const json = await res.json();
 
       if (!res.ok) {
+        const json = await res.json();
         setError(json.error ?? "No se pudo seleccionar la sede.");
         return;
       }
 
-      router.push("/cajero");
+      const cookies = document.cookie;
+      const esAdmin = cookies.includes("id_rol=1");
+
+      const rutaDestino = esAdmin ? "/admin" : "/cajero";
+
+      router.push(rutaDestino);
       router.refresh();
     } catch {
       setError("No se pudo conectar con el servidor.");

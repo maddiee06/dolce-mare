@@ -2,36 +2,53 @@ $color-primary: #1a365d;
 $color-coral: #f27a4d;
 $color-blue-light: #5c7294;
 
-.cardTitle {
-  color: $color-primary;
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.methodName {
-  color: $color-primary;
-}
+.metodosPagoCard {
+  opacity: 0;
+  animation: fadeSlideUp 0.5s ease-out forwards;
+  animation-delay: 0.4s;
 
-.methodAmount {
-  color: $color-primary;
-}
+  .cardTitle {
+    color: $color-primary;
+  }
 
-/* Barra de progreso base */
-.barTrack {
-  background-color: #f3f4f6;
-}
+  .methodName {
+    color: $color-primary;
+  }
 
-.barFillBase {
-  transition: width 1s ease-in-out;
-}
+  .methodAmount {
+    color: $color-primary;
+  }
 
-/* Colores específicos por método de pago */
-.fillEfectivo {
-  background-color: $color-primary;
-}
+  /* Barra de progreso base */
+  .barTrack {
+    background-color: #f3f4f6;
+  }
 
-.fillYape {
-  background-color: $color-coral;
-}
+  .barFillBase {
+    transition: width 1s ease-in-out;
+  }
 
-.fillTarjeta {
-  background-color: $color-blue-light;
+  /* Colores específicos por método de pago */
+  .fillEfectivo {
+    background-color: $color-primary;
+  }
+
+  .fillYape {
+    background-color: $color-coral;
+  }
+
+  .fillTarjeta {
+    background-color: $color-blue-light;
+  }
 }

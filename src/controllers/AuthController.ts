@@ -43,8 +43,8 @@ export class AuthController {
     }
 
     const token = await new SignJWT({
-      sub: resultado.usuario.id,
-      rol: resultado.usuario.rol,
+      sub: String(resultado.usuario.id_usuario),
+      rol: resultado.usuario.id_rol,
       nombre: `${resultado.usuario.nombres} ${resultado.usuario.apellidos}`,
     })
       .setProtectedHeader({ alg: "HS256" })
@@ -59,12 +59,20 @@ export class AuthController {
       maxAge: 60 * 60 * 8,
     });
 
+    cookieStore.set("id_rol", String(resultado.usuario.id_rol), {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 8,
+    });
+
     return NextResponse.json({
       redirect: resultado.redirect,
       usuario: {
         nombres: resultado.usuario.nombres,
         apellidos: resultado.usuario.apellidos,
-        rol: resultado.usuario.rol,
+        rol: resultado.usuario.id_rol,
       },
     });
   }

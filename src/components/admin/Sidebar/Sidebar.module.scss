@@ -3,13 +3,11 @@ $muted: #8a8580;
 $surface: #ffffff;
 $selected: #fbe8dd;
 $page: #fbf8f4;
-// Hicimos el borde un poco más visible pero muy suave
 $edge: rgba(42, 77, 143, 0.25);
 
 $item-h: 48px;
 $gap: 4px;
 
-// Movimiento más fluido
 $ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
 
 @mixin focus-ring {
@@ -19,11 +17,24 @@ $ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-// Contenedor
+@keyframes slideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .sidebar {
   background: $surface;
   color: $navy;
-  box-shadow: 1px 0 0 $edge;
+  border-right: 1px solid $edge;
+  z-index: 20;
+
+  animation: slideRight 0.5s ease-out forwards;
 }
 
 // Navegación

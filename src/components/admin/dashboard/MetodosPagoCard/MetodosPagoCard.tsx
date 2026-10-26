@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Banknote, Smartphone, CreditCard } from "lucide-react";
 import styles from "./MetodosPagoCard.module.scss";
@@ -31,7 +32,9 @@ export const MetodosPagoCard: React.FC<MetodosPagoCardProps> = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full">
+    <div
+      className={`${styles.metodosPagoCard} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full`}
+    >
       <div className="mb-6">
         <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
           Métodos de pago

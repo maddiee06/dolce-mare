@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { AlertTriangle, Package, Trash2 } from "lucide-react";
 import styles from "./AlertasOperativasCard.module.scss";
@@ -24,7 +25,9 @@ export const AlertasOperativasCard: React.FC<AlertasOperativasCardProps> = ({
   mermas,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full">
+    <div
+      className={`${styles.aletasOperativas} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full`}
+    >
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>

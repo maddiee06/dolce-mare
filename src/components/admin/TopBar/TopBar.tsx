@@ -1,23 +1,32 @@
 "use client";
 import React from "react";
-import { Bell } from "lucide-react";
+import { Bell, MapPin } from "lucide-react";
 import styles from "./TopBar.module.scss";
 import { usePerfilUsuario } from "../../../hooks/usePerfilUsuario";
 
 export type TopBarProps = {
   initialUserName?: string;
+  nombreSede?: string;
 };
 
-const TopBar: React.FC<TopBarProps> = ({ initialUserName }) => {
+const TopBar: React.FC<TopBarProps> = ({
+  initialUserName,
+  nombreSede = "Sede no seleccionada",
+}) => {
   const { userName, userRole, time, avatarUrl } =
     usePerfilUsuario(initialUserName);
 
   return (
     <header
-      // CAMBIO AQUÍ: Cambiamos justify-between por justify-end
-      className={`${styles.topbar} flex h-20 w-full items-center justify-end px-8`}
+      className={`${styles.topbar} flex h-20 w-full items-center justify-between px-8`}
     >
-      {/* Contenedor principal de acciones y perfil */}
+      {/* Lado Izquierdo*/}
+      <div className="flex items-center gap-2">
+        <MapPin className="size-5 text-[#1e3a8a]" strokeWidth={2} />{" "}
+        <span className="text-lg font-bold text-[#1e3a8a]">{nombreSede}</span>
+      </div>
+
+      {/* Lado Derecho*/}
       <div className="flex items-center gap-6">
         {/* Reloj */}
         <div className="text-sm font-bold text-gray-600">{time || "00:00"}</div>
@@ -48,11 +57,9 @@ const TopBar: React.FC<TopBarProps> = ({ initialUserName }) => {
             >
               {userName || "Cargando..."}
             </span>
-            <span
-              className={`${styles.userRole} text-xs font-medium mt-0.5 capitalize`}
-            >
-              {userRole || "Administrador"}
-            </span>
+            <p className="text-sm text-gray-500">
+              {Number(userRole) === 1 ? "Administrador" : "Cajero"}
+            </p>
           </div>
         </div>
       </div>
