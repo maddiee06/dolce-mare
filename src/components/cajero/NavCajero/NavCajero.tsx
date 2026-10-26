@@ -269,12 +269,9 @@ export function NavCajero({
               >
                 {userName || "Cajero"}
               </span>
-              <span
-                className="text-xs"
-                style={{ color: "var(--color-text-placeholder)" }}
-              >
-                {userRole || "Ventas"}
-              </span>
+              <p className="text-sm text-gray-500">
+                {Number(userRole) === 1 ? "Administrador" : "Cajero"}
+              </p>
             </div>
             <Image
               src="/chevron-down.svg"

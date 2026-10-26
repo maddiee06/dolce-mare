@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Banknote,
   ChartColumn,
@@ -11,18 +13,54 @@ import {
 } from "lucide-react";
 import styles from "./Sidebar.module.scss";
 
-export type SidebarProps = {};
+type NavItem = {
+  id: string;
+  label: string;
+  href: string;
+  icon: React.ElementType;
+  badge?: number | string;
+};
 
-const navItems = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "inventory", label: "Inventario", icon: IceCreamBowl, badge: 4 },
-  { id: "boxes", label: "Gestión de cajas", icon: Banknote, badge: 2 },
-  { id: "reports", label: "Reportes", icon: ChartColumn },
-  { id: "settings", label: "Configuración", icon: SlidersHorizontal },
+const navItems: NavItem[] = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    href: "/admin/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    id: "inventory",
+    label: "Inventario",
+    href: "/admin/inventario",
+    icon: IceCreamBowl,
+  },
+  {
+    id: "boxes",
+    label: "Gestión de cajas",
+    href: "/admin/cajas",
+    icon: Banknote,
+  },
+  {
+    id: "reports",
+    label: "Reportes",
+    href: "/admin/reportes",
+    icon: ChartColumn,
+  },
+  {
+    id: "settings",
+    label: "Configuración",
+    href: "/admin/configuracion",
+    icon: SlidersHorizontal,
+  },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({}) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+const Sidebar = () => {
+  const pathname = usePathname();
+
+  const activeIndex = Math.max(
+    0,
+    navItems.findIndex((item) => pathname.startsWith(item.href)),
+  );
 
   return (
     <aside
@@ -56,13 +94,17 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
           const isActive = activeIndex === index;
 
           return (
-            <button
+            <Link
               key={item.id}
-              onClick={() => setActiveIndex(index)}
-              className={`${styles.item} ${isActive ? styles.itemActive : ""} flex h-12 items-center gap-3.5 px-3.5 z-10`}
+              href={item.href}
+              className={`${styles.item} ${
+                isActive ? styles.itemActive : ""
+              } flex h-12 items-center gap-3.5 px-3.5 z-10`}
             >
               <Icon
-                className={`size-5.5 flex-none transition-colors ${isActive ? "text-blue-900" : "text-gray-500"}`}
+                className={`size-5.5 flex-none transition-colors ${
+                  isActive ? "text-blue-900" : "text-gray-500"
+                }`}
                 strokeWidth={isActive ? 2 : 1.6}
               />
               <span className="flex-1 text-left">{item.label}</span>
@@ -74,7 +116,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                   {item.badge}
                 </span>
               )}
-            </button>
+            </Link>
           );
         })}
       </nav>

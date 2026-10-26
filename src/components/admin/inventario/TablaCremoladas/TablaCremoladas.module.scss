@@ -1,0 +1,83 @@
+$navy: #2a4d8f;
+$navy-light: #466bb0;
+$surface: #ffffff;
+$page: #fbf8f4;
+$muted: #8a8580;
+$text-main: #1f2937;
+$selected: #fbe8dd;
+$edge: rgba(42, 77, 143, 0.15);
+$ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+
+@keyframes slideUpFadeCremoladas {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.contenedor {
+  animation: slideUpFadeCremoladas 0.6s $ease-smooth forwards;
+  margin-bottom: 2rem;
+}
+
+.tarjeta {
+  background-color: $surface;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid $edge;
+  overflow: hidden;
+}
+
+.cabecera {
+  background-color: $page;
+  color: $muted;
+  border-bottom: 1px solid $edge;
+  th {
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.fila {
+  color: $text-main;
+  border-bottom: 1px solid $edge;
+  transition: background-color 0.3s $ease-smooth;
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background-color: rgba($selected, 0.35);
+  }
+  td {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.nombreArticulo {
+  color: $navy;
+  font-weight: 500;
+}
+.stockActual {
+  color: $navy;
+  font-weight: 600;
+}
+
+.botonKardex {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-weight: 500;
+  color: $navy-light;
+  transition: all 0.3s $ease-smooth;
+  &:hover {
+    background-color: $selected;
+    color: $navy;
+    transform: translateX(2px);
+  }
+}

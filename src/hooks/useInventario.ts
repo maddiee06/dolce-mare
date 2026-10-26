@@ -17,10 +17,13 @@ export function useInventario(tipo: TipoInventario) {
 
   useEffect(() => {
     let cancelado = false;
-    setCargando(true);
 
     const espera = setTimeout(
       async () => {
+        if (cancelado) return;
+
+        setCargando(true);
+
         try {
           const r = await listarInventario({ tipo, busqueda, estado });
           if (cancelado) return;

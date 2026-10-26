@@ -71,13 +71,15 @@ export class InventarioDAO implements IInventarioDAO {
     };
   }
 
-      async obtenerContextoUsuario(): Promise<ContextoUsuario | null> {
+  async obtenerContextoUsuario(): Promise<ContextoUsuario | null> {
     const token = (await cookies()).get("session")?.value;
     if (!token) return null;
 
     let idUsuario: number;
     try {
-      const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
+      const { payload } = await jwtVerify(token, secret, {
+        algorithms: ["HS256"],
+      });
       idUsuario = Number(payload.sub);
     } catch {
       return null; // token inválido o expirado
@@ -86,7 +88,9 @@ export class InventarioDAO implements IInventarioDAO {
 
     const { data, error } = await this.supabase
       .from("usuarios")
-      .select("id_usuario, nombres, apellidos, estado, eliminado_en, roles ( nombre )")
+      .select(
+        "id_usuario, nombres, apellidos, estado, eliminado_en, roles ( nombre )",
+      )
       .eq("id_usuario", idUsuario)
       .maybeSingle();
 
@@ -107,7 +111,7 @@ export class InventarioDAO implements IInventarioDAO {
     };
   }
 
-    async sedeEstaActiva(idSede: number): Promise<boolean> {
+  async sedeEstaActiva(idSede: number): Promise<boolean> {
     const { data, error } = await this.supabase
       .from("sedes")
       .select("id_sede")
@@ -162,7 +166,7 @@ export class InventarioDAO implements IInventarioDAO {
     }));
   }
 
-   async obtenerKardex(
+  async obtenerKardex(
     idSede: number,
     idProducto: number,
     desdeISO: string,
@@ -193,103 +197,36 @@ export class InventarioDAO implements IInventarioDAO {
       stockAnterior: Number(m.stock_anterior),
       stockResultante: Number(m.stock_resultante),
       motivo: m.motivo,
-      usuario: m.usuarios ? `${m.usuarios.nombres} ${m.usuarios.apellidos}` : "—",
+      usuario: m.usuarios
+        ? `${m.usuarios.nombres} ${m.usuarios.apellidos}`
+        : "—",
     }));
   }
 
-   async registrarMovimiento(mov: NuevoMovimiento): Promise<ResultadoMovimiento> {
-    const { data: ps, error: errLeer } = await this.supabase
-      .from("producto_sede")
-      .select("id_producto_sede, stock_actual")
-      .eq("id_sede", mov.idSede)
-      .eq("id_producto", mov.idProducto)
-      .maybeSingle();
+  async registrarMovimiento(
+    mov: NuevoMovimiento,
+  ): Promise<ResultadoMovimiento> {
+    const { data, error } = await this.supabase.rpc("registrar_movimiento", {
+      p_id_sede: mov.idSede,
+      p_id_producto: mov.idProducto,
+      p_id_tipo_movimiento: mov.idTipoMovimiento,
+      p_id_usuario: mov.idUsuario,
+      p_cantidad: mov.cantidad,
+      p_motivo: mov.motivo ?? null,
+      p_es_merma: mov.esMerma ?? false,
+    });
 
-    if (errLeer) throw this.fallo("leer el stock", errLeer);
-    if (!ps) {
-      throw new InventarioError("El artículo no está registrado en esta sede", 404);
-    }
-
-    const anterior = Number(ps.stock_actual);
-    const resultante = redondear(
-      mov.afectaStock === "suma" ? anterior + mov.cantidad : anterior - mov.cantidad,
-    );
-
-    if (resultante < 0) {
-      throw new InventarioError(
-        `Stock insuficiente: hay ${anterior} y se intenta sacar ${mov.cantidad}`,
-        422,
-      );
-    }
-
-    const { data: actualizado, error: errUpd } = await this.supabase
-      .from("producto_sede")
-      .update({ stock_actual: resultante })
-      .eq("id_producto_sede", ps.id_producto_sede)
-      .eq("stock_actual", ps.stock_actual)
-      .select("id_producto_sede");
-
-    if (errUpd) throw this.fallo("actualizar el stock", errUpd);
-    if (!actualizado || actualizado.length === 0) {
-      throw new InventarioError(
-        "El stock cambió mientras lo registrabas. Inténtalo de nuevo.",
-        409,
-      );
-    }
-
-    let idMerma: number | null = null;
-    try {
-      if (mov.esMerma) {
-        const { data: merma, error: errMerma } = await this.supabase
-          .from("mermas")
-          .insert({
-            id_producto: mov.idProducto,
-            id_sede: mov.idSede,
-            id_usuario: mov.idUsuario,
-            cantidad: mov.cantidad,
-            motivo: (mov.motivo ?? "Merma registrada desde inventario").slice(0, 100),
-          })
-          .select("id_merma")
-          .single();
-        if (errMerma) throw this.fallo("registrar la merma", errMerma);
-        idMerma = merma.id_merma;
+    if (error) {
+      if (error.message.includes("Stock insuficiente")) {
+        throw new InventarioError(error.message, 422);
       }
-
-      const { data: kardex, error: errKardex } = await this.supabase
-        .from("movimientos_inventario")
-        .insert({
-          id_producto: mov.idProducto,
-          id_sede: mov.idSede,
-          id_tipo_movimiento: mov.idTipoMovimiento,
-          id_usuario: mov.idUsuario,
-          cantidad: mov.cantidad,
-          stock_anterior: anterior,
-          stock_resultante: resultante,
-          motivo: mov.motivo ?? null,
-        })
-        .select("id_movimiento")
-        .single();
-      if (errKardex) throw this.fallo("guardar el movimiento", errKardex);
-
-      return {
-        idMovimiento: kardex.id_movimiento,
-        stockAnterior: anterior,
-        stockResultante: resultante,
-      };
-    } catch (e) {
-      // Compensación: devolver el stock y borrar la merma si ya se creó.
-      await this.supabase
-        .from("producto_sede")
-        .update({ stock_actual: anterior })
-        .eq("id_producto_sede", ps.id_producto_sede)
-        .eq("stock_actual", resultante);
-      if (idMerma !== null) {
-        await this.supabase.from("mermas").delete().eq("id_merma", idMerma);
-      }
-      throw e;
+      throw this.fallo("registrar el movimiento", error);
     }
+
+    return data as ResultadoMovimiento;
   }
-    async obtenerSaldoAntesDe(
+
+  async obtenerSaldoAntesDe(
     idSede: number,
     idProducto: number,
     isoFecha: string,

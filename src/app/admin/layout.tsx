@@ -1,22 +1,40 @@
-import { Sidebar } from "@/src/components/admin/Sidebar";
+import { cookies } from "next/headers";
+import { createAdminClient } from "@/src/utils/supabase/admin";
 import { TopBar } from "@/src/components/admin/TopBar";
-import { Metadata } from "next";
+import { Sidebar } from "@/src/components/admin/Sidebar";
 
-export const metadata: Metadata = {
-  title: "Dolce Mare - Dashboard",
-};
+export const instant = false;
 
-export default function DashboardLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const idSede = cookieStore.get("id_sede")?.value;
+
+  let nombreSedeActiva = "Sede no seleccionada";
+
+  if (idSede) {
+    const supabase = createAdminClient();
+
+    const { data } = await supabase
+      .from("sedes")
+      .select("nombre")
+      .eq("id_sede", idSede)
+      .single();
+
+    if (data) {
+      nombreSedeActiva = data.nombre;
+    }
+  }
+
   return (
-    <div className="flex h-screen w-full bg-[#fbf8f4] overflow-hidden">
+    <div className="flex h-screen bg-[#FFF9F0]">
       <Sidebar />
 
-      <div className="flex flex-col flex-1 min-w-0">
-        <TopBar />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <TopBar nombreSede={nombreSedeActiva} />
 
         <main className="flex-1 overflow-y-auto p-8">{children}</main>
       </div>

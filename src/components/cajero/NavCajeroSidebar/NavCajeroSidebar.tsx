@@ -110,10 +110,8 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
               >
                 {userName}
               </h3>
-              <p
-                className={`text-xs font-medium m-0 mt-0.5 leading-tight ${styles.userRole}`}
-              >
-                {userRole}
+              <p className="text-sm text-gray-500">
+                {Number(userRole) === 1 ? "Administrador" : "Cajero"}
               </p>
             </div>
           </div>

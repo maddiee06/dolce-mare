@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Loader2 } from "lucide-react";
 import styles from "./RankingPersonalCard.module.scss";
@@ -19,7 +20,9 @@ export const RankingPersonalCard: React.FC<RankingPersonalCardProps> = ({
   cargando = false,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+    <div
+      className={`${styles.rankingPersonal} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm`}
+    >
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
