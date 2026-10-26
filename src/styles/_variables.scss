@@ -1,0 +1,115 @@
+// Este archivo corre todos los colores que pusimos en globals.css
+// para que los puedas usar en cualquier archivo .module.scss.
+// Si cambias un color en globals.css, aquí se cambia solo.
+
+// 1. Fondos de la página y las tarjetas
+$color-fondo: var(--color-fondo);
+$color-fondo-oscuro: var(--color-fondo-oscuro);
+$color-superficie: var(--color-superficie);
+$color-nav: var(--color-nav);
+$color-superficie-hover: var(--color-superficie-hover);
+$color-superficie-gris: var(--color-superficie-gris);
+$color-barra-fondo: var(--color-barra-fondo);
+
+// 2. Azules de Dolce Mare (títulos, menú de la izquierda, logos)
+$color-primario: var(--color-primario);
+$color-primario-oscuro: var(--color-primario-oscuro);
+$color-primario-claro: var(--color-primario-claro);
+$color-primario-suave: var(--color-primario-suave);
+$color-primario-hover: var(--color-primario-hover);
+$color-primario-focus: var(--color-primario-focus);
+$color-secundario: var(--color-secundario);
+
+// 3. El color coral / naranja (para selecciones, tabs y detalles llamativos)
+$color-coral: var(--color-coral);
+$color-coral-oscuro: var(--color-coral-oscuro);
+$color-coral-claro: var(--color-coral-claro);
+$color-seleccion: var(--color-seleccion);
+$color-seleccion-hover: var(--color-seleccion-hover);
+$color-seleccion-suave: var(--color-seleccion-suave);
+
+// 4. Botones (guardar, cancelar, etc.)
+$color-boton-primario: var(--color-boton-primario);
+$color-boton-primario-hover: var(--color-boton-primario-hover);
+$color-boton-secundario: var(--color-boton-secundario);
+$color-boton-secundario-hover: var(--color-boton-secundario-hover);
+$color-boton-deshabilitado: var(--color-boton-deshabilitado);
+
+// 5. Textos (títulos, párrafos, notas)
+$color-texto-primario: var(--color-texto-primario);
+$color-texto-secundario: var(--color-texto-secundario);
+$color-texto-principal: var(--color-texto-principal);
+$color-texto-oscuro: var(--color-texto-oscuro);
+$color-texto-mutado: var(--color-texto-mutado);
+$color-texto-claro: var(--color-texto-claro);
+$color-texto-deshabilitado: var(--color-texto-deshabilitado);
+$color-texto-placeholder: var(--color-texto-placeholder);
+$color-texto-blanco: var(--color-texto-blanco);
+
+// 6. Bordes de las tarjetas, cajitas y tablas
+$color-borde-suave: var(--color-borde-suave);
+$color-borde-tenue: var(--color-borde-tenue);
+$color-borde-gris: var(--color-borde-gris);
+$color-borde-gris-claro: var(--color-borde-gris-claro);
+$color-borde-1: var(--color-borde-1);
+$color-borde-2: var(--color-borde-2);
+
+// 7. Alertas del inventario y estados (verde, amarillo, rojo)
+// Verde: Hay buen stock o el pago está listo
+$color-exito: var(--color-exito);
+$color-exito-fondo: var(--color-exito-fondo);
+$color-exito-texto: var(--color-exito-texto);
+$color-exito-borde: var(--color-exito-borde);
+
+// Amarillo / Naranja: Queda poco stock o está por cobrar
+$color-advertencia: var(--color-advertencia);
+$color-advertencia-alerta: var(--color-advertencia-alerta);
+$color-advertencia-fondo: var(--color-advertencia-fondo);
+$color-advertencia-texto: var(--color-advertencia-texto);
+$color-advertencia-borde: var(--color-advertencia-borde);
+$color-alerta-naranja-fondo: var(--color-alerta-naranja-fondo);
+$color-alerta-naranja-borde: var(--color-alerta-naranja-borde);
+
+// Rojo: Se agotó el sabor, merma o hubo error
+$color-peligro: var(--color-peligro);
+$color-danger: var(--color-danger);
+$color-error: var(--color-error);
+$color-error-suave: var(--color-error-suave);
+$color-error-fondo: var(--color-error-fondo);
+$color-error-texto: var(--color-error-texto);
+$color-error-borde: var(--color-error-borde);
+$color-alerta-rojo-fondo: var(--color-alerta-rojo-fondo);
+$color-alerta-rojo-borde: var(--color-alerta-rojo-borde);
+$color-peligro-hover: var(--color-peligro-hover);
+$color-peligro-fondo-hover: var(--color-peligro-fondo-hover);
+
+// Intermedio
+$color-medio: var(--color-medio);
+
+// 8. Sombras y fondo oscuro de los modales
+$color-superposicion: var(--color-superposicion);
+$sombra-tarjeta: var(--sombra-tarjeta);
+$sombra-modal: var(--sombra-modal);
+$sombra-insignia: var(--sombra-insignia);
+
+// 9. Animaciones (para que las tarjetas carguen de arriba a abajo en cascada)
+$ease-suave: var(--ease-suave, cubic-bezier(0.25, 1, 0.5, 1));
+$ease-rebote: var(--ease-rebote, cubic-bezier(0.34, 1.56, 0.64, 1));
+$ease-caida: var(--ease-caida, cubic-bezier(0.4, 0, 0.2, 1));
+
+$transicion-rapida: var(--transicion-rapida);
+$transicion-suave: var(--transicion-suave);
+$transicion-deslizamiento: var(--transicion-deslizamiento);
+$transicion-barra: var(--transicion-barra);
+
+// 10. Cosas viejas del cajero y login (dejar aquí para que no se rompa nada)
+$color-botton-primary: var(--color-botton-primary);
+$color-botton-secondary: var(--color-botton-secondary);
+$color-botton-disabled: var(--color-botton-disabled);
+$color-text-primary: var(--color-text-primary);
+$color-text-secondary: var(--color-text-secondary);
+$color-text-disabled: var(--color-text-disabled);
+$color-text-placeholder: var(--color-text-placeholder);
+$color-success: var(--color-success);
+$color-middle: var(--color-middle);
+$color-warning: var(--color-warning);

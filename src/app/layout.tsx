@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dolce Mare | Inicio de Sesión",
+  title: "Dolce Mare - Inicio de Sesión",
   description: "Sistema de gestión de pedidos y cuentas abiertas de Dolce Mare",
 };
 

@@ -1,10 +1,108 @@
 @import "tailwindcss";
 @source "../";
 
-@theme static {
-  --color-fondo: #fbf8f4;
-  --color-nav: #ffffff;
-  --color-seleccion: #fbe8dd;
+:root {
+  /* 1. Fondos de la página y las tarjetas */
+  --color-fondo: #fbf8f4;              /* El fondo crema clarito de toda la app */
+  --color-fondo-oscuro: #f3ece4;       /* Un crema un poquito más oscuro */
+  --color-superficie: #ffffff;          /* Blanco para las tarjetas, tablas y modales */
+  --color-nav: #ffffff;                 /* Fondo de la barra de arriba */
+  --color-superficie-hover: #f9fafb;   /* El color cuando pasas el mouse por encima de una fila */
+  --color-superficie-gris: #f8f9fa;    /* Gris bien suave para separar secciones */
+  --color-barra-fondo: #f3f4f6;        /* El fondo gris de las barritas de progreso */
+
+  /* 2. Azules principales de Dolce Mare (títulos, menú de la izquierda, logos) */
+  --color-primario: #2a4d8f;           /* El azul principal de la marca */
+  --color-primario-oscuro: #203a6d;    /* Azul más oscuro para cuando pasas el mouse o haces clic */
+  --color-primario-claro: #466bb0;     /* Azul más claro para subtítulos y números secundarios */
+  --color-primario-suave: #eef2f9;     /* Azul bien bajito para fondos o pastillas activas */
+  --color-primario-hover: rgba(42, 77, 143, 0.04); /* Efecto suave al pasar el mouse */
+  --color-primario-focus: rgba(42, 77, 143, 0.5);  /* El borde azul cuando seleccionas un input */
+  --color-secundario: #5c7294;         /* Azul grisáceo para detalles */
+
+  /* 3. El color coral / naranja (para selecciones, tabs y detalles llamativos) */
+  --color-coral: #f27a4d;              /* Naranja coral de Dolce Mare */
+  --color-coral-oscuro: #d85f33;       /* Naranja más fuerte para que las letras se lean bien */
+  --color-coral-claro: rgba(242, 122, 77, 0.15); /* Fondo suave de las etiquetitas de sabores */
+  --color-seleccion: #fbe8dd;          /* El color durazno suave cuando seleccionas una pestaña o menú */
+  --color-seleccion-hover: #f5dacb;    /* Cuando pasas el mouse por encima de la pestaña */
+  --color-seleccion-suave: rgba(251, 232, 221, 0.5); /* Tinte suave para filas seleccionadas */
+
+  /* 4. Botones (guardar, cancelar, etc.) */
+  --color-boton-primario: #e8956b;           /* El botón principal (Guardar, Confirmar) */
+  --color-boton-primario-hover: #df8255;     /* Cuando pasas el mouse sobre el botón principal */
+  --color-boton-secundario: #fbe8dd;         /* El botón secundario o cancelar */
+  --color-boton-secundario-hover: #f5dacb;   /* Hover del botón secundario */
+  --color-boton-deshabilitado: #8a8580;      /* Cuando el botón está apagado y no se puede presionar */
+
+  /* 5. Textos (títulos, párrafos, notas) */
+  --color-texto-primario: #2a4d8f;      /* Azul para los títulos principales */
+  --color-texto-principal: #1f2937;     /* Texto oscuro normal para leer en tablas */
+  --color-texto-secundario: #2d2a26;    /* Texto para los nombres de los campos */
+  --color-texto-oscuro: #111827;        /* Negro bien marcado para los números grandes de ventas */
+  --color-texto-mutado: #8a8580;        /* Texto gris para descripciones, fechas y cositas secundarias */
+  --color-texto-claro: #9ca3af;         /* Gris más clarito para detalles pequeños */
+  --color-texto-deshabilitado: #8a8580; /* Texto de cosas que no se pueden editar */
+  --color-texto-placeholder: #8a8580;   /* El texto de ejemplo dentro de los buscadores */
+  --color-texto-blanco: #ffffff;        /* Letras blancas para botones o fondos oscuros */
+
+  /* 6. Bordes de las tarjetas, cajitas y tablas */
+  --color-borde-suave: rgba(42, 77, 143, 0.15); /* Borde azulado bien suave para las tarjetas */
+  --color-borde-tenue: rgba(42, 77, 143, 0.08); /* Línea casi invisible para separar filas */
+  --color-borde-gris: #e5e7eb;                  /* Borde gris normal para las cajitas de texto */
+  --color-borde-gris-claro: #f3f4f6;            /* Líneas muy suaves entre bloques */
+  --color-borde-1: #e9946b;                     /* Borde naranja */
+  --color-borde-2: #2b4c8f;                     /* Borde azul */
+
+  /* 7. Alertas del inventario y estados (verde, amarillo, rojo) */
+  /* Verde: Hay buen stock o el pago está listo */
+  --color-exito: #6ba583;
+  --color-exito-fondo: #d1fae5;
+  --color-exito-texto: #065f46;
+  --color-exito-borde: #a7f3d0;
+
+  /* Amarillo / Naranja: Queda poco stock o está por cobrar */
+  --color-advertencia: #fceddf;
+  --color-advertencia-alerta: #f27a4d;
+  --color-advertencia-fondo: #fef3c7;
+  --color-advertencia-texto: #92400e;
+  --color-advertencia-borde: #fde68a;
+  --color-alerta-naranja-fondo: rgba(242, 122, 77, 0.08);
+  --color-alerta-naranja-borde: rgba(242, 122, 77, 0.2);
+
+  /* Rojo: Se agotó el sabor, merma o hubo error */
+  --color-peligro: #ef4444;
+  --color-danger: #c0463a;
+  --color-error: #f9ebe9;
+  --color-error-suave: #f9ebe9;
+  --color-error-fondo: #ffe4e6;
+  --color-error-texto: #9f1239;
+  --color-error-borde: #fecdd3;
+  --color-alerta-rojo-fondo: rgba(239, 68, 68, 0.08);
+  --color-alerta-rojo-borde: rgba(239, 68, 68, 0.2);
+  --color-peligro-hover: #d32f2f;
+  --color-peligro-fondo-hover: rgba(211, 47, 47, 0.05);
+
+  /* Intermedio */
+  --color-medio: #faf2df;
+
+  /* 8. Sombras y fondo oscuro de los modales */
+  --color-superposicion: rgba(42, 77, 143, 0.4); /* La pantalla oscura detrás del modal de Ajustar */
+  --sombra-tarjeta: 0 4px 20px rgba(0, 0, 0, 0.03); /* La sombrita suave de las cards */
+  --sombra-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --sombra-insignia: 0 2px 4px rgba(42, 77, 143, 0.2);
+
+  /* 9. Animaciones (para que las tarjetas carguen de arriba a abajo en cascada) */
+  --ease-suave: cubic-bezier(0.25, 1, 0.5, 1);    /* Para que caigan suavecito */
+  --ease-rebote: cubic-bezier(0.34, 1.56, 0.64, 1); /* Para que den un saltito o rebote */
+  --ease-caida: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --transicion-rapida: all 0.2s ease;             /* Cambio rápido en botones al pasar el mouse */
+  --transicion-suave: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Para abrir cosas con calma */
+  --transicion-deslizamiento: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Para el menú del costado */
+  --transicion-barra: width 1s ease-in-out;       /* Para que las barritas de stock se llenen suave */
+
+  /* 10. Cosas viejas del cajero y login (dejar aquí para que no se rompa nada de allá) */
   --color-botton-primary: #e8956b;
   --color-botton-secondary: #fbe8dd;
   --color-botton-disabled: #8a8580;
@@ -14,8 +112,109 @@
   --color-text-placeholder: #8a8580;
   --color-success: #6ba583;
   --color-middle: #faf2df;
-  --color-error: #f9ebe9;
   --color-warning: #fceddf;
   --color-border-1: #e9946b;
   --color-border-2: #2b4c8f;
+}
+
+/* 
+   Esto es para que Tailwind entienda las variables de arriba y puedas
+   usarlas directamente como clases (por ejemplo: bg-primario, text-coral, etc.)
+*/
+@theme {
+  /* Fondos */
+  --color-fondo: var(--color-fondo);
+  --color-fondo-oscuro: var(--color-fondo-oscuro);
+  --color-superficie: var(--color-superficie);
+  --color-nav: var(--color-nav);
+  --color-superficie-hover: var(--color-superficie-hover);
+  --color-superficie-gris: var(--color-superficie-gris);
+  --color-barra-fondo: var(--color-barra-fondo);
+
+  /* Azules */
+  --color-primario: var(--color-primario);
+  --color-primario-oscuro: var(--color-primario-oscuro);
+  --color-primario-claro: var(--color-primario-claro);
+  --color-primario-suave: var(--color-primario-suave);
+  --color-secundario: var(--color-secundario);
+
+  /* Coral y selecciones */
+  --color-coral: var(--color-coral);
+  --color-coral-oscuro: var(--color-coral-oscuro);
+  --color-coral-claro: var(--color-coral-claro);
+  --color-seleccion: var(--color-seleccion);
+  --color-seleccion-hover: var(--color-seleccion-hover);
+  --color-seleccion-suave: var(--color-seleccion-suave);
+
+  /* Botones */
+  --color-boton-primario: var(--color-boton-primario);
+  --color-boton-primario-hover: var(--color-boton-primario-hover);
+  --color-boton-secundario: var(--color-boton-secundario);
+  --color-boton-secundario-hover: var(--color-boton-secundario-hover);
+  --color-boton-deshabilitado: var(--color-boton-deshabilitado);
+
+  /* Textos */
+  --color-texto-primario: var(--color-texto-primario);
+  --color-texto-secundario: var(--color-texto-secundario);
+  --color-texto-principal: var(--color-texto-principal);
+  --color-texto-oscuro: var(--color-texto-oscuro);
+  --color-texto-mutado: var(--color-texto-mutado);
+  --color-texto-claro: var(--color-texto-claro);
+  --color-texto-deshabilitado: var(--color-texto-deshabilitado);
+  --color-texto-placeholder: var(--color-texto-placeholder);
+  --color-texto-blanco: var(--color-texto-blanco);
+
+  /* Bordes */
+  --color-borde-1: var(--color-borde-1);
+  --color-borde-2: var(--color-borde-2);
+  --color-borde-suave: var(--color-borde-suave);
+  --color-borde-tenue: var(--color-borde-tenue);
+  --color-borde-gris: var(--color-borde-gris);
+  --color-borde-gris-claro: var(--color-borde-gris-claro);
+
+  /* Estados del inventario */
+  --color-exito: var(--color-exito);
+  --color-exito-fondo: var(--color-exito-fondo);
+  --color-exito-texto: var(--color-exito-texto);
+  --color-exito-borde: var(--color-exito-borde);
+
+  --color-advertencia: var(--color-advertencia);
+  --color-advertencia-alerta: var(--color-advertencia-alerta);
+  --color-advertencia-fondo: var(--color-advertencia-fondo);
+  --color-advertencia-texto: var(--color-advertencia-texto);
+  --color-advertencia-borde: var(--color-advertencia-borde);
+  --color-alerta-naranja-fondo: var(--color-alerta-naranja-fondo);
+  --color-alerta-naranja-borde: var(--color-alerta-naranja-borde);
+
+  --color-error: var(--color-error);
+  --color-error-suave: var(--color-error-suave);
+  --color-peligro: var(--color-peligro);
+  --color-danger: var(--color-danger);
+  --color-error-fondo: var(--color-error-fondo);
+  --color-error-texto: var(--color-error-texto);
+  --color-error-borde: var(--color-error-borde);
+  --color-alerta-rojo-fondo: var(--color-alerta-rojo-fondo);
+  --color-alerta-rojo-borde: var(--color-alerta-rojo-borde);
+  --color-peligro-hover: var(--color-peligro-hover);
+  --color-peligro-fondo-hover: var(--color-peligro-fondo-hover);
+
+  --color-medio: var(--color-medio);
+  --color-superposicion: var(--color-superposicion);
+
+  /* Compatibilidad con el cajero */
+  --color-botton-primary: var(--color-botton-primary);
+  --color-botton-secondary: var(--color-botton-secondary);
+  --color-botton-disabled: var(--color-botton-disabled);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-text-placeholder: var(--color-text-placeholder);
+  --color-success: var(--color-success);
+  --color-middle: var(--color-middle);
+  --color-warning: var(--color-warning);
+
+  /* Curvas para animaciones */
+  --ease-suave: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-rebote: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-caida: cubic-bezier(0.4, 0, 0.2, 1);
 }

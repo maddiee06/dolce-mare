@@ -1,11 +1,9 @@
-$color-primary: #1a365d;
-$color-coral: #f27a4d;
-$color-hover: #f9fafb;
+@use "../../../../styles/variables" as *;
 
 @keyframes fadeSlideUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
   100% {
     opacity: 1;
@@ -14,39 +12,38 @@ $color-hover: #f9fafb;
 }
 
 .rankingPersonal {
-  opacity: 0;
-  animation: fadeSlideUp 0.5s ease-out forwards;
-  animation-delay: 0.5s;
+  animation: fadeSlideUp 0.45s $ease-suave both;
+  animation-delay: 0.52s;
 
   .cardTitle {
-    color: $color-primary;
+    color: $color-primario;
   }
 
   /* Fila de la tabla */
   .row {
-    transition: background-color 0.2s ease;
+    transition: $transicion-rapida;
 
     &:hover {
-      background-color: $color-hover;
+      background-color: $color-superficie-hover;
     }
   }
 
   .userName {
-    color: $color-primary;
+    color: $color-primario;
   }
 
   .userTicket {
-    color: $color-primary;
+    color: $color-primario;
   }
 
   /* Números del ranking */
   .badgeFirstPlace {
     background-color: $color-coral;
-    color: #ffffff;
+    color: $color-texto-blanco;
   }
 
   .badgeOther {
     background-color: transparent;
-    color: #9ca3af;
+    color: $color-texto-claro;
   }
 }

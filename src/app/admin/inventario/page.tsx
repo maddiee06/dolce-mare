@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import type {
   ArticuloInventario,
   EstadoStock,
@@ -20,10 +20,7 @@ export default function InventarioPage() {
   const [estadoFiltro, setEstadoFiltro] = useState<"" | EstadoStock>("");
 
   // Estados de datos
-  const [heladosData, setHeladosData] = useState<ArticuloInventario[]>([]);
-  const [cremoladasData, setCremoladasData] = useState<ArticuloInventario[]>(
-    [],
-  );
+  const [saboresData, setSaboresData] = useState<ArticuloInventario[]>([]);
   const [envasesData, setEnvasesData] = useState<ArticuloInventario[]>([]);
   const [cargando, setCargando] = useState(true);
 
@@ -49,6 +46,81 @@ export default function InventarioPage() {
     cargarTiposMovimiento();
   }, []);
 
+  // Función para cargar inventario desde la API
+  const cargarInventario = useCallback(async () => {
+    setCargando(true);
+    try {
+      let params = "";
+      if (busqueda) params += `&busqueda=${encodeURIComponent(busqueda)}`;
+      if (estadoFiltro) params += `&estado=${estadoFiltro}`;
+
+      const [resSabores, resEnvases] = await Promise.all([
+        fetch(`/api/inventario?tipo=sabores${params}`),
+        fetch(`/api/inventario?tipo=envases${params}`),
+      ]);
+
+      const parsearRespuesta = async (res: Response): Promise<ArticuloInventario[]> => {
+        if (!res.ok) return [];
+        const raw = await res.json();
+        if (raw && Array.isArray(raw.grupos)) {
+          return raw.grupos.flatMap((g: GrupoInventario) => g.articulos);
+        }
+        if (Array.isArray(raw)) return raw;
+        return raw.data || raw.items || raw.productos || [];
+      };
+
+      const [sabores, envases] = await Promise.all([
+        parsearRespuesta(resSabores),
+        parsearRespuesta(resEnvases),
+      ]);
+
+      setSaboresData(sabores);
+      setEnvasesData(envases);
+    } catch (error) {
+      console.error("Error al cargar el inventario:", error);
+    } finally {
+      setCargando(false);
+    }
+  }, [busqueda, estadoFiltro]);
+
+  // Carga inicial y ante cambios en búsqueda o estado (con debounce de 300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      cargarInventario();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [cargarInventario]);
+
+  // Filtros en memoria por pestaña y categoría (instantáneos, 0ms)
+  const heladosFiltrados = useMemo(() => {
+    return saboresData
+      .filter((item) => item.categoria.toLowerCase().includes("helado"))
+      .filter((item) =>
+        categoria
+          ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
+          : true,
+      );
+  }, [saboresData, categoria]);
+
+  const cremoladasFiltradas = useMemo(() => {
+    return saboresData
+      .filter((item) => item.categoria.toLowerCase().includes("cremolada"))
+      .filter((item) =>
+        categoria
+          ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
+          : true,
+      );
+  }, [saboresData, categoria]);
+
+  const envasesFiltrados = useMemo(() => {
+    return envasesData.filter((item) =>
+      categoria
+        ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
+        : true,
+    );
+  }, [envasesData, categoria]);
+
   // Función para registrar el ajuste de stock
   const handleConfirmarAjuste = async (
     idTipoMovimiento: number,
@@ -73,107 +145,29 @@ export default function InventarioPage() {
       throw new Error(errorData.error || "No se pudo registrar el movimiento");
     }
 
-    // Recargar la página para ver el inventario actualizado
-    window.location.reload();
+    // Actualizar silenciosamente el inventario sin recargar toda la página
+    await cargarInventario();
   };
-
-  useEffect(() => {
-    const fetchDesdeTuAPI = async () => {
-      setCargando(true);
-      try {
-        const tipoQuery = tabActivo === "envases" ? "envases" : "sabores";
-
-        let url = `/api/inventario?tipo=${tipoQuery}`;
-        if (busqueda) url += `&busqueda=${encodeURIComponent(busqueda)}`;
-        if (estadoFiltro) url += `&estado=${estadoFiltro}`;
-
-        const respuesta = await fetch(url);
-
-        if (!respuesta.ok) {
-          throw new Error(`Error HTTP: ${respuesta.status}`);
-        }
-
-        const rawData = await respuesta.json();
-        console.log("Respuesta de la API:", rawData);
-
-        let data: ArticuloInventario[] = [];
-        if (rawData && Array.isArray(rawData.grupos)) {
-          data = rawData.grupos.flatMap(
-            (grupo: GrupoInventario) => grupo.articulos,
-          );
-        } else if (Array.isArray(rawData)) {
-          data = rawData;
-        } else {
-          data = rawData.data || rawData.items || rawData.productos || [];
-        }
-
-        if (!Array.isArray(data) || data.length === 0) {
-          console.warn(
-            "No hay artículos para mostrar o la estructura falló.",
-            rawData,
-          );
-          setHeladosData([]);
-          setCremoladasData([]);
-          setEnvasesData([]);
-          return;
-        }
-
-        // Filtro del dropdown de categoría de la UI
-        const dataFiltrada = data.filter((item) =>
-          categoria
-            ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
-            : true,
-        );
-
-        // Distribución por pestañas
-        if (tabActivo === "helados") {
-          setHeladosData(
-            dataFiltrada.filter((item) =>
-              item.categoria.toLowerCase().includes("helado"),
-            ),
-          );
-        } else if (tabActivo === "cremoladas") {
-          setCremoladasData(
-            dataFiltrada.filter((item) =>
-              item.categoria.toLowerCase().includes("cremolada"),
-            ),
-          );
-        } else if (tabActivo === "envases") {
-          setEnvasesData(dataFiltrada);
-        }
-      } catch (error) {
-        console.error("Error al cargar el inventario:", error);
-      } finally {
-        setCargando(false);
-      }
-    };
-
-    const timeoutId = setTimeout(() => {
-      fetchDesdeTuAPI();
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [tabActivo, busqueda, estadoFiltro, categoria]);
 
   return (
     <div className="animateFadeIn">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#2a4d8f]">
+        <h1 className="text-3xl font-bold text-primario">
           Inventario General
         </h1>
-        <p className="mt-1 text-sm text-[#8a8580]">
+        <p className="mt-1 text-sm text-texto-mutado">
           Gestiona el stock actual, registra movimientos y revisa el Kardex.
         </p>
       </div>
 
       {/* Navegación por Pestañas */}
-      <div className="mb-8 flex w-fit gap-2 rounded-2xl border border-[#2a4d8f]/15 bg-white p-2 shadow-sm">
+      <div className="mb-8 flex w-fit gap-2 rounded-2xl border border-borde-suave bg-superficie p-2 shadow-sm">
         <button
           onClick={() => setTabActivo("helados")}
           className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 ${
             tabActivo === "helados"
-              ? "bg-[#fbe8dd] text-[#2a4d8f]"
-              : "text-[#8a8580] hover:bg-[#fbe8dd]/40 hover:text-[#2a4d8f]"
+              ? "bg-seleccion text-primario"
+              : "text-texto-mutado hover:bg-seleccion-suave hover:text-primario"
           }`}
         >
           Helados
@@ -182,8 +176,8 @@ export default function InventarioPage() {
           onClick={() => setTabActivo("cremoladas")}
           className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 ${
             tabActivo === "cremoladas"
-              ? "bg-[#fbe8dd] text-[#2a4d8f]"
-              : "text-[#8a8580] hover:bg-[#fbe8dd]/40 hover:text-[#2a4d8f]"
+              ? "bg-seleccion text-primario"
+              : "text-texto-mutado hover:bg-seleccion-suave hover:text-primario"
           }`}
         >
           Cremoladas
@@ -192,8 +186,8 @@ export default function InventarioPage() {
           onClick={() => setTabActivo("envases")}
           className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 ${
             tabActivo === "envases"
-              ? "bg-[#fbe8dd] text-[#2a4d8f]"
-              : "text-[#8a8580] hover:bg-[#fbe8dd]/40 hover:text-[#2a4d8f]"
+              ? "bg-seleccion text-primario"
+              : "text-texto-mutado hover:bg-seleccion-suave hover:text-primario"
           }`}
         >
           Envases y Complementos
@@ -210,16 +204,16 @@ export default function InventarioPage() {
         setEstado={setEstadoFiltro}
       />
 
-      <div key={tabActivo} className="animateFadeIn">
+      <div>
         {cargando ? (
-          <div className="flex h-32 items-center justify-center text-sm font-medium text-[#8a8580]">
+          <div className="flex h-32 items-center justify-center text-sm font-medium text-texto-mutado">
             Cargando inventario...
           </div>
         ) : (
           <>
             {tabActivo === "helados" && (
               <TablaHelados
-                helados={heladosData}
+                helados={heladosFiltrados}
                 onAjustar={(producto) => {
                   setProductoSeleccionado(producto);
                   setModalAbierto(true);
@@ -228,7 +222,7 @@ export default function InventarioPage() {
             )}
             {tabActivo === "cremoladas" && (
               <TablaCremoladas
-                cremoladas={cremoladasData}
+                cremoladas={cremoladasFiltradas}
                 onAjustar={(producto) => {
                   setProductoSeleccionado(producto);
                   setModalAbierto(true);
@@ -237,7 +231,7 @@ export default function InventarioPage() {
             )}
             {tabActivo === "envases" && (
               <TablaEnvases
-                envases={envasesData}
+                envases={envasesFiltrados}
                 onAjustar={(producto) => {
                   setProductoSeleccionado(producto);
                   setModalAbierto(true);

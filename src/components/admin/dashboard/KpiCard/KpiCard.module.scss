@@ -1,7 +1,9 @@
+@use "../../../../styles/variables" as *;
+
 @keyframes fadeSlideUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
   100% {
     opacity: 1;
@@ -10,7 +12,5 @@
 }
 
 .kpiCard {
-  opacity: 0;
-  animation: fadeSlideUp 0.5s ease-out forwards;
-  animation-delay: 0.1s; // Aparece primero
+  animation: fadeSlideUp 0.45s $ease-suave both;
 }

@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Store,
   Clock,
@@ -12,6 +12,7 @@ import {
   LockOpen,
   ShelvingUnit,
 } from "lucide-react";
+import { MenuPerfil } from "../MenuPerfil/MenuPerfil";
 import { usePerfilUsuario } from "@/src/hooks/usePerfilUsuario";
 import { NavCajeroSidebar } from "../NavCajeroSidebar";
 import { RolNombre } from "../../../models/Usuario";
@@ -32,11 +33,12 @@ export function NavCajero({
   const { time, isMobileMenuOpen, toggleMobileMenu, avatarUrl } =
     usePerfilUsuario(userName);
   const pathname = usePathname();
+  const router = useRouter();
 
-  // Función para determinar si la ruta está activa
+  const [cerrando, setCerrando] = useState(false);
+
   const isActive = (path: string) => pathname === path;
 
-  // Clases base y activas para los enlaces
   const getLinkClasses = (path: string) => {
     const baseClasses =
       "inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer";
@@ -48,9 +50,28 @@ export function NavCajero({
     return `${baseClasses} ${isActive(path) ? activeClasses : inactiveClasses}`;
   };
 
+  // Función para cerrar sesión
+  const handleLogout = async () => {
+    setCerrando(true);
+    try {
+      const res = await fetch("/api/auth/logout", { method: "POST" });
+      if (res.ok) {
+        router.push("/login");
+        router.refresh();
+        setTimeout(() => {
+        setCerrando(false);
+      }, 800);
+      } else {
+        setCerrando(false);
+      }
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+      setCerrando(false);
+    }
+  };
+
   return (
     <>
-      {/* Sidebar Móvil */}
       <NavCajeroSidebar
         isOpen={isMobileMenuOpen}
         onClose={toggleMobileMenu}
@@ -61,6 +82,7 @@ export function NavCajero({
         pendingCount={pendingCount}
       />
 
+      {/* Vista Móvil */}
       <div className="block lg:hidden">
         <div
           className="flex justify-between items-center w-full h-[76px] px-6 py-4 border-b border-[var(--color-text-placeholder)]/25"
@@ -95,8 +117,6 @@ export function NavCajero({
                 {isCajaAbierta ? "Caja abierta" : "Caja cerrada"}
               </span>
             </div>
-
-            {/* Hora */}
             <div className="text-right">
               <span
                 className="text-sm font-bold"
@@ -105,8 +125,6 @@ export function NavCajero({
                 {time || "00:00"}
               </span>
             </div>
-
-            {/* Botón hamburguesa que abre el sidebar */}
             <button
               className="p-1.5 cursor-pointer hover:opacity-80 transition"
               onClick={toggleMobileMenu}
@@ -128,7 +146,6 @@ export function NavCajero({
         className="hidden lg:flex justify-between items-center w-full h-[76px] px-8 border-b border-[var(--color-text-placeholder)]/25 box-border"
         style={{ backgroundColor: "var(--color-nav)" }}
       >
-        {/* Logo */}
         <div className="flex items-center">
           <Image
             className="object-contain"
@@ -140,10 +157,8 @@ export function NavCajero({
           />
         </div>
 
-        {/* Menú de Navegación Estático */}
         <nav className="h-full flex items-center">
           <ul className="flex items-center gap-2 list-none m-0 p-0 h-full">
-            {/* Opción: Inicio */}
             <li className="relative h-full flex items-center">
               <Link href="/cajero" className={getLinkClasses("/cajero")}>
                 <span className="w-5 h-5 flex items-center justify-center">
@@ -152,8 +167,6 @@ export function NavCajero({
                 <span>Inicio</span>
               </Link>
             </li>
-
-            {/* Opción: Caja */}
             <li className="relative h-full flex items-center">
               <Link
                 href="/cajero/caja"
@@ -165,8 +178,6 @@ export function NavCajero({
                 <span>Caja</span>
               </Link>
             </li>
-
-            {/* Opción: Pendientes */}
             <li className="relative h-full flex items-center">
               <Link
                 href="/cajero/pendientes"
@@ -176,7 +187,6 @@ export function NavCajero({
                   <Clock size={20} strokeWidth={2} />
                 </span>
                 <span>Pendientes</span>
-
                 {pendingCount > 0 && (
                   <span
                     className="text-[11px] px-2 py-0.5 rounded-full font-bold border border-[var(--color-border-1)]"
@@ -190,8 +200,6 @@ export function NavCajero({
                 )}
               </Link>
             </li>
-
-            {/* Opción: Historial */}
             <li className="relative h-full flex items-center">
               <Link
                 href="/cajero/historial"
@@ -203,8 +211,6 @@ export function NavCajero({
                 <span>Historial</span>
               </Link>
             </li>
-
-            {/* Opción: Inventario */}
             <li className="relative h-full flex items-center">
               <Link
                 href="/cajero/inventario"
@@ -219,7 +225,6 @@ export function NavCajero({
           </ul>
         </nav>
 
-        {/* Zona derecha: Estado de Caja, Hora y Perfil */}
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-1.5">
             {isCajaAbierta ? (
@@ -255,32 +260,12 @@ export function NavCajero({
             style={{ backgroundColor: "var(--color-text-placeholder)" }}
           />
 
-          <div className="flex items-center gap-3 cursor-pointer select-none group">
-            <img
-              className="w-10 h-10 rounded-full object-cover border"
-              style={{ borderColor: "var(--color-border-1)" }}
-              src={avatarUrl}
-              alt={`Avatar de ${userName || "Cajero"}`}
-            />
-            <div className="flex flex-col leading-tight">
-              <span
-                className="text-sm font-bold transition-colors group-hover:opacity-80"
-                style={{ color: "var(--color-text-secondary)" }}
-              >
-                {userName || "Cajero"}
-              </span>
-              <p className="text-sm text-gray-500">
-                {Number(userRole) === 1 ? "Administrador" : "Cajero"}
-              </p>
-            </div>
-            <Image
-              src="/chevron-down.svg"
-              alt="Desplegar menú"
-              width={18}
-              height={18}
-              className="opacity-60 group-hover:opacity-100 transition-opacity"
-            />
-          </div>
+          {/* Menú Desplegable de Perfil */}
+          <MenuPerfil
+            userName={userName}
+            userRole={userRole}
+            avatarUrl={avatarUrl}
+          />
         </div>
       </header>
     </>

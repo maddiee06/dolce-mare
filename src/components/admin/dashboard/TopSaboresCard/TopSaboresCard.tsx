@@ -17,21 +17,21 @@ interface TopSaboresCardProps {
 export const TopSaboresCard: React.FC<TopSaboresCardProps> = ({ sabores }) => {
   return (
     <div
-      className={`${styles.topSaboresCard} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm`}
+      className={`${styles.topSaboresCard} bg-superficie p-6 rounded-2xl border border-borde-gris-claro shadow-sm`}
     >
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
             Top sabores vendidos
           </h2>
-          <p className="text-gray-400 text-sm">Bolas servidas hoy</p>
+          <p className="text-texto-claro text-sm">Bolas servidas hoy</p>
         </div>
-        <Award className="w-5 h-5 text-gray-300" />
+        <Award className="w-5 h-5 text-texto-claro" />
       </div>
 
       <div className="flex flex-col gap-5">
         {sabores.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-4">
+          <p className="text-texto-claro text-sm text-center py-4">
             Sin datos de ventas aún.
           </p>
         ) : (

@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   Banknote,
   ChartColumn,
@@ -55,7 +55,36 @@ const navItems: NavItem[] = [
 ];
 
 const Sidebar = () => {
+  const router = useRouter();
   const pathname = usePathname();
+  const [cerrando, setCerrando] = useState(false);
+
+  useEffect(() => {
+    setCerrando(false);
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    setCerrando(true);
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        router.push("/login");
+        router.refresh();
+        setTimeout(() => {
+          setCerrando(false);
+        }, 800);
+      } else {
+        console.error("Error al cerrar sesión");
+        setCerrando(false);
+      }
+    } catch (error) {
+      console.error("Fallo la petición de cierre de sesión", error);
+      setCerrando(false);
+    }
+  };
 
   const activeIndex = Math.max(
     0,
@@ -125,10 +154,20 @@ const Sidebar = () => {
       <div className="mt-auto flex flex-col gap-2.5">
         <hr className={styles.separacion} />
         <button
-          className={`${styles.logout} flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium`}
+          onClick={handleLogout}
+          disabled={cerrando}
+          className={`${styles.logout} flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium transition-all ${
+            cerrando
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-alerta-rojo-fondo hover:text-peligro"
+          }`}
         >
-          <LogOut className="size-5 flex-none" strokeWidth={1.8} />
-          <span>Cerrar sesión</span>
+          {cerrando ? (
+            <span className="h-5 w-5 flex-none animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+          ) : (
+            <LogOut className="size-5 flex-none" strokeWidth={1.8} />
+          )}
+          <span>{cerrando ? "Cerrando..." : "Cerrar sesión"}</span>
         </button>
       </div>
     </aside>

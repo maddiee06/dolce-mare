@@ -11,6 +11,12 @@ import { RankingPersonalCard } from "@/src/components/admin/dashboard/RankingPer
 import { AlertasOperativasCard } from "@/src/components/admin/dashboard/AlertasOperativasCard";
 import { EvolucionVentasCard } from "@/src/components/admin/dashboard/EvolucionVentasCard";
 import { MetodoPagoData } from "@/src/components/admin/dashboard/MetodosPagoCard/MetodosPagoCard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dolce Mare - Dashboard",
+  description: "Sistema de gestión de pedidos y cuentas abiertas de Dolce Mare",
+};
 
 export const instant = false;
 
@@ -32,38 +38,42 @@ export default async function DashboardView() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-bold text-[#1a365d]">Resumen General</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-primario">Resumen General</h1>
+        <p className="text-sm text-texto-mutado mt-1">
           Métricas principales de las operaciones de hoy.
         </p>
       </div>
 
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KpiCard
+          delay={60}
           title="Ventas de hoy"
           value={formatSoles(dbData.resumen.ventasHoy)}
           subtitle={`${dbData.resumen.variacionVentas > 0 ? "+" : ""}${dbData.resumen.variacionVentas.toFixed(1)}% vs. ayer a esta hora`}
           subtitleColor={
             dbData.resumen.variacionVentas >= 0
-              ? "text-green-500"
-              : "text-red-500"
+              ? "text-exito"
+              : "text-peligro"
           }
         />
         <KpiCard
+          delay={130}
           title="Ventas realizadas"
           value={dbData.resumen.cantidadVentas.toString()}
           subtitle="Comprobantes pagados"
         />
         <KpiCard
+          delay={200}
           title="Ticket promedio"
           value={formatSoles(dbData.resumen.ticketPromedio)}
           subtitle="Por venta de hoy"
         />
         <KpiCard
+          delay={270}
           title="Cuentas abiertas"
           value={dbData.resumen.cuentasAbiertas.toString()}
           subtitle={`${formatSoles(dbData.resumen.montoPorCobrar)} por cobrar`}
-          subtitleColor="text-blue-500"
+          subtitleColor="text-primario-claro"
         />
       </section>
 

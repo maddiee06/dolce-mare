@@ -9,22 +9,22 @@ export default function EstadoStockBadge({ estado }: Props) {
   const config = {
     disponible: {
       etiqueta: "Disponible",
-      clases: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      clases: "bg-exito-fondo text-exito-texto border-exito-borde",
     },
     stock_bajo: {
       etiqueta: "Stock Bajo",
-      clases: "bg-amber-100 text-amber-800 border-amber-200",
+      clases: "bg-advertencia-fondo text-advertencia-texto border-advertencia-borde",
     },
     agotado: {
       etiqueta: "Agotado",
-      clases: "bg-rose-100 text-rose-800 border-rose-200",
+      clases: "bg-error-fondo text-error-texto border-error-borde",
     },
   };
 
   // Si llega un estado que no reconocemos, usamos un gris neutral por defecto
   const estilo = config[estado as keyof typeof config] || {
     etiqueta: estado || "Desconocido",
-    clases: "bg-gray-100 text-gray-700 border-gray-200",
+    clases: "bg-superficie-hover text-texto-mutado border-borde-gris",
   };
 
   return (

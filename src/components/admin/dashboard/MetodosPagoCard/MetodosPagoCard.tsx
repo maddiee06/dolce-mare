@@ -33,18 +33,18 @@ export const MetodosPagoCard: React.FC<MetodosPagoCardProps> = ({
 
   return (
     <div
-      className={`${styles.metodosPagoCard} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full`}
+      className={`${styles.metodosPagoCard} bg-superficie p-6 rounded-2xl border border-borde-gris-claro shadow-sm h-full`}
     >
       <div className="mb-6">
         <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
           Métodos de pago
         </h2>
-        <p className="text-gray-400 text-sm">distribución de hoy</p>
+        <p className="text-texto-claro text-sm">distribución de hoy</p>
       </div>
 
       <div className="flex flex-col gap-6">
         {metodos.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-4">
+          <p className="text-texto-claro text-sm text-center py-4">
             No hay pagos registrados.
           </p>
         ) : (
@@ -54,7 +54,7 @@ export const MetodosPagoCard: React.FC<MetodosPagoCardProps> = ({
               <div key={index} className="flex flex-col gap-2">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <Icon className="w-5 h-5 text-gray-400" />
+                    <Icon className="w-5 h-5 text-texto-claro" />
                     <span className={`${styles.methodName} font-medium`}>
                       {metodo.nombre}
                     </span>
@@ -71,7 +71,7 @@ export const MetodosPagoCard: React.FC<MetodosPagoCardProps> = ({
                     style={{ width: `${metodo.porcentajeBarra}%` }}
                   />
                 </div>
-                <span className="text-gray-400 text-xs">
+                <span className="text-texto-claro text-xs">
                   {metodo.porcentaje}% del total
                 </span>
               </div>

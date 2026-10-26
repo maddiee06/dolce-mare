@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Store,
   Clock,
@@ -10,6 +10,7 @@ import {
   Settings,
   X,
   ShelvingUnit,
+  LogOut,
 } from "lucide-react";
 import styles from "./NavCajeroSidebar.module.scss";
 import { RolNombre } from "../../../models/Usuario";
@@ -34,6 +35,8 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
   pendingCount = 0,
 }) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const [cerrando, setCerrando] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -55,7 +58,6 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
 
   const isActive = (path: string) => pathname === path;
 
-  // Función helper para clases comunes de enlaces en el sidebar
   const getSidebarLinkClasses = (path: string) => {
     const baseClasses =
       "w-full flex items-center justify-between px-4 py-3 rounded-xl text-base transition-all text-left cursor-pointer";
@@ -64,6 +66,26 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
         ? `font-bold ${styles.navBtnActive}`
         : `font-medium hover:bg-black/5 ${styles.navBtnInactive}`
     }`;
+  };
+
+  const handleLogout = async () => {
+    setCerrando(true);
+    try {
+      const res = await fetch("/api/auth/logout", { method: "POST" });
+      if (res.ok) {
+        router.push("/login");
+        router.refresh();
+        setTimeout(() => {
+          setCerrando(false);
+          if (onClose) onClose();
+        }, 800);
+      } else {
+        setCerrando(false);
+      }
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+      setCerrando(false);
+    }
   };
 
   return (
@@ -222,8 +244,8 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
             </Link>
           </nav>
 
-          {/* Ajustes */}
-          <div className="pt-3 pb-2 border-t border-stone-200/100 mt-auto">
+          {/* Ajustes y Cerrar sesión */}
+          <div className="pt-3 pb-2 border-t border-stone-200/100 mt-auto flex flex-col gap-1">
             <Link
               href="/cajero/ajustes"
               onClick={onClose}
@@ -241,6 +263,24 @@ const NavCajeroSidebar: React.FC<NavCajeroSidebarProps> = ({
                 <span>Ajustes</span>
               </div>
             </Link>
+
+            <button
+              onClick={handleLogout}
+              disabled={cerrando}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-all text-left cursor-pointer text-red-600 hover:bg-red-50 mt-1"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-1.5 h-4 rounded-full opacity-0" />
+                <span className="w-5 h-5 flex items-center justify-center opacity-80">
+                  {cerrando ? (
+                    <span className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+                  ) : (
+                    <LogOut size={18} strokeWidth={2} />
+                  )}
+                </span>
+                <span>{cerrando ? "Saliendo..." : "Cerrar sesión"}</span>
+              </div>
+            </button>
           </div>
         </div>
       </aside>

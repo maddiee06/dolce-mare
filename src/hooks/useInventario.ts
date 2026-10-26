@@ -8,6 +8,13 @@ import type {
   TipoInventario,
 } from "../models/Inventario";
 
+/**
+ * Hook para la gestión del estado del inventario en componentes React.
+ * Controla la búsqueda con temporizador (debounce de 300ms), el filtro por estado de stock,
+ * el estado de carga y el manejo de errores.
+ * 
+ * @param tipo - Categoría base a listar: 'sabores' (helados y cremoladas) o 'envases'
+ */
 export function useInventario(tipo: TipoInventario) {
   const [busqueda, setBusqueda] = useState("");
   const [estado, setEstado] = useState<EstadoStock | "">("");
@@ -18,6 +25,7 @@ export function useInventario(tipo: TipoInventario) {
   useEffect(() => {
     let cancelado = false;
 
+    // Si el usuario está escribiendo en el buscador, espera 300ms antes de consultar
     const espera = setTimeout(
       async () => {
         if (cancelado) return;
@@ -39,6 +47,7 @@ export function useInventario(tipo: TipoInventario) {
       busqueda ? 300 : 0,
     );
 
+    // Limpieza del temporizador si el usuario sigue escribiendo o desmonta la vista
     return () => {
       cancelado = true;
       clearTimeout(espera);

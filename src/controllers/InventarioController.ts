@@ -10,8 +10,15 @@ import {
   type RegistrarMovimientoInput,
 } from "../models/Inventario";
 
+// Estados válidos de stock admitidos por el filtro
 const ESTADOS: EstadoStock[] = ["disponible", "stock_bajo", "agotado"];
 
+/**
+ * Controlador de Inventario
+ * Atiende las peticiones a la API (/api/inventario/...) para:
+ * listar stock agrupado, consultar tipos de movimiento, ver el Kardex
+ * y registrar ajustes de stock o mermas.
+ */
 export class InventarioController {
   constructor(
     private readonly service: IInventarioService,
@@ -19,9 +26,9 @@ export class InventarioController {
   ) {}
 
   /**
-   * Arma el controller para la petición actual.
-   * - Usa el cliente de servicio (solo servidor): los permisos los controla InventarioService.
-   * - La sede activa sale de la cookie `id_sede` que guarda /api/sedes/seleccionar.
+   * Crea una instancia del controlador para la petición actual.
+   * Utiliza el cliente de servicio administrativo para asegurar permisos y
+   * obtiene la sede activa directamente desde la cookie 'id_sede'.
    */
   static async crear(): Promise<InventarioController> {
     const cookieStore = await cookies();
@@ -36,7 +43,10 @@ export class InventarioController {
     );
   }
 
-  /** Sede elegida en /seleccionsucursal (cookie id_sede). */
+  /**
+   * Valida que exista una sede activa seleccionada en la sesión.
+   * Si no hay sede, lanza un error para obligar a elegir sucursal.
+   */
   private sedeActiva(): number {
     if (this.idSedeCookie === null) {
       throw new InventarioError(
@@ -47,6 +57,9 @@ export class InventarioController {
     return this.idSedeCookie;
   }
 
+  /**
+   * Valida que un valor recibido sea un número entero positivo.
+   */
   private entero(valor: unknown, campo: string): number {
     const n = Number(valor);
     if (
@@ -64,6 +77,9 @@ export class InventarioController {
     return n;
   }
 
+  /**
+   * Maneja y centraliza la respuesta de error devolviendo el código HTTP adecuado.
+   */
   private responderError(e: unknown): NextResponse {
     if (e instanceof InventarioError) {
       return NextResponse.json({ error: e.message }, { status: e.status });
@@ -75,6 +91,11 @@ export class InventarioController {
     );
   }
 
+  /**
+   * GET /api/inventario
+   * Lista el inventario de la sede activa según el tipo ('sabores' o 'envases'),
+   * permitiendo filtrar opcionalmente por texto o estado de stock.
+   */
   async listar(req: NextRequest): Promise<NextResponse> {
     try {
       const idSede = this.sedeActiva();
@@ -97,6 +118,10 @@ export class InventarioController {
     }
   }
 
+  /**
+   * GET /api/inventario/tipos-movimiento
+   * Devuelve los tipos de movimiento manuales configurados (Entrada, Ajuste, Merma, etc.).
+   */
   async tiposMovimiento(): Promise<NextResponse> {
     try {
       return NextResponse.json(await this.service.obtenerTiposMovimiento());
@@ -105,7 +130,10 @@ export class InventarioController {
     }
   }
 
-  /** Nombre y rol del usuario logueado (el formulario lo muestra como "Responsable"). */
+  /**
+   * GET /api/inventario/contexto
+   * Obtiene los datos del usuario logueado que figura como 'Responsable' en los formularios.
+   */
   async contexto(): Promise<NextResponse> {
     try {
       return NextResponse.json(await this.service.obtenerResponsable());
@@ -114,6 +142,10 @@ export class InventarioController {
     }
   }
 
+  /**
+   * GET /api/inventario/kardex
+   * Devuelve el historial detallado de movimientos de un producto con sus fechas y saldos.
+   */
   async kardex(req: NextRequest): Promise<NextResponse> {
     try {
       const idSede = this.sedeActiva();
@@ -133,6 +165,10 @@ export class InventarioController {
     }
   }
 
+  /**
+   * POST /api/inventario/registrar
+   * Registra un movimiento de stock (aumento, descuento o merma) en la base de datos.
+   */
   async registrar(req: NextRequest): Promise<NextResponse> {
     try {
       const idSede = this.sedeActiva();

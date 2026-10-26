@@ -11,7 +11,7 @@ interface Props {
 export default function TablaEnvases({ envases, onAjustar }: Props) {
   if (envases.length === 0) {
     return (
-      <div className="rounded-xl border border-[#2a4d8f]/10 bg-white p-8 text-center text-sm text-[#8a8580] shadow-sm">
+      <div className="rounded-xl border border-borde-tenue bg-superficie p-8 text-center text-sm text-texto-mutado shadow-sm">
         No hay envases o complementos registrados o que coincidan con la
         búsqueda.
       </div>
@@ -25,22 +25,22 @@ export default function TablaEnvases({ envases, onAjustar }: Props) {
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className={styles.cabecera}>
               <tr>
-                <th className="py-4 pl-6 text-[#8a8580] font-medium">
+                <th className="py-4 pl-6 text-texto-mutado font-medium">
                   Artículo
                 </th>
-                <th className="py-4 text-center text-[#8a8580] font-medium">
+                <th className="py-4 text-center text-texto-mutado font-medium">
                   Formato / Unidad
                 </th>
-                <th className="py-4 text-center text-[#8a8580] font-medium">
+                <th className="py-4 text-center text-texto-mutado font-medium">
                   Stock actual
                 </th>
-                <th className="py-4 text-center text-[#8a8580] font-medium">
+                <th className="py-4 text-center text-texto-mutado font-medium">
                   Mínimo
                 </th>
-                <th className="py-4 text-center text-[#8a8580] font-medium">
+                <th className="py-4 text-center text-texto-mutado font-medium">
                   Estado
                 </th>
-                <th className="py-4 pr-6 text-center text-[#8a8580] font-medium">
+                <th className="py-4 pr-6 text-center text-texto-mutado font-medium">
                   Acción
                 </th>
               </tr>
@@ -50,24 +50,24 @@ export default function TablaEnvases({ envases, onAjustar }: Props) {
                 <tr key={envase.idProducto} className={styles.fila}>
                   <td className="py-4 pl-6">
                     <div className="flex flex-col">
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-semibold text-texto-oscuro">
                         {envase.nombre}
                       </span>
-                      <span className="text-sm text-[#8a8580]">
+                      <span className="text-sm text-texto-mutado">
                         {envase.categoria}
                       </span>
                     </div>
                   </td>
 
-                  <td className="py-4 text-center text-[#8a8580]">
+                  <td className="py-4 text-center text-texto-mutado">
                     {envase.unidadMedida}
                   </td>
 
-                  <td className="py-4 text-center font-semibold text-gray-900">
+                  <td className="py-4 text-center font-semibold text-texto-oscuro">
                     {formatearCantidad(envase.stockActual)}
                   </td>
 
-                  <td className="py-4 text-center text-[#8a8580]">
+                  <td className="py-4 text-center text-texto-mutado">
                     {formatearCantidad(envase.stockMinimo)}
                   </td>
 
@@ -77,7 +77,7 @@ export default function TablaEnvases({ envases, onAjustar }: Props) {
 
                   <td className="py-4 pr-6 text-center">
                     <button
-                      className="px-4 py-2 font-semibold text-[#2a4d8f] bg-[#fbe8dd] rounded-lg hover:bg-[#f5dacb] transition-colors"
+                      className="px-4 py-2 font-semibold text-primario bg-seleccion rounded-lg hover:bg-seleccion-hover transition-colors"
                       onClick={() => onAjustar(envase)}
                     >
                       {envase.estado === "agotado" ||

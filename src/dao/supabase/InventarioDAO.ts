@@ -16,6 +16,9 @@ import {
 } from "../../models/Inventario";
 import { normalizar } from "../../utils/estadoStock";
 
+/**
+ * Estructuras crudas devueltas por Supabase al consultar stock y kardex
+ */
 interface FilaStockRaw {
   id_producto_sede: number;
   id_producto: number;
@@ -40,6 +43,7 @@ interface FilaKardexRaw {
   usuarios: { nombres: string; apellidos: string } | null;
 }
 
+/** Columnas seleccionadas para el inventario de productos */
 const SELECT_STOCK = `
   id_producto_sede, id_producto, stock_actual, stock_minimo, disponible,
   productos!inner (
@@ -48,16 +52,26 @@ const SELECT_STOCK = `
   )
 `;
 
-const redondear = (n: number) => Math.round(n * 100) / 100;
-
+/**
+ * DAO de Inventario (Implementación Supabase)
+ * Ejecuta todas las operaciones de acceso a datos para el módulo de inventario:
+ * consulta de stock por sede, movimientos de Kardex y llamada al procedimiento
+ * almacenado 'registrar_movimiento'.
+ */
 export class InventarioDAO implements IInventarioDAO {
   constructor(private readonly supabase: SupabaseClient) {}
 
+  /**
+   * Helper para registrar el error en consola y generar una excepción controlada.
+   */
   private fallo(accion: string, error: { message: string }): InventarioError {
     console.error(`[InventarioDAO] No se pudo ${accion}:`, error.message);
     return new InventarioError(`No se pudo ${accion}`, 500);
   }
 
+  /**
+   * Mapea un registro devuelto por Supabase al formato estandarizado FilaStock.
+   */
   private mapearStock(f: FilaStockRaw): FilaStock {
     return {
       idProductoSede: f.id_producto_sede,
@@ -71,6 +85,10 @@ export class InventarioDAO implements IInventarioDAO {
     };
   }
 
+  /**
+   * Obtiene la información del usuario en sesión leyendo la cookie 'session'.
+   * Verifica la firma JWT y consulta el rol en la tabla 'usuarios'.
+   */
   async obtenerContextoUsuario(): Promise<ContextoUsuario | null> {
     const token = (await cookies()).get("session")?.value;
     if (!token) return null;
@@ -82,7 +100,7 @@ export class InventarioDAO implements IInventarioDAO {
       });
       idUsuario = Number(payload.sub);
     } catch {
-      return null; // token inválido o expirado
+      return null; // Token inválido o expirado
     }
     if (!Number.isInteger(idUsuario) || idUsuario <= 0) return null;
 
@@ -111,6 +129,9 @@ export class InventarioDAO implements IInventarioDAO {
     };
   }
 
+  /**
+   * Comprueba si la sede especificada existe y está habilitada para operar.
+   */
   async sedeEstaActiva(idSede: number): Promise<boolean> {
     const { data, error } = await this.supabase
       .from("sedes")
@@ -123,6 +144,9 @@ export class InventarioDAO implements IInventarioDAO {
     return !!data;
   }
 
+  /**
+   * Obtiene todo el stock de productos activos para una sede determinada.
+   */
   async obtenerStockPorSede(idSede: number): Promise<FilaStock[]> {
     const { data, error } = await this.supabase
       .from("producto_sede")
@@ -137,6 +161,9 @@ export class InventarioDAO implements IInventarioDAO {
     );
   }
 
+  /**
+   * Consulta el registro de stock actual de un artículo específico dentro de una sede.
+   */
   async obtenerStockProducto(
     idSede: number,
     idProducto: number,
@@ -152,6 +179,9 @@ export class InventarioDAO implements IInventarioDAO {
     return data ? this.mapearStock(data as unknown as FilaStockRaw) : null;
   }
 
+  /**
+   * Consulta los tipos de movimiento de inventario disponibles (Entrada, Ajuste, Merma, etc.).
+   */
   async obtenerTiposMovimiento(): Promise<TipoMovimiento[]> {
     const { data, error } = await this.supabase
       .from("tipos_movimiento_inventario")
@@ -166,6 +196,9 @@ export class InventarioDAO implements IInventarioDAO {
     }));
   }
 
+  /**
+   * Consulta el listado de movimientos de Kardex de un producto en un rango de fechas ISO.
+   */
   async obtenerKardex(
     idSede: number,
     idProducto: number,
@@ -203,6 +236,10 @@ export class InventarioDAO implements IInventarioDAO {
     }));
   }
 
+  /**
+   * Ejecuta el procedimiento almacenado 'registrar_movimiento' en Supabase.
+   * Actualiza el stock en 'producto_sede' de forma atómica y crea el registro en 'movimientos_inventario'.
+   */
   async registrarMovimiento(
     mov: NuevoMovimiento,
   ): Promise<ResultadoMovimiento> {
@@ -226,6 +263,10 @@ export class InventarioDAO implements IInventarioDAO {
     return data as ResultadoMovimiento;
   }
 
+  /**
+   * Obtiene el stock resultante del último movimiento previo a la fecha inicial
+   * para utilizarlo como saldo inicial del Kardex.
+   */
   async obtenerSaldoAntesDe(
     idSede: number,
     idProducto: number,
@@ -246,6 +287,10 @@ export class InventarioDAO implements IInventarioDAO {
     return data ? Number(data.stock_resultante) : null;
   }
 
+  /**
+   * Obtiene el stock anterior del primer movimiento posterior a la fecha final
+   * en caso de no haber movimientos previos.
+   */
   async obtenerSaldoDespuesDe(
     idSede: number,
     idProducto: number,

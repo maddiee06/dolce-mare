@@ -1,11 +1,9 @@
-$color-primary: #1a365d;
-$color-coral: #f27a4d;
-$color-blue-light: #5c7294;
+@use "../../../../styles/variables" as *;
 
 @keyframes fadeSlideUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
   100% {
     opacity: 1;
@@ -14,34 +12,33 @@ $color-blue-light: #5c7294;
 }
 
 .metodosPagoCard {
-  opacity: 0;
-  animation: fadeSlideUp 0.5s ease-out forwards;
-  animation-delay: 0.4s;
+  animation: fadeSlideUp 0.45s $ease-suave both;
+  animation-delay: 0.46s;
 
   .cardTitle {
-    color: $color-primary;
+    color: $color-primario;
   }
 
   .methodName {
-    color: $color-primary;
+    color: $color-primario;
   }
 
   .methodAmount {
-    color: $color-primary;
+    color: $color-primario;
   }
 
   /* Barra de progreso base */
   .barTrack {
-    background-color: #f3f4f6;
+    background-color: $color-barra-fondo;
   }
 
   .barFillBase {
-    transition: width 1s ease-in-out;
+    transition: $transicion-barra;
   }
 
   /* Colores específicos por método de pago */
   .fillEfectivo {
-    background-color: $color-primary;
+    background-color: $color-primario;
   }
 
   .fillYape {
@@ -49,6 +46,6 @@ $color-blue-light: #5c7294;
   }
 
   .fillTarjeta {
-    background-color: $color-blue-light;
+    background-color: $color-secundario;
   }
 }

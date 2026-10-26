@@ -21,22 +21,22 @@ export const RankingPersonalCard: React.FC<RankingPersonalCardProps> = ({
 }) => {
   return (
     <div
-      className={`${styles.rankingPersonal} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm`}
+      className={`${styles.rankingPersonal} bg-superficie p-6 rounded-2xl border border-borde-gris-claro shadow-sm`}
     >
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
             Ranking de personal
           </h2>
-          <p className="text-gray-400 text-sm">
+          <p className="text-texto-claro text-sm">
             Por ticket promedio, no por venta total
           </p>
         </div>
-        {cargando && <Loader2 className="w-5 h-5 text-gray-300 animate-spin" />}
+        {cargando && <Loader2 className="w-5 h-5 text-texto-claro animate-spin" />}
       </div>
 
       <div className="w-full">
-        <div className="flex justify-between items-center text-xs font-semibold text-gray-400 border-b border-gray-100 pb-3 mb-3 px-2">
+        <div className="flex justify-between items-center text-xs font-semibold text-texto-claro border-b border-borde-gris-claro pb-3 mb-3 px-2">
           <span>USUARIO</span>
           <div className="flex gap-8 text-right">
             <span className="w-16">N.º VENTAS</span>
@@ -46,7 +46,7 @@ export const RankingPersonalCard: React.FC<RankingPersonalCardProps> = ({
 
         <div className="flex flex-col gap-2">
           {personal.length === 0 && !cargando ? (
-            <p className="text-gray-400 text-sm text-center py-4">
+            <p className="text-texto-claro text-sm text-center py-4">
               No hay ventas registradas hoy.
             </p>
           ) : (
@@ -65,13 +65,13 @@ export const RankingPersonalCard: React.FC<RankingPersonalCardProps> = ({
                     <p className={`${styles.userName} font-medium text-sm`}>
                       {persona.nombre}
                     </p>
-                    <p className="text-gray-400 text-xs">
+                    <p className="text-texto-claro text-xs">
                       id_usuario: {persona.id}
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-8 text-right text-sm items-center">
-                  <span className="w-16 text-gray-500">{persona.ventas}</span>
+                  <span className="w-16 text-texto-mutado">{persona.ventas}</span>
                   <span className={`w-20 font-bold ${styles.userTicket}`}>
                     {persona.ticket}
                   </span>

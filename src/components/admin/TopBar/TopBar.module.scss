@@ -1,10 +1,4 @@
-$navy: #2a4d8f;
-$navy-light: #466bb0;
-$text-main: #1f2937;
-$muted: #8a8580;
-$surface: #ffffff;
-$selected: #fbe8dd;
-$edge: rgba(42, 77, 143, 0.12);
+@use "../../../styles/variables" as *;
 
 @keyframes slideDown {
   0% {
@@ -18,46 +12,46 @@ $edge: rgba(42, 77, 143, 0.12);
 }
 
 .topbar {
-  background-color: $surface;
-  border-bottom: 1px solid $edge;
+  background-color: $color-superficie;
+  border-bottom: 1px solid $color-borde-tenue;
 
   animation: slideDown 0.4s ease-out forwards;
 }
 
 // Estilos de la marca
 .brandTitle {
-  color: $navy;
+  color: $color-primario;
 }
 
 .brandSubtitle {
-  color: $navy-light;
+  color: $color-primario-claro;
 }
 
 // Botón de la campanita
 .iconButton {
-  color: $muted;
+  color: $color-texto-mutado;
 
   &:hover {
-    background-color: rgba($muted, 0.08);
-    color: $navy;
+    background-color: $color-superficie-hover;
+    color: $color-primario;
   }
 
   &:focus-visible {
-    outline: 2px solid rgba($navy, 0.5);
+    outline: 2px solid $color-primario-focus;
     outline-offset: 2px;
   }
 }
 
 // Avatar y textos de usuario
 .avatar {
-  background-color: $selected;
-  color: $navy;
+  background-color: $color-seleccion;
+  color: $color-primario;
 }
 
 .userName {
-  color: $text-main;
+  color: $color-texto-principal;
 }
 
 .userRole {
-  color: $muted;
+  color: $color-texto-mutado;
 }

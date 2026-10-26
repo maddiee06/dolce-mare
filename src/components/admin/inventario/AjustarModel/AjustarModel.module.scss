@@ -1,3 +1,5 @@
+@use "../../../../styles/variables" as *;
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -5,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(42, 77, 143, 0.4);
+  background-color: $color-superposicion;
   padding: 1rem;
   animation: fadeIn 0.2s ease-out forwards;
 }
@@ -14,10 +16,8 @@
   width: 100%;
   max-width: 28rem;
   border-radius: 1rem;
-  background-color: #ffffff;
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background-color: $color-superficie;
+  box-shadow: $sombra-modal;
   animation: slideUp 0.3s ease-out forwards;
 }
 
@@ -25,21 +25,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(42, 77, 143, 0.1);
+  border-bottom: 1px solid $color-borde-tenue;
   padding: 1rem 1.5rem;
 
   h2 {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #2a4d8f;
+    color: $color-primario;
   }
 }
 
 .closeButton {
   border-radius: 9999px;
   padding: 0.5rem;
-  color: #8a8580;
-  transition: all 0.2s;
+  color: $color-texto-mutado;
+  transition: $transicion-rapida;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -48,8 +48,8 @@
   justify-content: center;
 
   &:hover {
-    background-color: rgba(251, 232, 221, 0.5);
-    color: #2a4d8f;
+    background-color: $color-seleccion-suave;
+    color: $color-primario;
   }
 }
 
@@ -63,31 +63,31 @@
   flex-direction: column;
   align-items: center;
   border-radius: 0.75rem;
-  border: 1px solid rgba(42, 77, 143, 0.05);
-  background-color: #f8f9fa;
+  border: 1px solid $color-borde-tenue;
+  background-color: $color-superficie-gris;
   padding: 1rem;
   text-align: center;
 
   .categoria {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #8a8580;
+    color: $color-texto-mutado;
   }
 
   .nombre {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #111827;
+    color: $color-texto-oscuro;
   }
 
   .stock {
     margin-top: 0.5rem;
     border-radius: 9999px;
-    background-color: #eef2f9;
+    background-color: $color-primario-suave;
     padding: 0.25rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #2a4d8f;
+    color: $color-primario;
   }
 }
 
@@ -99,11 +99,11 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #374151;
+    color: $color-texto-principal;
 
     span {
       font-weight: 400;
-      color: #8a8580;
+      color: $color-texto-mutado;
     }
   }
 
@@ -112,20 +112,20 @@
   textarea {
     width: 100%;
     border-radius: 0.75rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid $color-borde-gris;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
-    transition: all 0.2s;
-    background-color: #ffffff;
+    transition: $transicion-rapida;
+    background-color: $color-superficie;
 
     &:focus {
-      border-color: #2a4d8f;
+      border-color: $color-primario;
       outline: none;
-      box-shadow: 0 0 0 1px #2a4d8f;
+      box-shadow: 0 0 0 1px $color-primario;
     }
 
     &:disabled {
-      background-color: #f3f4f6;
+      background-color: $color-barra-fondo;
       cursor: not-allowed;
     }
   }
@@ -143,16 +143,16 @@
   .btnCancel {
     flex: 1;
     border-radius: 0.75rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid $color-borde-gris;
     padding: 0.75rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #4b5563;
+    color: $color-texto-principal;
     transition: background-color 0.2s;
-    background: #ffffff;
+    background: $color-superficie;
 
     &:hover:not(:disabled) {
-      background-color: #f9fafb;
+      background-color: $color-superficie-hover;
     }
   }
 
@@ -162,16 +162,16 @@
     align-items: center;
     justify-content: center;
     border-radius: 0.75rem;
-    background-color: #2a4d8f;
+    background-color: $color-primario;
     padding: 0.75rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #ffffff;
+    color: $color-texto-blanco;
     transition: background-color 0.2s;
     border: none;
 
     &:hover:not(:disabled) {
-      background-color: #203a6d;
+      background-color: $color-primario-oscuro;
     }
 
     &:disabled {

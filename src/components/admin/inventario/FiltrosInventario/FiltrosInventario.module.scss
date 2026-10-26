@@ -1,14 +1,4 @@
-$navy: #2a4d8f;
-$navy-light: #466bb0;
-$surface: #ffffff;
-$page: #fbf8f4;
-$muted: #8a8580;
-$text-main: #1f2937;
-$selected: #fbe8dd;
-$edge: rgba(42, 77, 143, 0.15);
-
-$ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
-$ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+@use "../../../../styles/variables" as *;
 
 @keyframes slideUpFade {
   0% {
@@ -26,7 +16,7 @@ $ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  animation: slideUpFade 0.5s $ease-smooth forwards;
+  animation: slideUpFade 0.5s $ease-suave forwards;
 }
 
 .inputGrupo {
@@ -40,35 +30,35 @@ $ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 .iconoInput {
   position: absolute;
   left: 1rem;
-  color: $muted;
-  transition: color 0.3s $ease-smooth;
+  color: $color-texto-mutado;
+  transition: color 0.3s $ease-suave;
 }
 
 .inputControl,
 .selectControl {
   width: 100%;
-  background-color: $surface;
-  border: 1px solid $edge;
+  background-color: $color-superficie;
+  border: 1px solid $color-borde-suave;
   border-radius: 0.75rem;
   padding: 0.75rem 1rem 0.75rem 2.75rem;
   font-size: 0.875rem;
-  color: $text-main;
+  color: $color-texto-principal;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s $ease-smooth;
+  transition: all 0.3s $ease-suave;
   appearance: none;
 
   &::placeholder {
-    color: lighten($muted, 15%);
+    color: $color-texto-placeholder;
   }
 
   &:hover {
-    border-color: rgba($navy, 0.3);
+    border-color: $color-borde-2;
   }
 
   &:focus {
     outline: none;
-    border-color: $navy;
-    box-shadow: 0 0 0 4px rgba($navy, 0.1);
+    border-color: $color-primario;
+    box-shadow: 0 0 0 4px $color-primario-hover;
   }
 }
 
@@ -84,6 +74,6 @@ $ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 .iconoSelect {
   position: absolute;
   right: 1rem;
-  color: $muted;
+  color: $color-texto-mutado;
   pointer-events: none;
 }

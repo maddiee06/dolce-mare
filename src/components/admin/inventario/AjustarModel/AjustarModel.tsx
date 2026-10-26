@@ -86,7 +86,7 @@ export default function AjustarModal({
           </div>
 
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-100">
+            <div className="mb-4 rounded-lg bg-alerta-rojo-fondo p-3 text-sm text-peligro border border-alerta-rojo-borde">
               {error}
             </div>
           )}

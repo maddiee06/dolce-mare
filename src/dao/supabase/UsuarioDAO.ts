@@ -2,9 +2,19 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { IUsuarioDAO } from "../interfaces/IUsuarioDAO";
 import { Usuario } from "../../models/Usuario";
 
+/**
+ * DAO de Usuarios (Implementación Supabase)
+ * Realiza las consultas y ejecuciones directas sobre la tabla 'usuarios'
+ * y la función almacenada 'verificar_login' en la base de datos.
+ */
 export class UsuarioDAO implements IUsuarioDAO {
   constructor(private readonly supabase: SupabaseClient) {}
 
+  /**
+   * Ejecuta el procedimiento almacenado 'verificar_login' en la base de datos
+   * pasando el usuario y contraseña. Si las credenciales coinciden,
+   * normaliza el rol (1 para Administrador, 2 para Cajero) y devuelve el objeto Usuario.
+   */
   async verificarCredenciales(
     usuario: string,
     password: string,
@@ -16,17 +26,15 @@ export class UsuarioDAO implements IUsuarioDAO {
 
     if (error || !data) return null;
 
-    console.log("Respuesta de verificar_login:", data);
-
-    let idRolFinal = 2;
+    // Normalización de roles para asegurar compatibilidad
+    let idRolFinal = 2; // Por defecto rol 2 (Cajero)
 
     if (data.id_rol && !isNaN(Number(data.id_rol))) {
       idRolFinal = Number(data.id_rol);
     } else if (data.rol) {
       const rolTexto = String(data.rol).toLowerCase();
-
       if (rolTexto.includes("admin")) {
-        idRolFinal = 1;
+        idRolFinal = 1; // Rol 1 (Administrador)
       }
     }
 
@@ -39,6 +47,9 @@ export class UsuarioDAO implements IUsuarioDAO {
     } as unknown as Usuario;
   }
 
+  /**
+   * Consulta un usuario por su identificador primario en la tabla 'usuarios'.
+   */
   async obtenerPorId(id: string): Promise<Usuario | null> {
     const { data, error } = await this.supabase
       .from("usuarios")

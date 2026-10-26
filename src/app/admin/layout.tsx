@@ -30,7 +30,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex h-screen bg-[#FFF9F0]">
+    <div className="flex h-screen bg-fondo">
       <Sidebar />
 
       <div className="flex flex-1 flex-col overflow-hidden">

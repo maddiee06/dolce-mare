@@ -5,9 +5,22 @@ import { createClient } from "../utils/supabase/server";
 import { UsuarioDAO } from "../dao/supabase/UsuarioDAO";
 import { AuthService } from "../services/AuthService";
 
+// Clave secreta para firmar y verificar tokens JWT de sesión
 const secret = new TextEncoder().encode(process.env.SESSION_SECRET);
 
+/**
+ * Controlador de Autenticación
+ * Se encarga del inicio de sesión, generación de tokens JWT en cookies seguras
+ * y la lectura de los datos del perfil activo.
+ */
 export class AuthController {
+  /**
+   * Procesa la solicitud de login del usuario.
+   * 1. Extrae y valida que vengan las credenciales (usuario y contraseña).
+   * 2. Consulta a AuthService para verificar contra la base de datos.
+   * 3. Si es correcto, genera un token JWT firmado válido por 8 horas.
+   * 4. Guarda las cookies de sesión en el navegador y devuelve la ruta de redirección.
+   */
   async login(request: Request) {
     let body: { usuario?: unknown; password?: unknown };
     try {
@@ -22,6 +35,7 @@ export class AuthController {
     const usuario = typeof body.usuario === "string" ? body.usuario.trim() : "";
     const password = typeof body.password === "string" ? body.password : "";
 
+    // Validación básica: ninguno de los campos puede estar vacío
     if (!usuario || !password) {
       return NextResponse.json(
         { error: "Completa usuario y contraseña." },
@@ -33,6 +47,7 @@ export class AuthController {
     const supabase = createClient(cookieStore);
     const service = new AuthService(new UsuarioDAO(supabase));
 
+    // Verificación de credenciales en base de datos
     const resultado = await service.login(usuario, password);
 
     if (!resultado.ok) {
@@ -42,6 +57,7 @@ export class AuthController {
       );
     }
 
+    // Creación del token JWT con los datos clave del usuario
     const token = await new SignJWT({
       sub: String(resultado.usuario.id_usuario),
       rol: resultado.usuario.id_rol,
@@ -51,14 +67,16 @@ export class AuthController {
       .setExpirationTime("8h")
       .sign(secret);
 
+    // Cookie de sesión principal (httpOnly para proteger contra ataques XSS)
     cookieStore.set("session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 8,
+      maxAge: 60 * 60 * 8, // 8 horas
     });
 
+    // Cookie de rol para lectura rápida en frontend
     cookieStore.set("id_rol", String(resultado.usuario.id_rol), {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
@@ -77,7 +95,11 @@ export class AuthController {
     });
   }
 
-  async obtenerPerfil(request: Request) {
+  /**
+   * Obtiene la información del usuario autenticado leyendo y verificando
+   * el token JWT almacenado en la cookie 'session'.
+   */
+  async obtenerPerfil(_request?: Request) {
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get("session")?.value;
 

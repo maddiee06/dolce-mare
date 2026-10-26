@@ -51,9 +51,9 @@ const CustomDot = (props: CustomDotProps) => {
           cx={cx}
           cy={cy}
           r={5}
-          stroke="#fff"
+          stroke="var(--color-superficie)"
           strokeWidth={2}
-          fill="#f27a4d"
+          fill="var(--color-coral)"
         />
         {/* Etiqueta debajo del punto */}
         <foreignObject
@@ -82,9 +82,9 @@ const CustomDot = (props: CustomDotProps) => {
       cx={cx}
       cy={cy}
       r={4}
-      stroke="#fff"
+      stroke="var(--color-superficie)"
       strokeWidth={2}
-      fill="#1a365d"
+      fill="var(--color-primario)"
     />
   );
 };
@@ -102,7 +102,7 @@ const CustomXAxisTick = (props: CustomXAxisTickProps) => {
         y={0}
         dy={16}
         textAnchor="middle"
-        fill={isHoy ? "#1a365d" : "#9ca3af"}
+        fill={isHoy ? "var(--color-primario)" : "var(--color-texto-claro)"}
         fontSize={12}
         fontWeight={isHoy ? 600 : 400}
       >
@@ -120,7 +120,7 @@ export const EvolucionVentasCard: React.FC<EvolucionVentasCardProps> = ({
 }) => {
   return (
     <div
-      className={`${styles.evolucionVentas} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm w-full h-full flex flex-col`}
+      className={`${styles.evolucionVentas} bg-superficie p-6 rounded-2xl border border-borde-gris-claro shadow-sm w-full h-full flex flex-col`}
     >
       {/* Cabecera */}
       <div className="flex justify-between items-start mb-8">
@@ -128,14 +128,14 @@ export const EvolucionVentasCard: React.FC<EvolucionVentasCardProps> = ({
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
             Evolución de ventas
           </h2>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-texto-claro text-sm mt-1">
             Últimos 7 días · {acumulado} acumulados
           </p>
         </div>
 
         {/* Selector de Fechas */}
         <select
-          className={`${styles.dateSelector} text-sm font-medium py-2 px-3 rounded-lg outline-none cursor-pointer appearance-none pr-8 relative bg-no-repeat bg-[right_0.5rem_center] bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%231a365d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')]`}
+          className={`${styles.dateSelector} text-sm font-medium py-2 px-3 rounded-lg outline-none cursor-pointer appearance-none pr-8 relative bg-no-repeat bg-[right_0.5rem_center] bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%232a4d8f%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')]`}
         >
           <option>{rangoFechas}</option>
           <option>Mes anterior</option>
@@ -153,7 +153,7 @@ export const EvolucionVentasCard: React.FC<EvolucionVentasCardProps> = ({
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#f3f4f6"
+              stroke="var(--color-barra-fondo)"
             />
 
             <XAxis
@@ -167,7 +167,7 @@ export const EvolucionVentasCard: React.FC<EvolucionVentasCardProps> = ({
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#9ca3af", fontSize: 12 }}
+              tick={{ fill: "var(--color-texto-claro)", fontSize: 12 }}
               tickFormatter={(value: number) => value.toLocaleString()}
             />
 
@@ -187,13 +187,13 @@ export const EvolucionVentasCard: React.FC<EvolucionVentasCardProps> = ({
             <Line
               type="monotone"
               dataKey="total"
-              stroke="#1a365d"
+              stroke="var(--color-primario)"
               strokeWidth={3}
               dot={<CustomDot />}
               activeDot={{
                 r: 6,
-                fill: "#1a365d",
-                stroke: "#fff",
+                fill: "var(--color-primario)",
+                stroke: "var(--color-superficie)",
                 strokeWidth: 2,
               }}
               isAnimationActive={true}

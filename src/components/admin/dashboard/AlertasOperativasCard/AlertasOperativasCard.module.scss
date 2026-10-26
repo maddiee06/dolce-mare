@@ -1,16 +1,23 @@
-$color-primary: #1a365d;
-$color-coral: #f27a4d;
-$color-red: #ef4444;
+@use "../../../../styles/variables" as *;
 
-/* Fondos muy suaves para las alertas */
-$bg-orange-alert: rgba(242, 122, 77, 0.08);
-$border-orange-alert: rgba(242, 122, 77, 0.2);
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-$bg-red-alert: rgba(239, 68, 68, 0.08);
-$border-red-alert: rgba(239, 68, 68, 0.2);
+.aletasOperativas {
+  animation: fadeSlideUp 0.45s $ease-suave both;
+  animation-delay: 0.58s;
+}
 
 .cardTitle {
-  color: $color-primary;
+  color: $color-primario;
 }
 
 .iconWarning {
@@ -19,32 +26,32 @@ $border-red-alert: rgba(239, 68, 68, 0.2);
 
 /* Cajas de alerta de Stock */
 .stockAlertBox {
-  background-color: $bg-orange-alert;
-  border: 1px solid $border-orange-alert;
+  background-color: $color-alerta-naranja-fondo;
+  border: 1px solid $color-alerta-naranja-borde;
 }
 
 .stockAlertName {
-  color: $color-primary;
+  color: $color-primario;
 }
 
 .stockAlertValue {
-  color: darken($color-coral, 5%);
+  color: $color-coral-oscuro;
 }
 
 /* Cajas de alerta de Mermas */
 .mermaAlertBox {
-  background-color: $bg-red-alert;
-  border: 1px solid $border-red-alert;
+  background-color: $color-alerta-rojo-fondo;
+  border: 1px solid $color-alerta-rojo-borde;
 }
 
 .mermaAlertName {
-  color: $color-primary;
+  color: $color-primario;
 }
 
 .mermaAlertMotivo {
-  color: lighten($color-red, 10%);
+  color: $color-peligro;
 }
 
 .mermaAlertValue {
-  color: $color-red;
+  color: $color-peligro;
 }

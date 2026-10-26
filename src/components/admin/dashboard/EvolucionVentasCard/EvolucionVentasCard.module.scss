@@ -1,11 +1,9 @@
-$color-primary: #1a365d;
-$color-coral: #f27a4d;
-$bg-coral-light: rgba(242, 122, 77, 0.15);
+@use "../../../../styles/variables" as *;
 
 @keyframes fadeSlideUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
   }
   100% {
     opacity: 1;
@@ -14,31 +12,30 @@ $bg-coral-light: rgba(242, 122, 77, 0.15);
 }
 
 .evolucionVentas {
-  opacity: 0;
-  animation: fadeSlideUp 0.5s ease-out forwards;
-  animation-delay: 0.2s;
+  animation: fadeSlideUp 0.45s $ease-suave both;
+  animation-delay: 0.32s;
 }
 
 .cardTitle {
-  color: $color-primary;
+  color: $color-primario;
 
   /* El selector de fechas superior derecho */
   .dateSelector {
-    background-color: #f9fafb;
-    color: $color-primary;
+    background-color: $color-superficie-hover;
+    color: $color-primario;
     border: 1px solid transparent;
-    transition: all 0.2s;
+    transition: $transicion-rapida;
 
     &:hover {
-      background-color: #f3f4f6;
-      border-color: #e5e7eb;
+      background-color: $color-barra-fondo;
+      border-color: $color-borde-gris;
     }
   }
 
   /* Tooltip personalizado o etiqueta fija debajo del punto */
   .customLabel {
-    background-color: $bg-coral-light;
-    color: darken($color-coral, 15%);
+    background-color: $color-coral-claro;
+    color: $color-coral-oscuro;
     padding: 4px 12px;
     border-radius: 9999px;
     font-size: 12px;

@@ -2,12 +2,21 @@
 import { useState, useEffect } from "react";
 import { getAvatarUrl } from "../utils/avatar";
 
+/**
+ * Hook para la cabecera y barra de navegación superior (TopBar).
+ * Mantiene la hora actual de Lima actualizada cada segundo,
+ * obtiene los datos del usuario en sesión (nombre y rol)
+ * y genera la URL del avatar con las iniciales.
+ * 
+ * @param initialUserName - Nombre inicial del usuario en caso de provenir de Server Components
+ */
 export function usePerfilUsuario(initialUserName?: string) {
   const [userName, setUserName] = useState(initialUserName || "");
   const [userRole, setUserRole] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [time, setTime] = useState("");
 
+  // Reloj en tiempo real con formato 24 horas para Perú
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -24,6 +33,7 @@ export function usePerfilUsuario(initialUserName?: string) {
     return () => clearInterval(interval);
   }, []);
 
+  // Si no se proporcionó un nombre inicial, consulta el endpoint /api/auth/perfil
   useEffect(() => {
     if (!initialUserName) {
       fetch("/api/auth/perfil")
@@ -36,7 +46,10 @@ export function usePerfilUsuario(initialUserName?: string) {
     }
   }, [initialUserName]);
 
+  // Alterna la visibilidad del menú desplegable en dispositivos móviles
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+
+  // URL del avatar generado a partir del nombre del usuario
   const avatarUrl = getAvatarUrl(userName);
 
   return {

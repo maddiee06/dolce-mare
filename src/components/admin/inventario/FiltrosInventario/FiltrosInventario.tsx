@@ -26,7 +26,7 @@ export default function FiltrosInventario({
     >
       {/* Barra de Búsqueda */}
       <div className="flex flex-1 flex-col gap-1.5 min-w-[280px]">
-        <label className="ml-1 text-sm font-semibold text-[#2a4d8f]">
+        <label className="ml-1 text-sm font-semibold text-primario">
           Buscar producto
         </label>
         <div className={styles.inputGrupo}>
@@ -43,7 +43,7 @@ export default function FiltrosInventario({
 
       {/* Filtro de Categoría */}
       <div className="flex flex-col gap-1.5">
-        <label className="ml-1 text-sm font-semibold text-[#2a4d8f]">
+        <label className="ml-1 text-sm font-semibold text-primario">
           Categoría
         </label>
         <div className="relative flex items-center">
@@ -62,7 +62,7 @@ export default function FiltrosInventario({
 
       {/* Filtro de Estado */}
       <div className="flex flex-col gap-1.5">
-        <label className="ml-1 text-sm font-semibold text-[#2a4d8f]">
+        <label className="ml-1 text-sm font-semibold text-primario">
           Estado de stock
         </label>
         <div className="relative flex items-center">

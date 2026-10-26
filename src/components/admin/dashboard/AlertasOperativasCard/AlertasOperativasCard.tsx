@@ -26,14 +26,14 @@ export const AlertasOperativasCard: React.FC<AlertasOperativasCardProps> = ({
 }) => {
   return (
     <div
-      className={`${styles.aletasOperativas} bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full`}
+      className={`${styles.aletasOperativas} bg-superficie p-6 rounded-2xl border border-borde-gris-claro shadow-sm h-full`}
     >
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className={`${styles.cardTitle} font-semibold text-lg`}>
             Alertas operativas
           </h2>
-          <p className="text-gray-400 text-sm">
+          <p className="text-texto-claro text-sm">
             Stock, mermas y movimientos entre sedes
           </p>
         </div>
@@ -43,14 +43,14 @@ export const AlertasOperativasCard: React.FC<AlertasOperativasCardProps> = ({
       <div className="flex flex-col gap-6">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <Package className="w-4 h-4 text-gray-400" />
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+            <Package className="w-4 h-4 text-texto-claro" />
+            <h3 className="text-xs font-bold text-texto-claro uppercase tracking-wider">
               Stock por debajo del mínimo
             </h3>
           </div>
           <div className="flex flex-col gap-2">
             {stockAlertas.length === 0 ? (
-              <p className="text-gray-400 text-sm italic">Inventario óptimo.</p>
+              <p className="text-texto-claro text-sm italic">Inventario óptimo.</p>
             ) : (
               stockAlertas.map((alerta, index) => (
                 <div
@@ -63,7 +63,7 @@ export const AlertasOperativasCard: React.FC<AlertasOperativasCardProps> = ({
                     >
                       {alerta.nombre}
                     </p>
-                    <p className="text-gray-400 text-xs">
+                    <p className="text-texto-claro text-xs">
                       mín. {alerta.minimo}
                     </p>
                   </div>
@@ -80,14 +80,14 @@ export const AlertasOperativasCard: React.FC<AlertasOperativasCardProps> = ({
 
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <Trash2 className="w-4 h-4 text-gray-400" />
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+            <Trash2 className="w-4 h-4 text-texto-claro" />
+            <h3 className="text-xs font-bold text-texto-claro uppercase tracking-wider">
               Mermas registradas hoy
             </h3>
           </div>
           <div className="flex flex-col gap-2">
             {mermas.length === 0 ? (
-              <p className="text-gray-400 text-sm italic">Sin mermas hoy.</p>
+              <p className="text-texto-claro text-sm italic">Sin mermas hoy.</p>
             ) : (
               mermas.map((merma, index) => (
                 <div

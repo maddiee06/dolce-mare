@@ -1,18 +1,11 @@
-$navy: #2a4d8f;
-$muted: #8a8580;
-$surface: #ffffff;
-$selected: #fbe8dd;
-$page: #fbf8f4;
-$edge: rgba(42, 77, 143, 0.25);
+@use "../../../styles/variables" as *;
 
 $item-h: 48px;
 $gap: 4px;
 
-$ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
-
 @mixin focus-ring {
   &:focus-visible {
-    outline: 2px solid rgba($navy, 0.5);
+    outline: 2px solid $color-primario-focus;
     outline-offset: 2px;
   }
 }
@@ -29,9 +22,9 @@ $ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar {
-  background: $surface;
-  color: $navy;
-  border-right: 1px solid $edge;
+  background: $color-superficie;
+  color: $color-primario;
+  border-right: 1px solid $color-borde-suave;
   z-index: 20;
 
   animation: slideRight 0.5s ease-out forwards;
@@ -44,10 +37,10 @@ $ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
 
 // Gota que se desliza entre secciones
 .pill {
-  background: $selected;
+  background: $color-seleccion;
   border-radius: 12px;
   transform: translateY(calc(var(--active-index) * #{$item-h + $gap}));
-  transition: transform 0.35s $ease-drop;
+  transition: $transicion-deslizamiento;
   pointer-events: none;
 }
 
@@ -55,79 +48,79 @@ $ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
 .pillBar {
   left: 0;
   width: 4px;
-  background: $navy;
+  background: $color-primario;
   border-radius: 12px 0 0 12px;
 }
 
 .item {
   position: relative;
   border-radius: 12px;
-  color: $muted;
+  color: $color-texto-mutado;
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: $transicion-rapida;
 
   &:hover:not(.itemActive) {
-    color: lighten($navy, 15%);
-    background: rgba($navy, 0.04);
+    color: $color-primario-claro;
+    background: $color-primario-hover;
   }
 
   @include focus-ring;
 }
 
 .itemActive {
-  color: $navy;
+  color: $color-primario;
   font-weight: 700;
 }
 
 .badge {
-  background: $navy;
-  color: $surface;
-  box-shadow: 0 2px 4px rgba($navy, 0.2);
+  background: $color-primario;
+  color: $color-superficie;
+  box-shadow: $sombra-insignia;
 }
 
 // Pie
 .store {
-  background: $page;
+  background: $color-fondo;
   border-radius: 16px;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.2s ease;
+  transition: $transicion-rapida;
 
   &:hover {
-    background: darken($page, 2%);
-    border-color: $edge;
+    background: $color-fondo-oscuro;
+    border-color: $color-borde-suave;
   }
 
   @include focus-ring;
 }
 
 .avatar {
-  background: linear-gradient(135deg, $navy 0%, lighten($navy, 10%) 100%);
-  color: $surface;
+  background: linear-gradient(135deg, $color-primario 0%, $color-primario-claro 100%);
+  color: $color-superficie;
   border-radius: 10px;
   font-size: 16px;
 }
 
 .storeName {
-  color: $navy;
+  color: $color-primario;
 }
 
 .storeMeta {
-  color: lighten($muted, 10%);
+  color: $color-texto-claro;
 }
 
 .logout {
-  color: $muted;
+  color: $color-texto-mutado;
   cursor: pointer;
   border-radius: 10px;
-  transition: all 0.2s ease;
+  transition: $transicion-rapida;
 
   &:hover {
-    color: #d32f2f;
-    background: rgba(211, 47, 47, 0.05);
+    color: $color-peligro-hover;
+    background: $color-peligro-fondo-hover;
   }
 
   @include focus-ring;
@@ -137,7 +130,7 @@ $ease-drop: cubic-bezier(0.4, 0, 0.2, 1);
 .separacion {
   border: none;
   height: 1px;
-  background-color: $edge;
+  background-color: $color-borde-suave;
   margin: 12px 16px;
 }
 
