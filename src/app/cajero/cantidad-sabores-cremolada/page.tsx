@@ -1,13 +1,14 @@
 "use client";
 import React, { Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FlujoPasos } from "../../../components/cajero/FlujoPasos";
 import { SaboresCard } from "../../../components/cajero/SaboresCard";
 import { CuentasAbiertas } from "../../../components/cajero/CuentasAbiertas";
 
 function CantidadSaboresCremoladaContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const envase = searchParams.get("envase") || "pequeno";
 
   // Generamos las opciones dinámicamente basándonos en la carta física
@@ -48,7 +49,7 @@ function CantidadSaboresCremoladaContent() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
-              Cambiar envase
+              Cambiar cantidad
             </Link>
             
             <h1 className="text-[32px] font-bold text-[#2d2a26] mb-1">
@@ -72,7 +73,7 @@ function CantidadSaboresCremoladaContent() {
                 precio={opcion.precio}
                 capacidadMl={opcion.capacidadMl}
                 imagen={opcion.imagen}
-                onSelect={() => console.log(`Seleccionado: ${opcion.titulo}`)}
+                onSelect={() => router.push(`/cajero/caja?producto=${encodeURIComponent(opcion.titulo)}&precio=${opcion.precio}`)}
               />
             ))}
           </div>

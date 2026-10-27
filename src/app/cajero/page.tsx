@@ -2,28 +2,28 @@
 import React from "react";
 import SeleccionCategoria from "../../components/cajero/SeleccionCategoria";
 import { CuentasAbiertas } from "../../components/cajero/CuentasAbiertas";
+import type { CuentaGuardadaType } from "../../components/cajero/CuentasGuardadas/CuentasGuardadas";
 
-const PEDIDOS_INICIALES = [
+const PEDIDOS_INICIALES: CuentaGuardadaType[] = [
   {
     id_pedido: 101,
     total: 28.5,
     fecha_pedido: "2026-10-18T16:37:00.000Z",
-    estado: { nombre: "Abierto" },
-    entrega: { nombre: "Mesa 3" },
-    detalle_pedido: [
-      { cantidad: 2, productos: { nombre: "Helado Artesanal Doble" } },
-      { cantidad: 1, productos: { nombre: "Cremolada de Mango" } },
-    ],
+    cliente: "Mesa 3",
+    direccion_entrega: null,
+    detalle: "2 × Helado Artesanal Doble, 1 × Cremolada de Mango",
+    estado: "Abierto",
+    tipo_entrega: "Mesa",
   },
   {
     id_pedido: 102,
     total: 18.0,
     fecha_pedido: "2026-10-18T16:22:00.000Z",
-    estado: { nombre: "Abierto" },
-    entrega: { nombre: "Delivery" },
-    detalle_pedido: [
-      { cantidad: 1, productos: { nombre: "Postre Tres Leches" } },
-    ],
+    cliente: "Delivery",
+    direccion_entrega: "",
+    detalle: "1 × Postre Tres Leches",
+    estado: "Abierto",
+    tipo_entrega: "Delivery",
   },
 ];
 
