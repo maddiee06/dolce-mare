@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { FlujoPasos } from "../FlujoPasos/FlujoPasos";
 
 const categorias = [
   {
@@ -96,25 +97,8 @@ export default function SeleccionCategoria() {
       </p>
 
       {/* Stepper */}
-      <div className="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm mb-8 overflow-x-auto pb-2">
-        <div className="flex items-center text-[#3b4b86] font-bold whitespace-nowrap">
-          <span className="bg-orange-200 text-orange-700 rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">
-            01
-          </span>
-          Categoría
-        </div>
-        <span className="text-gray-300 font-bold">&gt;</span>
-        <div className="text-gray-400 font-medium whitespace-nowrap">
-          02 Envase
-        </div>
-        <span className="text-gray-300 font-bold">&gt;</span>
-        <div className="text-gray-400 font-medium whitespace-nowrap">
-          03 Cantidad
-        </div>
-        <span className="text-gray-300 font-bold">&gt;</span>
-        <div className="text-gray-400 font-medium whitespace-nowrap">
-          04 Sabores
-        </div>
+      <div className="mb-8 overflow-x-auto pb-2">
+        <FlujoPasos pasoActual={1} />
       </div>
 
       {/* Grid de Tarjetas */}

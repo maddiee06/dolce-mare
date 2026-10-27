@@ -1,55 +1,69 @@
 .contenedor {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   font-family: inherit;
 }
 
 .paso {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-text-disabled); 
+  gap: 10px;
   font-size: 14px;
   font-weight: 500;
+  color: var(--color-text-disabled);
 
+  // Cuadro redondeado del ícono (estado pendiente: gris)
   .indicador {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: transparent; 
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background-color: #ececec;
     color: var(--color-text-disabled);
-    font-size: 12px;
-    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
   }
 
- 
-  &.actual {
-    color: var(--color-text-primary); 
+  // Completado: fondo azul claro, ícono azul
+  &.completado {
+    color: var(--color-text-primary);
 
     .indicador {
-      background-color: var(--color-botton-primary); 
-      color: var(--color-nav); 
+      background-color: var(--color-seleccion);
+      color: var(--color-botton-primary);
     }
   }
 
   
-  &.completado {
-    color: var(--color-text-primary); 
+  &.actual {
+    color: var(--color-text-primary);
+    font-weight: 700;
 
     .indicador {
-      background-color: var(--color-seleccion); 
-      color: var(--color-botton-primary); 
-      font-size: 14px; 
+      background-color: var(--color-botton-primary);
+      color: #fff;
     }
   }
 }
 
 .separador {
+  list-style: none;
+  display: flex;
+  align-items: center;
   color: var(--color-text-disabled);
   font-size: 14px;
-  margin: 0 4px;
+  margin: 0 2px;
+}
+
+// En móvil solo se muestra la etiqueta del paso actual
+@media (max-width: 480px) {
+  .paso:not(.actual) .etiqueta {
+    display: none;
+  }
 }
