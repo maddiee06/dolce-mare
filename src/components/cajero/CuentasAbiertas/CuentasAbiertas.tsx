@@ -2,6 +2,7 @@
 "use client";
 
 import styles from "./CuentasAbiertas.module.scss";
+import { CuentaGuardadaType } from "../CuentasGuardadas/CuentasGuardadas";
 
 interface RelacionNombre {
   nombre: string;
@@ -140,7 +141,7 @@ export function CuentasAbiertas({ pedidos, error }: Props) {
       )}
 
       <a
-        href="/cuentas-guardadas"
+        href="/cajero/cuentas-guardadas" 
         className={styles.botonGuardadas}
       >
         <span aria-hidden="true">→</span>
