@@ -11,8 +11,8 @@ interface Paso {
 
 const PASOS: Paso[] = [
   { id: 1, label: 'Categoría', Icono: LayoutGrid },
-  { id: 2, label: 'Cantidad', Icono: ListOrdered },
-  { id: 3, label: 'Envase', Icono: CupSoda },
+  { id: 2, label: 'Envase', Icono: ListOrdered },
+  { id: 3, label: 'Cantidad', Icono: CupSoda },
   { id: 4, label: 'Sabores', Icono: IceCreamCone },
 ];
 
