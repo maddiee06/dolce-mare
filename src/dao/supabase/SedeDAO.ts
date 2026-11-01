@@ -4,7 +4,6 @@ import { Sede } from "../../models/Sede";
 import { ISedeDAO } from "../interfaces/ISedeDAO";
 
 /**
- * DAO de Sedes (Implementación Supabase)
  * Accede a la tabla 'sedes' para consultar las sucursales físicas habilitadas de Dolce Mare.
  */
 export class SedeDAO implements ISedeDAO {

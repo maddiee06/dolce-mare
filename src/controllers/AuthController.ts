@@ -17,7 +17,7 @@ export class AuthController {
   /**
    * Procesa la solicitud de login del usuario.
    * 1. Extrae y valida que vengan las credenciales (usuario y contraseña).
-   * 2. Consulta a AuthService para verificar contra la base de datos.
+   * 2. Consulta a AuthService para verificar contra la base de datos (y registrar último acceso).
    * 3. Si es correcto, genera un token JWT firmado válido por 8 horas.
    * 4. Guarda las cookies de sesión en el navegador y devuelve la ruta de redirección.
    */
@@ -45,9 +45,12 @@ export class AuthController {
 
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
-    const service = new AuthService(new UsuarioDAO(supabase));
 
-    // Verificación de credenciales en base de datos
+    // Instanciación del DAO y el Servicio
+    const usuarioDao = new UsuarioDAO(supabase);
+    const service = new AuthService(usuarioDao);
+
+    // Verificación de credenciales en base de datos (la lógica de negocio actualiza el último acceso aquí)
     const resultado = await service.login(usuario, password);
 
     if (!resultado.ok) {

@@ -53,7 +53,6 @@ const SELECT_STOCK = `
 `;
 
 /**
- * DAO de Inventario (Implementación Supabase)
  * Ejecuta todas las operaciones de acceso a datos para el módulo de inventario:
  * consulta de stock por sede, movimientos de Kardex y llamada al procedimiento
  * almacenado 'registrar_movimiento'.
@@ -106,14 +105,12 @@ export class InventarioDAO implements IInventarioDAO {
 
     const { data, error } = await this.supabase
       .from("usuarios")
-      .select(
-        "id_usuario, nombres, apellidos, estado, eliminado_en, roles ( nombre )",
-      )
+      .select("id_usuario, nombres, apellidos, estado, roles ( nombre )")
       .eq("id_usuario", idUsuario)
       .maybeSingle();
 
     if (error) throw this.fallo("identificar al usuario", error);
-    if (!data || !data.estado || data.eliminado_en) return null;
+    if (!data || !data.estado) return null;
 
     const roles = data.roles as unknown;
     const rol =

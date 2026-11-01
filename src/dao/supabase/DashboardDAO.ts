@@ -11,7 +11,6 @@ import {
 } from "../../models/dtos/DashboardDTO";
 
 /**
- * DAO del Dashboard (Implementación Supabase)
  * Ejecuta todas las consultas SQL sobre las tablas de ventas, pedidos,
  * detalle de venta, métodos de pago, usuarios, stock y mermas.
  */

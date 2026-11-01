@@ -3,7 +3,6 @@ import { IUsuarioDAO } from "../interfaces/IUsuarioDAO";
 import { Usuario } from "../../models/Usuario";
 
 /**
- * DAO de Usuarios (Implementación Supabase)
  * Realiza las consultas y ejecuciones directas sobre la tabla 'usuarios'
  * y la función almacenada 'verificar_login' en la base de datos.
  */
