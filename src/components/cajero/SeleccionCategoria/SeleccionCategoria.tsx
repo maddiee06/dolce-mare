@@ -28,7 +28,7 @@ const categorias = [
     descripcion: "Pequeños grandes antojos",
     precio: "20.00",
     imagen: "/categorias/postres.jpg",
-    ruta: "/cajero/envase-helado", // Ajusta si agregas ruta de postres luego
+    ruta: "/cajero/postres", 
   },
   {
     id: 4,
@@ -36,7 +36,7 @@ const categorias = [
     descripcion: "El complemento perfecto",
     precio: "5.00",
     imagen: "/categorias/bebidas.jpg",
-    ruta: "/cajero/envase-helado", // Ajusta si agregas ruta de bebidas luego
+    ruta: "/cajero/bebidas", 
   },
 ];
 
