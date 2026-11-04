@@ -1,0 +1,50 @@
+// =============================================================================
+// Animaciones de ModalDetalleArqueo (Dolce Mare)
+// =============================================================================
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: overlayFadeIn 0.35s ease-in-out forwards;
+}
+
+.modal {
+  background-color: var(--color-superficie, #ffffff);
+  border: 1px solid var(--color-borde-suave, rgba(42, 77, 143, 0.15));
+  border-radius: 1.5rem; // rounded-3xl
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 38rem; // max-w-xl
+  max-height: 90vh;
+  overflow-y: auto;
+  transform-origin: center center;
+  animation: modalEnter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

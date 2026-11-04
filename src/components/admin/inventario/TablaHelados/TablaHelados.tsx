@@ -2,13 +2,15 @@ import { formatearCantidad } from "../../../../utils/estadoStock";
 import EstadoStockBadge from "../EstadoStockBadge";
 import type { ArticuloInventario } from "../../../../models/Inventario";
 import styles from "./TablaHelados.module.scss";
+import { Pencil } from "lucide-react";
 
 interface Props {
   helados: ArticuloInventario[];
   onAjustar: (producto: ArticuloInventario) => void;
+  onEditar?: (producto: ArticuloInventario) => void;
 }
 
-export default function TablaHelados({ helados, onAjustar }: Props) {
+export default function TablaHelados({ helados, onAjustar, onEditar }: Props) {
   if (helados.length === 0) {
     return (
       <div className="rounded-xl border border-borde-tenue bg-superficie p-8 text-center text-sm text-texto-mutado shadow-sm">
@@ -59,7 +61,7 @@ export default function TablaHelados({ helados, onAjustar }: Props) {
                   </td>
 
                   <td className="py-4 text-center text-texto-mutado">
-                    {helado.unidadMedida}
+                    {helado.unidadMedida || "Porción"}
                   </td>
 
                   <td className="py-4 text-center font-semibold text-texto-oscuro">
@@ -75,15 +77,27 @@ export default function TablaHelados({ helados, onAjustar }: Props) {
                   </td>
 
                   <td className="py-4 pr-6 text-center">
-                    <button
-                      className="px-4 py-2 font-semibold text-primario bg-seleccion rounded-lg hover:bg-seleccion-hover transition-colors"
-                      onClick={() => onAjustar(helado)}
-                    >
-                      {helado.estado === "agotado" ||
-                      helado.estado === "stock_bajo"
-                        ? "Reponer"
-                        : "Ajustar"}
-                    </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        className="px-4 py-2 font-semibold text-primario bg-seleccion rounded-lg hover:bg-seleccion-hover transition-colors"
+                        onClick={() => onAjustar(helado)}
+                      >
+                        {helado.estado === "agotado" ||
+                        helado.estado === "stock_bajo"
+                          ? "Reponer"
+                          : "Ajustar"}
+                      </button>
+                      {onEditar && (
+                        <button
+                          type="button"
+                          title="Editar información del producto"
+                          className="flex items-center justify-center p-2 rounded-lg border border-borde-gris text-texto-mutado hover:text-primario hover:bg-superficie-hover hover:border-primario transition-all"
+                          onClick={() => onEditar(helado)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

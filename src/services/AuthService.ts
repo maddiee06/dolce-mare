@@ -17,7 +17,9 @@ export class AuthService implements IAuthService {
    */
   async login(usuario: string, password: string): Promise<LoginResultado> {
     const user = await this.usuarioDAO.verificarCredenciales(usuario, password);
-    if (!user) return { ok: false, status: 401, error: ERROR_CREDENCIALES };
+    if (!user || !user.id_usuario) {
+      return { ok: false, status: 401, error: ERROR_CREDENCIALES };
+    }
 
     return {
       ok: true,

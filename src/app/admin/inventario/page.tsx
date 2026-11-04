@@ -11,6 +11,8 @@ import { TablaHelados } from "@/src/components/admin/inventario/TablaHelados";
 import { TablaCremoladas } from "@/src/components/admin/inventario/TablaCremoladas";
 import { FiltrosInventario } from "@/src/components/admin/inventario/FiltrosInventario";
 import { AjustarModel } from "@/src/components/admin/inventario/AjustarModel";
+import { ModalEditarProducto } from "@/src/components/admin/inventario/ModalEditarProducto";
+import { HistorialMovimientos } from "@/src/components/admin/inventario/HistorialMovimientos";
 
 export default function InventarioPage() {
   // Estados de navegación y filtros
@@ -24,11 +26,22 @@ export default function InventarioPage() {
   const [envasesData, setEnvasesData] = useState<ArticuloInventario[]>([]);
   const [cargando, setCargando] = useState(true);
 
-  // Estados para el Modal de Ajuste
+  // Estados para el Modal de Ajuste de Stock
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] =
     useState<ArticuloInventario | null>(null);
   const [tiposMovimiento, setTiposMovimiento] = useState<TipoMovimiento[]>([]);
+
+  // Estados para el Modal de Edición de Producto (Nombre, Precio, Categoría y Foto)
+  const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
+  const [productoAEditar, setProductoAEditar] = useState<{
+    id: number | string;
+    nombre: string;
+    precio: number;
+    categoria: string;
+    imagenUrl?: string;
+    unidadMedida?: string;
+  } | null>(null);
 
   // Cargar los tipos de movimiento al iniciar
   useEffect(() => {
@@ -59,7 +72,9 @@ export default function InventarioPage() {
         fetch(`/api/inventario?tipo=envases${params}`),
       ]);
 
-      const parsearRespuesta = async (res: Response): Promise<ArticuloInventario[]> => {
+      const parsearRespuesta = async (
+        res: Response
+      ): Promise<ArticuloInventario[]> => {
         if (!res.ok) return [];
         const raw = await res.json();
         if (raw && Array.isArray(raw.grupos)) {
@@ -99,7 +114,7 @@ export default function InventarioPage() {
       .filter((item) =>
         categoria
           ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
-          : true,
+          : true
       );
   }, [saboresData, categoria]);
 
@@ -109,7 +124,7 @@ export default function InventarioPage() {
       .filter((item) =>
         categoria
           ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
-          : true,
+          : true
       );
   }, [saboresData, categoria]);
 
@@ -117,7 +132,7 @@ export default function InventarioPage() {
     return envasesData.filter((item) =>
       categoria
         ? item.categoria.toLowerCase().includes(categoria.toLowerCase())
-        : true,
+        : true
     );
   }, [envasesData, categoria]);
 
@@ -125,11 +140,11 @@ export default function InventarioPage() {
   const handleConfirmarAjuste = async (
     idTipoMovimiento: number,
     cantidad: number,
-    motivo: string,
+    motivo: string
   ) => {
     if (!productoSeleccionado) return;
 
-    const respuesta = await fetch("/api/inventario/registrar", {
+    const respuesta = await fetch("/api/inventario/movimientos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -149,19 +164,117 @@ export default function InventarioPage() {
     await cargarInventario();
   };
 
+  // Abrir modal de edición para un producto específico (trayendo datos de BD)
+  const handleAbrirEditar = (producto: ArticuloInventario) => {
+    setProductoAEditar({
+      id: producto.idProducto,
+      nombre: producto.nombre,
+      precio: producto.precioVenta ?? 0,
+      categoria: producto.categoria,
+      imagenUrl: producto.imagenUrl,
+      unidadMedida: producto.unidadMedida,
+    });
+    setModalEditarAbierto(true);
+  };
+
+  // Guardar los cambios de nombre, precio, categoría y foto del producto
+  const handleGuardarEdicion = async (datos: {
+    nombre: string;
+    precio: number;
+    categoria: string;
+    imagenUrl?: string;
+  }) => {
+    if (!productoAEditar) return;
+
+    const respuesta = await fetch("/api/inventario/producto", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        idProducto: productoAEditar.id,
+        nombre: datos.nombre,
+        precio: datos.precio,
+        categoria: datos.categoria,
+        imagenUrl: datos.imagenUrl,
+      }),
+    });
+
+    if (!respuesta.ok) {
+      const errorData = await respuesta.json().catch(() => ({}));
+      throw new Error(errorData.error || "No se pudo actualizar el producto");
+    }
+
+    // Actualización reactiva optimista en memoria
+    setSaboresData((prev) =>
+      prev.map((item) =>
+        item.idProducto === productoAEditar.id
+          ? {
+              ...item,
+              nombre: datos.nombre,
+              categoria: datos.categoria,
+              precioVenta: datos.precio,
+              imagenUrl: datos.imagenUrl,
+            }
+          : item
+      )
+    );
+    setEnvasesData((prev) =>
+      prev.map((item) =>
+        item.idProducto === productoAEditar.id
+          ? {
+              ...item,
+              nombre: datos.nombre,
+              categoria: datos.categoria,
+              precioVenta: datos.precio,
+              imagenUrl: datos.imagenUrl,
+            }
+          : item
+      )
+    );
+
+    // Sincronizar con base de datos
+    await cargarInventario();
+  };
+
   return (
     <div className="animateFadeIn">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-primario">
-          Inventario General
-        </h1>
+        <h1 className="text-3xl font-bold text-primario">Inventario General</h1>
         <p className="mt-1 text-sm text-texto-mutado">
-          Gestiona el stock actual, registra movimientos y revisa el Kardex.
+          Gestiona el stock actual, registra movimientos y actualiza la
+          información de tus productos.
         </p>
       </div>
 
-      {/* Navegación por Pestañas */}
-      <div className="mb-8 flex w-fit gap-2 rounded-2xl border border-borde-suave bg-superficie p-2 shadow-sm">
+      {/* SECCIÓN 1: Resumen y Actividad Reciente */}
+      <section className="mb-8" aria-label="Actividad reciente">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="h-4 w-1 rounded-full bg-coral" />
+          <span className="text-xs font-bold uppercase tracking-wider text-texto-secundario">
+            Actividad Reciente
+          </span>
+        </div>
+        <HistorialMovimientos />
+      </section>
+
+      {/* SECCIÓN 2: Catálogo y Control de Stock */}
+      <section className="pt-6 border-t border-borde-tenue" aria-label="Catálogo de productos y stock">
+        <div className="mb-5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="h-4 w-1 rounded-full bg-primario" />
+            <span className="text-xs font-bold uppercase tracking-wider text-texto-secundario">
+              Existencias en Sede
+            </span>
+          </div>
+          <h2 className="text-xl font-bold text-texto-primario tracking-tight">
+            Catálogo y Control de Stock
+          </h2>
+          <p className="mt-0.5 text-xs text-texto-mutado">
+            Selecciona una sección para consultar inventario disponible, ajustar cantidades o editar información del producto.
+          </p>
+        </div>
+
+        {/* Navegación por Pestañas */}
+        <div className="mb-6 flex w-fit gap-2 rounded-2xl border border-borde-suave bg-superficie p-2 shadow-sm">
         <button
           onClick={() => setTabActivo("helados")}
           className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 ${
@@ -218,6 +331,7 @@ export default function InventarioPage() {
                   setProductoSeleccionado(producto);
                   setModalAbierto(true);
                 }}
+                onEditar={handleAbrirEditar}
               />
             )}
             {tabActivo === "cremoladas" && (
@@ -227,6 +341,7 @@ export default function InventarioPage() {
                   setProductoSeleccionado(producto);
                   setModalAbierto(true);
                 }}
+                onEditar={handleAbrirEditar}
               />
             )}
             {tabActivo === "envases" && (
@@ -236,19 +351,32 @@ export default function InventarioPage() {
                   setProductoSeleccionado(producto);
                   setModalAbierto(true);
                 }}
+                onEditar={handleAbrirEditar}
               />
             )}
           </>
         )}
       </div>
+      </section>
 
-      {/* Modal de Ajuste */}
+      {/* Modal de Ajuste de Stock */}
       <AjustarModel
         isOpen={modalAbierto}
         onClose={() => setModalAbierto(false)}
         producto={productoSeleccionado}
         tiposMovimiento={tiposMovimiento}
         onConfirm={handleConfirmarAjuste}
+      />
+
+      {/* Modal de Edición de Producto con Vista Previa de Card de Cajero */}
+      <ModalEditarProducto
+        isOpen={modalEditarAbierto}
+        onClose={() => {
+          setModalEditarAbierto(false);
+          setProductoAEditar(null);
+        }}
+        producto={productoAEditar}
+        onSave={handleGuardarEdicion}
       />
     </div>
   );

@@ -1,184 +1,14 @@
 @use "../../../../styles/variables" as *;
 
+// Fondo sin blur (cero lag de GPU), solo fade-in suave de opacidad
 .overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: $color-superposicion;
-  padding: 1rem;
-  animation: fadeIn 0.2s ease-out forwards;
+  animation: fadeIn 0.2s $ease-suave forwards;
 }
 
-.modal {
-  width: 100%;
-  max-width: 28rem;
-  border-radius: 1rem;
-  background-color: $color-superficie;
-  box-shadow: $sombra-modal;
-  animation: slideUp 0.3s ease-out forwards;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid $color-borde-tenue;
-  padding: 1rem 1.5rem;
-
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: $color-primario;
-  }
-}
-
-.closeButton {
-  border-radius: 9999px;
-  padding: 0.5rem;
-  color: $color-texto-mutado;
-  transition: $transicion-rapida;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background-color: $color-seleccion-suave;
-    color: $color-primario;
-  }
-}
-
-.form {
-  padding: 1.25rem 1.5rem;
-}
-
-.infoBox {
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 0.75rem;
-  border: 1px solid $color-borde-tenue;
-  background-color: $color-superficie-gris;
-  padding: 1rem;
-  text-align: center;
-
-  .categoria {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: $color-texto-mutado;
-  }
-
-  .nombre {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: $color-texto-oscuro;
-  }
-
-  .stock {
-    margin-top: 0.5rem;
-    border-radius: 9999px;
-    background-color: $color-primario-suave;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: $color-primario;
-  }
-}
-
-.inputGroup {
-  margin-bottom: 1rem;
-
-  label {
-    margin-bottom: 0.375rem;
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: $color-texto-principal;
-
-    span {
-      font-weight: 400;
-      color: $color-texto-mutado;
-    }
-  }
-
-  select,
-  input,
-  textarea {
-    width: 100%;
-    border-radius: 0.75rem;
-    border: 1px solid $color-borde-gris;
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    transition: $transicion-rapida;
-    background-color: $color-superficie;
-
-    &:focus {
-      border-color: $color-primario;
-      outline: none;
-      box-shadow: 0 0 0 1px $color-primario;
-    }
-
-    &:disabled {
-      background-color: $color-barra-fondo;
-      cursor: not-allowed;
-    }
-  }
-}
-
-.actions {
-  margin-top: 2rem;
-  display: flex;
-  gap: 0.75rem;
-
-  button {
-    cursor: pointer;
-  }
-
-  .btnCancel {
-    flex: 1;
-    border-radius: 0.75rem;
-    border: 1px solid $color-borde-gris;
-    padding: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: $color-texto-principal;
-    transition: background-color 0.2s;
-    background: $color-superficie;
-
-    &:hover:not(:disabled) {
-      background-color: $color-superficie-hover;
-    }
-  }
-
-  .btnSubmit {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.75rem;
-    background-color: $color-primario;
-    padding: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: $color-texto-blanco;
-    transition: background-color 0.2s;
-    border: none;
-
-    &:hover:not(:disabled) {
-      background-color: $color-primario-oscuro;
-    }
-
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-  }
+// Contenedor principal con curva elástica suave personalizada Dolce Mare
+.modalContenedor {
+  animation: modalEntrada 0.28s $ease-rebote forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes fadeIn {
@@ -190,13 +20,13 @@
   }
 }
 
-@keyframes slideUp {
-  from {
+@keyframes modalEntrada {
+  0% {
     opacity: 0;
-    transform: translateY(1rem);
+    transform: scale(0.96) translateY(12px);
   }
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
   }
 }

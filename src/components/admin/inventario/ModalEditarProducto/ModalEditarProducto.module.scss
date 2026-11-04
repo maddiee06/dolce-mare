@@ -1,0 +1,59 @@
+@use "../../../../styles/variables" as *;
+
+.overlay {
+  animation: fadeIn 0.2s $ease-suave forwards;
+}
+
+// Contenedor principal con curva elástica suave personalizada Dolce Mare
+.modalContenedor {
+  animation: modalEntrada 0.28s $ease-rebote forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalEntrada {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Estructura de la tarjeta del cajero (POS)
+.cardPreview {
+  background-color: #ffffff;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(42, 77, 143, 0.12);
+  box-shadow: 0 4px 18px rgba(42, 77, 143, 0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardImageContainer {
+  position: relative;
+  width: 100%;
+  height: 12.5rem;
+  background-color: #f8f1e9; // Tono crema cálido idéntico a las cards del punto de venta
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

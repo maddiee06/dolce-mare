@@ -28,6 +28,8 @@ interface FilaStockRaw {
   productos: {
     nombre: string;
     unidad_medida: string;
+    precio_venta?: number | string;
+    imagen_url?: string | null;
     categorias: { nombre: string };
   };
 }
@@ -47,7 +49,7 @@ interface FilaKardexRaw {
 const SELECT_STOCK = `
   id_producto_sede, id_producto, stock_actual, stock_minimo, disponible,
   productos!inner (
-    nombre, unidad_medida, estado, eliminado_en,
+    nombre, unidad_medida, precio_venta, imagen_url, estado, eliminado_en,
     categorias!inner ( nombre )
   )
 `;
@@ -81,6 +83,8 @@ export class InventarioDAO implements IInventarioDAO {
       stockActual: Number(f.stock_actual),
       stockMinimo: Number(f.stock_minimo),
       disponible: f.disponible,
+      precioVenta: f.productos.precio_venta != null ? Number(f.productos.precio_venta) : 0,
+      imagenUrl: f.productos.imagen_url || undefined,
     };
   }
 

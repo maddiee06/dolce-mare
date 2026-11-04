@@ -25,24 +25,37 @@ export class UsuarioDAO implements IUsuarioDAO {
 
     if (error || !data) return null;
 
+    // Supabase RPC puede retornar un array de filas o un objeto individual
+    const usuarioData = Array.isArray(data) ? data[0] : data;
+
+    // Si no hay datos o el id_usuario es nulo/inválido, las credenciales no son correctas
+    if (!usuarioData || !usuarioData.id_usuario) {
+      return null;
+    }
+
+    const idUsuario = Number(usuarioData.id_usuario || usuarioData.id);
+    if (isNaN(idUsuario) || idUsuario <= 0) {
+      return null;
+    }
+
     // Normalización de roles para asegurar compatibilidad
     let idRolFinal = 2; // Por defecto rol 2 (Cajero)
 
-    if (data.id_rol && !isNaN(Number(data.id_rol))) {
-      idRolFinal = Number(data.id_rol);
-    } else if (data.rol) {
-      const rolTexto = String(data.rol).toLowerCase();
+    if (usuarioData.id_rol && !isNaN(Number(usuarioData.id_rol))) {
+      idRolFinal = Number(usuarioData.id_rol);
+    } else if (usuarioData.rol) {
+      const rolTexto = String(usuarioData.rol).toLowerCase();
       if (rolTexto.includes("admin")) {
         idRolFinal = 1; // Rol 1 (Administrador)
       }
     }
 
     return {
-      id_usuario: Number(data.id_usuario || data.id),
+      id_usuario: idUsuario,
       id_rol: idRolFinal,
-      nombres: data.nombres,
-      apellidos: data.apellidos,
-      usuario: data.usuario,
+      nombres: usuarioData.nombres,
+      apellidos: usuarioData.apellidos,
+      usuario: usuarioData.usuario,
     } as unknown as Usuario;
   }
 

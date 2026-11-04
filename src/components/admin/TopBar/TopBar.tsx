@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Bell, MapPin } from "lucide-react";
 import styles from "./TopBar.module.scss";
 import { usePerfilUsuario } from "../../../hooks/usePerfilUsuario";
+import { HistorialNotificaciones } from "../HistorialNotificaciones";
 
 export type TopBarProps = {
   initialUserName?: string;
@@ -16,9 +17,28 @@ const TopBar: React.FC<TopBarProps> = ({
   const { userName, userRole, time, avatarUrl } =
     usePerfilUsuario(initialUserName);
 
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+
+  // Cerrar el sidebar con la tecla Escape
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMostrarNotificaciones(false);
+      }
+    };
+
+    if (mostrarNotificaciones) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mostrarNotificaciones]);
+
   return (
     <header
-      className={`${styles.topbar} flex h-20 w-full items-center justify-between px-8`}
+      className={`${styles.topbar} relative z-30 flex h-20 w-full items-center justify-between px-8`}
     >
       {/* Lado Izquierdo*/}
       <div className="flex items-center gap-2">
@@ -33,11 +53,21 @@ const TopBar: React.FC<TopBarProps> = ({
 
         {/* Botón de Notificaciones */}
         <button
-          className={`${styles.iconButton} relative flex size-10 items-center justify-center rounded-full transition-colors hover:bg-superficie-hover`}
+          type="button"
+          onClick={() => setMostrarNotificaciones(true)}
+          aria-expanded={mostrarNotificaciones}
+          aria-label="Abrir notificaciones"
+          className={`${styles.iconButton} relative flex size-10 items-center justify-center rounded-full transition-all duration-200 hover:bg-superficie-hover`}
         >
           <Bell className="size-5" strokeWidth={1.5} />
           <span className="absolute right-2.5 top-2.5 size-1.5 rounded-full bg-peligro"></span>
         </button>
+
+        {/* Sidebar Lateral Derecho (Drawer estilo Canvas/App) */}
+        <HistorialNotificaciones
+          isOpen={mostrarNotificaciones}
+          onClose={() => setMostrarNotificaciones(false)}
+        />
 
         <div className="w-px h-8 opacity-30 bg-borde-gris" />
 

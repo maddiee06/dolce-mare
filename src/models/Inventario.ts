@@ -23,6 +23,8 @@ export interface FilaStock {
   stockActual: number;
   stockMinimo: number;
   disponible: boolean;
+  precioVenta?: number;
+  imagenUrl?: string;
 }
 
 export interface ArticuloInventario extends FilaStock {

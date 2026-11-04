@@ -1,0 +1,54 @@
+// HistorialNotificaciones.module.scss
+// Dolce Mare - Sidebar Lateral Derecho de Notificaciones con Desenfoque
+
+.backdrop {
+  opacity: 0;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.sidebarDerecho {
+  transform: translateX(100%);
+  animation: slideInRight 0.28s var(--ease-suave, cubic-bezier(0.25, 1, 0.5, 1)) forwards;
+  box-shadow: -12px 0 35px -5px rgba(15, 23, 42, 0.16), -4px 0 12px -2px rgba(15, 23, 42, 0.08);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+// Scrollbar estilizado moderno
+.scrollLista {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-borde-gris, #e2e8f0) transparent;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-borde-gris, #e2e8f0);
+    border-radius: 9999px;
+
+    &:hover {
+      background: var(--color-borde-suave, #cbd5e1);
+    }
+  }
+}
