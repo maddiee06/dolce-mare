@@ -1,2 +1,2 @@
 export { default as ModalPago } from "./ModalPago";
-export type { ModalPagoProps } from "./ModalPago";
+export type { ModalPagoProps, CuentaCobrarInfo } from "./ModalPago";

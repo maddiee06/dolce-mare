@@ -4,13 +4,13 @@ import styles from './CuentasGuardadas.module.scss';
 
 export interface CuentaGuardadaType {
   id_pedido: number; 
-  cliente: string; 
+  cliente?: string;              // Nombre del cliente o referencia (ej. "Mesa 3", "Juan Pérez")
   direccion_entrega: string | null; 
-  detalle: string; 
+  detalle: string;               // Descripción concatenada de los ítems del detalle_pedido
   total: number; 
   fecha_pedido: string; 
-  estado: string; 
-  tipo_entrega: string; 
+  estado: string;                // Viene del catálogo estados_pedido
+  tipo_entrega: string;          // Viene del catálogo tipos_entrega (ej. "Mesa", "Delivery")
 }
 
 interface CuentasGuardadasProps {
@@ -41,15 +41,16 @@ function obtenerHoraYFecha(fechaIso: string): { hora: string, fechaStr: string }
 
 export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, cargando }) => {
   
-  const totalPendiente = cuentas.reduce((acumulador, cuenta) => acumulador + Number(cuenta.total), 0);
+  const totalPendiente = cuentas.reduce((acumulador, cuenta) => acumulador + Number(cuenta.total || 0), 0);
   
   const cantPendientes = cuentas.filter((c) => {
-    if(!c.estado) return false;
-    return c.estado.toLowerCase() === "pendiente" || c.estado.toLowerCase() === "abierto";
+    if (!c.estado) return false;
+    const est = c.estado.toLowerCase();
+    return est === "pendiente" || est === "abierto";
   }).length;
   
   const cantPreparacion = cuentas.filter((c) => {
-    if(!c.estado) return false;
+    if (!c.estado) return false;
     return c.estado.toLowerCase() === "en preparación";
   }).length;
 
@@ -63,7 +64,7 @@ export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, car
           <p className="text-[#8a8580] text-sm md:text-base">Retoma un pedido o cobra una cuenta cuando esté lista.</p>
         </div>
         <Link href="/cajero" className="w-full md:w-auto">
-          <button className="w-full md:w-auto justify-center bg-[#e8956b] hover:bg-[#d88258] text-white px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 transition-colors">
+          <button className="w-full md:w-auto justify-center bg-[#e8956b] hover:bg-[#d88258] text-white px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 transition-colors cursor-pointer">
             <span>+</span> Nueva venta
           </button>
         </Link>
@@ -117,7 +118,7 @@ export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, car
 
       <div className={styles.tablaContenedor}>
         
-        {/* VISTA MÓVIL: TARJETAS (Se oculta en escritorio) */}
+        {/* VISTA MÓVIL: TARJETAS */}
         <div className="md:hidden flex flex-col gap-3 p-4">
           {cargando ? (
             <div className="text-center text-[#8a8580] py-8">Cargando cuentas...</div>
@@ -126,12 +127,13 @@ export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, car
           ) : (
             cuentas.map((cuenta) => {
               const tiempo = obtenerHoraYFecha(cuenta.fecha_pedido);
+              const esDelivery = cuenta.tipo_entrega?.toLowerCase() === "delivery";
               return (
                 <div key={cuenta.id_pedido} className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm flex flex-col gap-3">
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="font-bold text-[#2d2a26]">
-                        {cuenta.tipo_entrega?.toLowerCase() === "delivery" ? "Delivery" : cuenta.cliente || "Cliente"}
+                        {esDelivery ? "Delivery" : cuenta.cliente || "Mesa / Cliente"}
                       </div>
                       <div className="text-xs text-[#8a8580] mt-0.5">#{cuenta.id_pedido}</div>
                     </div>
@@ -156,20 +158,20 @@ export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, car
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 border-t border-gray-50 mt-1">
-                    <button className="flex-1 bg-gray-50 text-[#2a4d8f] font-semibold text-sm py-2 rounded-lg flex justify-center items-center gap-1 transition-colors hover:bg-gray-100">
-                       Editar
+                    <button className="flex-1 bg-gray-50 text-[#2a4d8f] font-semibold text-sm py-2 rounded-lg flex justify-center items-center gap-1 transition-colors hover:bg-gray-100 cursor-pointer">
+                        Editar
                     </button>
-                    <button className="flex-1 bg-[#fbe8dd] text-[#e8956b] hover:bg-[#e8956b] hover:text-white transition-colors py-2 rounded-lg font-semibold text-sm flex justify-center items-center gap-1">
-                       Cobrar
+                    <button className="flex-1 bg-[#fbe8dd] text-[#e8956b] hover:bg-[#e8956b] hover:text-white transition-colors py-2 rounded-lg font-semibold text-sm flex justify-center items-center gap-1 cursor-pointer">
+                        Cobrar
                     </button>
                   </div>
                 </div>
-              )
+              );
             })
           )}
         </div>
 
-        {/* VISTA ESCRITORIO: TABLA (Se oculta en móvil) */}
+        {/* VISTA ESCRITORIO: TABLA */}
         <div className="hidden md:block overflow-x-auto">
           <table className={styles.tabla}>
             <thead>
@@ -194,11 +196,12 @@ export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, car
               ) : (
                 cuentas.map((cuenta) => {
                   const tiempo = obtenerHoraYFecha(cuenta.fecha_pedido);
+                  const esDelivery = cuenta.tipo_entrega?.toLowerCase() === "delivery";
                   return (
                     <tr key={cuenta.id_pedido}>
                       <td>
                         <div className="font-bold text-[#2d2a26]">
-                          {cuenta.tipo_entrega?.toLowerCase() === "delivery" ? "Delivery" : cuenta.cliente || "Cliente"}
+                          {esDelivery ? "Delivery" : cuenta.cliente || "Mesa / Cliente"}
                         </div>
                         <div className="text-xs text-[#8a8580] mt-0.5">#{cuenta.id_pedido}</div>
                       </td>
@@ -221,18 +224,18 @@ export const CuentasGuardadas: React.FC<CuentasGuardadasProps> = ({ cuentas, car
                       </td>
                       <td>
                         <div className="flex items-center gap-3">
-                          <button className="text-[#2a4d8f] font-semibold text-sm hover:underline flex items-center gap-1">
+                          <button className="text-[#2a4d8f] font-semibold text-sm hover:underline flex items-center gap-1 cursor-pointer">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                             Editar
                           </button>
-                          <button className="bg-[#fbe8dd] text-[#e8956b] hover:bg-[#e8956b] hover:text-white transition-colors px-4 py-1.5 rounded-full font-semibold text-sm flex items-center gap-1">
+                          <button className="bg-[#fbe8dd] text-[#e8956b] hover:bg-[#e8956b] hover:text-white transition-colors px-4 py-1.5 rounded-full font-semibold text-sm flex items-center gap-1 cursor-pointer">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
                             Cobrar
                           </button>
                         </div>
                       </td>
                     </tr>
-                  )
+                  );
                 })
               )}
             </tbody>
