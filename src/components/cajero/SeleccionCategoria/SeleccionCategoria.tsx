@@ -2,41 +2,40 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { FlujoPasos } from "../FlujoPasos/FlujoPasos";
+import { FlujoPasos } from "../FlujoPasos";
 
 const categorias = [
   {
     id: 1,
     titulo: "Helados",
+    slug: "helados" as const,
     descripcion: "+20 sabores artesanales",
     precio: "9.00",
     imagen: "/categorias/heladito.jpg",
-    ruta: "/cajero/envase-helado",
   },
   {
     id: 2,
     titulo: "Cremoladas",
+    slug: "cremoladas" as const,
     descripcion: "Fruta fresca, puro sabor",
     precio: "6.00",
     imagen: "/categorias/cremolada.jpg",
-    ruta: "/cajero/envase-cremolada",
   },
   {
     id: 3,
     titulo: "Postres",
+    slug: "postres" as const,
     descripcion: "Pequeños grandes antojos",
     precio: "20.00",
     imagen: "/categorias/postres.jpg",
-    ruta: "/cajero/postres", 
   },
   {
     id: 4,
     titulo: "Bebidas",
+    slug: "bebidas" as const,
     descripcion: "El complemento perfecto",
     precio: "5.00",
     imagen: "/categorias/bebidas.jpg",
-    ruta: "/cajero/bebidas", 
   },
 ];
 
@@ -83,9 +82,13 @@ const CategoriaCard = ({
   );
 };
 
-export default function SeleccionCategoria() {
-  const router = useRouter();
+type Categoria = "helados" | "cremoladas" | "postres" | "bebidas";
 
+interface SeleccionCategoriaProps {
+  onSelectCategoria?: (categoria: Categoria) => void;
+}
+
+export default function SeleccionCategoria({ onSelectCategoria }: SeleccionCategoriaProps) {
   return (
     <div className="bg-[#FAF8F5] p-6 md:p-8 rounded-3xl w-full max-w-4xl font-sans">
       {/* Cabecera */}
@@ -96,8 +99,8 @@ export default function SeleccionCategoria() {
         Selecciona una categoría para empezar una nueva venta.
       </p>
 
-      {/* Stepper */}
-      <div className="mb-8 overflow-x-auto pb-2">
+      {/* Stepper reutilizando FlujoPasos */}
+      <div className="mb-8">
         <FlujoPasos pasoActual={1} />
       </div>
 
@@ -110,7 +113,11 @@ export default function SeleccionCategoria() {
             descripcion={categoria.descripcion}
             precio={categoria.precio}
             imagen={categoria.imagen} 
-            onClick={() => router.push(categoria.ruta)}
+            onClick={() => {
+              if (onSelectCategoria) {
+                onSelectCategoria(categoria.slug);
+              }
+            }}
           />
         ))}
       </div>

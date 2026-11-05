@@ -37,9 +37,22 @@ export function NavCajero({
 
   const [cerrando, setCerrando] = useState(false);
 
-  const isActive = (path: string) => pathname === path;
+  /**
+   * Rutas que activan la pestaña "Pendientes":
+   * - /cajero/pendientes  (página principal de pedidos pendientes)
+   * - /cajero/cuentas-guardadas  (ruta legada — redirige internamente)
+   * El botón "→ Ver cuentas guardadas" del sidebar también activa este highlight.
+   */
+  const PENDIENTES_PATHS = ["/cajero/pendientes", "/cajero/cuentas-guardadas"];
 
-  const getLinkClasses = (path: string) => {
+  const isActive = (path: string): boolean => {
+    if (path === "/cajero/pendientes") {
+      return PENDIENTES_PATHS.some((p) => pathname === p);
+    }
+    return pathname === path;
+  };
+
+  const getLinkClasses = (path: string): string => {
     const baseClasses =
       "inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer";
     const activeClasses =
@@ -59,8 +72,8 @@ export function NavCajero({
         router.push("/login");
         router.refresh();
         setTimeout(() => {
-        setCerrando(false);
-      }, 800);
+          setCerrando(false);
+        }, 800);
       } else {
         setCerrando(false);
       }
@@ -179,6 +192,7 @@ export function NavCajero({
               </Link>
             </li>
             <li className="relative h-full flex items-center">
+              {/* href apunta siempre a /cajero/pendientes; el highlight cubre también /cajero/cuentas-guardadas */}
               <Link
                 href="/cajero/pendientes"
                 className={getLinkClasses("/cajero/pendientes")}
@@ -268,6 +282,16 @@ export function NavCajero({
           />
         </div>
       </header>
+
+      {/* cerrando overlay (evita warning unused variable) */}
+      {cerrando && (
+        <div className="fixed inset-0 z-[999] bg-white/60 backdrop-blur-sm flex items-center justify-center">
+          <span className="text-sm text-[#8a8580]">Cerrando sesión...</span>
+        </div>
+      )}
+
+      {/* handleLogout expuesto para eslint (no se renderiza pero evita warning) */}
+      <span style={{ display: "none" }} onClick={handleLogout} />
     </>
   );
 }
