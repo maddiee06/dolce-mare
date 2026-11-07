@@ -28,7 +28,7 @@ export default function InventarioEnvasesPage() {
         </Link>
       </div>
 
-      <SubTabsInventario nota="Todos los artículos se controlan en unidades" />
+      <SubTabsInventario nota="Entradas por paquetes o cajas; control de stock en unidades" />
 
       <div className="mb-5 flex flex-wrap items-stretch gap-4">
         <FiltrosInventario

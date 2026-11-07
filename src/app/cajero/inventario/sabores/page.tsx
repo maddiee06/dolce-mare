@@ -16,7 +16,7 @@ export default function InventarioSaboresPage() {
         <div>
           <h1 className="text-3xl font-semibold text-text-secondary">Sabores</h1>
           <p className="mt-1 text-sm text-text-disabled">
-            Controla helados y cremoladas por separado, con una misma unidad de medida.
+            Controla helados y cremoladas por bandejas y fracciones (1/2, 1/4, etc.).
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export default function InventarioSaboresPage() {
         </Link>
       </div>
 
-      <SubTabsInventario nota="Sabores medidos en litros (L)" />
+      <SubTabsInventario nota="Sabores gestionados por bandejas (1/2, 1/4 bandeja, etc.)" />
 
       <div className="mb-5 flex flex-wrap items-stretch gap-4">
         <FiltrosInventario
@@ -59,11 +59,11 @@ export default function InventarioSaboresPage() {
           <div className="rounded-3xl bg-seleccion px-6 py-5 text-sm text-text-secondary">
             <h3 className="mb-1 font-semibold text-text-primary">Un Kardex para cada sabor</h3>
             <p>
-              Las entradas aumentan el stock; las ventas y mermas lo reducen. Registra siempre las
-              cantidades en litros, también en los ajustes.
+              Las entradas aumentan el stock; las ventas y mermas lo reducen. Registra las
+              cantidades en bandejas y fracciones de bandeja (p. ej. 1, 1/2, 1/4).
             </p>
             <p className="mt-3 text-xs text-text-disabled">
-              Stock bajo: existencias iguales o inferiores al mínimo. Agotado: saldo de 0 L.
+              Stock bajo: existencias iguales o inferiores al mínimo. Agotado: saldo de 0 bandejas.
             </p>
           </div>
         </div>

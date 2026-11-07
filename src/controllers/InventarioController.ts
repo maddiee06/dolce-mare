@@ -58,6 +58,27 @@ export class InventarioController {
   }
 
   /**
+   * Resuelve la sede a usar: si viene en la URL o cuerpo se utiliza con prioridad,
+   * de lo contrario recurre a la cookie de la sucursal activa.
+   */
+  private resolverIdSede(req?: NextRequest, bodyIdSede?: unknown): number {
+    if (bodyIdSede !== undefined && bodyIdSede !== null && bodyIdSede !== "") {
+      const n = Number(bodyIdSede);
+      if (Number.isInteger(n) && n > 0) return n;
+    }
+    if (req) {
+      const param =
+        req.nextUrl.searchParams.get("idSede") ||
+        req.nextUrl.searchParams.get("id_sede");
+      if (param) {
+        const n = Number(param);
+        if (Number.isInteger(n) && n > 0) return n;
+      }
+    }
+    return this.sedeActiva();
+  }
+
+  /**
    * Valida que un valor recibido sea un número entero positivo.
    */
   private entero(valor: unknown, campo: string): number {
@@ -98,7 +119,7 @@ export class InventarioController {
    */
   async listar(req: NextRequest): Promise<NextResponse> {
     try {
-      const idSede = this.sedeActiva();
+      const idSede = this.resolverIdSede(req);
       const p = req.nextUrl.searchParams;
 
       const tipo = p.get("tipo");
@@ -148,7 +169,7 @@ export class InventarioController {
    */
   async kardex(req: NextRequest): Promise<NextResponse> {
     try {
-      const idSede = this.sedeActiva();
+      const idSede = this.resolverIdSede(req);
       const p = req.nextUrl.searchParams;
       const idProducto = this.entero(p.get("idProducto"), "idProducto");
 
@@ -166,17 +187,17 @@ export class InventarioController {
   }
 
   /**
-   * POST /api/inventario/registrar
+   * POST /api/inventario/registrar (o /api/inventario/movimientos)
    * Registra un movimiento de stock (aumento, descuento o merma) en la base de datos.
    */
   async registrar(req: NextRequest): Promise<NextResponse> {
     try {
-      const idSede = this.sedeActiva();
-
       const body = await req.json().catch(() => null);
       if (!body || typeof body !== "object") {
         throw new InventarioError("Cuerpo de la petición inválido", 400);
       }
+
+      const idSede = this.resolverIdSede(req, body.idSede ?? body.id_sede);
 
       const input: RegistrarMovimientoInput = {
         idProducto: this.entero(body.idProducto, "idProducto"),

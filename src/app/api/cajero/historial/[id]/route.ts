@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient } from "../../../../../../utils/supabase/server";
+import { createClient } from "@/src/utils/supabase/server";
 
 export async function GET(
   _req: NextRequest,
@@ -20,26 +20,24 @@ export async function GET(
     // Cabecera de la venta
     const { data: venta, error: errVenta } = await supabase
       .from("ventas")
-      .select(
-        `
+      .select(`
         id_venta,
-        id_pedido,
-        id_metodo_pago,
-        id_estado_venta,
-        fecha_venta,
+        codigo_ticket,
+        tipo_comprobante,
+        fecha_emision,
+        estado,
         subtotal,
         igv,
         total,
-        metodos_pago ( nombre ),
-        estados_venta ( nombre ),
-        pedidos (
-          observaciones,
-          direccion_entrega,
-          id_tipo_entrega,
-          tipos_entrega ( nombre )
+        descuento,
+        metodos_pago:id_metodo_pago (
+          nombre
+        ),
+        usuarios:id_usuario (
+          nombres,
+          apellidos
         )
-      `
-      )
+      `)
       .eq("id_venta", idVenta)
       .single();
 
@@ -48,33 +46,32 @@ export async function GET(
     }
 
     // Detalle de la venta
-    const { data: detalle, error: errDetalle } = await supabase
-      .from("detalle_venta")
-      .select(
-        `
-        id_detalle_venta,
+    const { data: detalles, error: errDetalles } = await supabase
+      .from("detalle_ventas")
+      .select(`
+        id_detalle,
         id_producto,
         cantidad,
         precio_unitario,
-        descuento,
         subtotal,
-        productos ( id_producto, nombre, codigo )
-      `
-      )
+        notas,
+        productos:id_producto (
+          nombre,
+          unidad_medida
+        )
+      `)
       .eq("id_venta", idVenta);
 
-    if (errDetalle) {
-      console.error("Error al obtener detalle_venta:", errDetalle);
+    if (errDetalles) {
+      return NextResponse.json({ error: "Error al cargar los productos de la venta." }, { status: 500 });
     }
 
     return NextResponse.json({
-      ok: true,
       venta,
-      detalle: detalle || [],
+      detalles: detalles ?? [],
     });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Error desconocido";
-    console.error("Error en /api/cajero/historial/[id]:", error);
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (error) {
+    console.error("Error en GET /api/cajero/historial/[id]:", error);
+    return NextResponse.json({ error: "Error interno del servidor." }, { status: 500 });
   }
 }

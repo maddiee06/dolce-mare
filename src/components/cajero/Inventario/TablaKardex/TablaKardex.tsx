@@ -1,5 +1,6 @@
 import type { MovimientoKardex } from "../../../../models/Inventario";
 import { formatearCantidad } from "../../../../utils/estadoStock";
+import { formatearBandejas } from "../../../../utils/formatoBandejas";
 import { partesFechaHora } from "../../../../utils/fechas";
 import { esAjuste } from "../../../../utils/movimientos";
 import styles from "./TablaKardex.module.scss";
@@ -18,6 +19,11 @@ function claseTipo(m: MovimientoKardex): { etiqueta: string; clase: string } {
 
 export default function TablaKardex({ movimientos, unidad }: Props) {
   const n = movimientos.length;
+  const esBandeja = unidad.toLowerCase().includes("bandeja");
+
+  const formatearValor = (val: number) => {
+    return esBandeja ? formatearBandejas(val) : formatearCantidad(val);
+  };
 
   return (
     <section className={styles.tarjeta}>
@@ -64,10 +70,10 @@ export default function TablaKardex({ movimientos, unidad }: Props) {
                 </div>
 
                 <span className={`${styles.der} ${suma ? styles.entrada : styles.vacioCelda}`}>
-                  {suma ? formatearCantidad(m.cantidad) : "—"}
+                  {suma ? formatearValor(m.cantidad) : "—"}
                 </span>
                 <span className={`${styles.der} ${!suma ? styles.salida : styles.vacioCelda}`}>
-                  {!suma ? formatearCantidad(m.cantidad) : "—"}
+                  {!suma ? formatearValor(m.cantidad) : "—"}
                 </span>
 
                 <span className={styles.centro}>
@@ -78,7 +84,7 @@ export default function TablaKardex({ movimientos, unidad }: Props) {
                 </span>
 
                 <span className={styles.der}>
-                  <span className={styles.saldo}>{formatearCantidad(m.stockResultante)}</span>
+                  <span className={styles.saldo}>{formatearValor(m.stockResultante)}</span>
                 </span>
               </div>
             );

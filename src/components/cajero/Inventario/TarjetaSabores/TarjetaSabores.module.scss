@@ -37,10 +37,10 @@
 
 .fila {
   display: grid;
-  grid-template-columns: 1.5fr 0.8fr 0.8fr 1.4fr 1.1fr;
+  grid-template-columns: 1.3fr 1.2fr 0.9fr 1.2fr 1fr;
   align-items: center;
-  min-width: 480px;
-  gap: 6px;
+  min-width: 520px;
+  gap: 8px;
   padding: 10px 20px;
 }
 
@@ -63,13 +63,21 @@
 
 .stock {
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
+  line-height: 1.2;
+}
+
+.stockDecimal {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-disabled);
 }
 
 .minimo {
   color: var(--color-text-secondary);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .kardex {

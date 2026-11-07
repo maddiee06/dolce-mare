@@ -11,11 +11,12 @@ import type {
 /**
  * Hook para la gestión del estado del inventario en componentes React.
  * Controla la búsqueda con temporizador (debounce de 300ms), el filtro por estado de stock,
- * el estado de carga y el manejo de errores.
+ * filtro por sede, el estado de carga y el manejo de errores.
  * 
  * @param tipo - Categoría base a listar: 'sabores' (helados y cremoladas) o 'envases'
+ * @param idSede - ID opcional de la sede para filtrar
  */
-export function useInventario(tipo: TipoInventario) {
+export function useInventario(tipo: TipoInventario, idSede?: number) {
   const [busqueda, setBusqueda] = useState("");
   const [estado, setEstado] = useState<EstadoStock | "">("");
   const [datos, setDatos] = useState<InventarioRespuesta | null>(null);
@@ -33,7 +34,7 @@ export function useInventario(tipo: TipoInventario) {
         setCargando(true);
 
         try {
-          const r = await listarInventario({ tipo, busqueda, estado });
+          const r = await listarInventario({ tipo, busqueda, estado, idSede });
           if (cancelado) return;
           setDatos(r);
           setError(null);
@@ -52,7 +53,7 @@ export function useInventario(tipo: TipoInventario) {
       cancelado = true;
       clearTimeout(espera);
     };
-  }, [tipo, busqueda, estado]);
+  }, [tipo, busqueda, estado, idSede]);
 
   return { datos, cargando, error, busqueda, setBusqueda, estado, setEstado };
 }

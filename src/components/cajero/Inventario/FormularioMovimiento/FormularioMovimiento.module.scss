@@ -260,7 +260,7 @@
 .nuevoValor {
   margin: 2px 0;
   color: var(--color-text-primary);
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
 }
 
@@ -309,5 +309,87 @@
   margin: 0 0 6px;
   color: var(--color-text-primary);
   font-size: 14px;
+  font-weight: 600;
+}
+
+.fraccionesContenedor {
+  margin-top: 4px;
+}
+
+.fraccionesEtiqueta {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-disabled);
+  margin-bottom: 6px;
+}
+
+.fracciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fraccionBtn {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--color-text-placeholder) 35%, transparent);
+  background: var(--color-fondo);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--color-seleccion);
+    color: var(--color-text-primary);
+  }
+}
+
+.fraccionBtnActiva {
+  background: var(--color-botton-primary);
+  color: var(--color-text-secondary);
+  border-color: var(--color-botton-primary);
+  font-weight: 700;
+}
+
+.modosEmpaque {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.modoBtn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--color-text-placeholder) 35%, transparent);
+  background: var(--color-fondo);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: var(--color-seleccion);
+  }
+}
+
+.modoBtnActivo {
+  background: color-mix(in srgb, var(--color-text-primary) 12%, var(--color-nav));
+  color: var(--color-text-primary);
+  border-color: var(--color-border-2);
+  font-weight: 700;
+}
+
+.infoConversion {
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-nav));
+  color: var(--color-text-primary);
+  font-size: 12px;
   font-weight: 600;
 }

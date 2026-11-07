@@ -26,16 +26,18 @@ async function leer<T>(res: Response): Promise<T> {
 }
 
 /**
- * Consulta la lista de artículos de inventario aplicando filtros de tipo, búsqueda o estado.
+ * Consulta la lista de artículos de inventario aplicando filtros de tipo, búsqueda, estado o sede.
  */
 export async function listarInventario(p: {
   tipo: TipoInventario;
   busqueda?: string;
   estado?: EstadoStock | "";
+  idSede?: number;
 }): Promise<InventarioRespuesta> {
   const qs = new URLSearchParams({ tipo: p.tipo });
   if (p.busqueda?.trim()) qs.set("busqueda", p.busqueda.trim());
   if (p.estado) qs.set("estado", p.estado);
+  if (p.idSede) qs.set("idSede", String(p.idSede));
   return leer(await fetch(`/api/inventario?${qs}`, { cache: "no-store" }));
 }
 
@@ -54,16 +56,18 @@ export async function obtenerResponsable(): Promise<Responsable> {
 }
 
 /**
- * Consulta el historial de Kardex de un producto para un periodo de fechas determinado.
+ * Consulta el historial de Kardex de un producto para un periodo de fechas determinado y sede.
  */
 export async function obtenerKardex(
   idProducto: number,
   desde?: string,
   hasta?: string,
+  idSede?: number,
 ): Promise<KardexRespuesta> {
   const qs = new URLSearchParams({ idProducto: String(idProducto) });
   if (desde) qs.set("desde", desde);
   if (hasta) qs.set("hasta", hasta);
+  if (idSede) qs.set("idSede", String(idSede));
   return leer(await fetch(`/api/inventario/kardex?${qs}`, { cache: "no-store" }));
 }
 
