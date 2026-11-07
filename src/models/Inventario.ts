@@ -77,6 +77,7 @@ export interface RegistrarMovimientoInput {
   idTipoMovimiento: number;
   cantidad: number;
   motivo?: string;
+  idSede?: number;
 }
 
 /** Lo que recibe el DAO ya validado y completado por el service. */

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import type {
   ArticuloInventario,
   RegistrarMovimientoInput,
@@ -10,6 +10,15 @@ import type {
 } from "../../../../models/Inventario";
 import { calcularEstadoStock, formatearCantidad } from "../../../../utils/estadoStock";
 import { tipoAjuste, tiposDeClase, type ClaseMovimiento } from "../../../../utils/movimientos";
+import {
+  esSaborOBandeja,
+  formatearBandejas,
+  OPCIONES_FRACCIONES,
+} from "../../../../utils/formatoBandejas";
+import {
+  describirStockEmpaque,
+  identificarTipoEmpaque,
+} from "../../../../utils/empaques";
 import styles from "./FormularioMovimiento.module.scss";
 
 interface Props {
@@ -27,12 +36,6 @@ const OPCIONES: { clase: ClaseMovimiento; simbolo: string; texto: string }[] = [
   { clase: "salida", simbolo: "−", texto: "Salida" },
   { clase: "ajuste", simbolo: "≈", texto: "Ajuste" },
 ];
-
-const ETIQUETA_CANTIDAD: Record<ClaseMovimiento, string> = {
-  entrada: "Cantidad de entrada",
-  salida: "Cantidad de salida",
-  ajuste: "Saldo contado (conteo físico)",
-};
 
 const redondear = (n: number) => Math.round(n * 100) / 100;
 
@@ -53,19 +56,71 @@ export default function FormularioMovimiento({
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Modo de empaque para envases y utensilios ('caja' | 'paquete' | 'unidad')
+  const [modoEmpaque, setModoEmpaque] = useState<"caja" | "paquete" | "unidad">("unidad");
+
   const articulo = articulos.find((a) => String(a.idProducto) === idProducto);
+  const esSabor = articulo ? esSaborOBandeja(articulo.categoria) : false;
+  const empaqueInfo = articulo && !esSabor ? identificarTipoEmpaque(articulo.nombre) : null;
+
+  // Actualizar modo sugerido al seleccionar artículo
+  const handleSeleccionarArticulo = (id: string) => {
+    setIdProducto(id);
+    setCantidad("");
+    const nuevoArt = articulos.find((a) => String(a.idProducto) === id);
+    if (nuevoArt && !esSaborOBandeja(nuevoArt.categoria)) {
+      const info = identificarTipoEmpaque(nuevoArt.nombre);
+      if (info.tipo === "conos" && info.unidadesPorCaja) {
+        setModoEmpaque(clase === "entrada" ? "caja" : "unidad");
+      } else if (info.tipo === "obleas") {
+        setModoEmpaque(clase === "entrada" ? "caja" : "paquete");
+      } else if (info.unidadesPorPaquete) {
+        setModoEmpaque(clase === "entrada" ? "paquete" : "unidad");
+      }
+    }
+  };
+
   const stock = articulo?.stockActual ?? 0;
-  const unidad = articulo?.unidadMedida ?? "unidades";
+  const unidadMostrar = esSabor
+    ? "Bandejas"
+    : articulo
+      ? articulo.unidadMedida
+      : "unidades";
 
   const opciones = tiposDeClase(tipos, clase);
-  const cant = Number(cantidad);
+
+  // Cálculo de la cantidad real en unidades / bandejas para el inventario
+  const cantIngresada = Number(cantidad);
   const hayCantidad =
-    cantidad.trim() !== "" && Number.isFinite(cant) && (clase === "ajuste" ? cant >= 0 : cant > 0);
-  const diferencia = clase === "ajuste" && hayCantidad ? redondear(cant - stock) : 0;
+    cantidad.trim() !== "" &&
+    Number.isFinite(cantIngresada) &&
+    (clase === "ajuste" ? cantIngresada >= 0 : cantIngresada > 0);
+
+  // Multiplicador según el empaque seleccionado
+  const factorMultiplicador = useMemo(() => {
+    if (esSabor || !empaqueInfo || clase === "ajuste") return 1;
+    if (modoEmpaque === "caja" && empaqueInfo.unidadesPorCaja) {
+      return empaqueInfo.unidadesPorCaja;
+    }
+    if (modoEmpaque === "paquete" && empaqueInfo.unidadesPorPaquete) {
+      return empaqueInfo.unidadesPorPaquete;
+    }
+    return 1;
+  }, [esSabor, empaqueInfo, modoEmpaque, clase]);
+
+  // Cantidad total real en la unidad base (unidades de conos/obleas/vasos, o bandejas para helados)
+  const cantTotalBase = hayCantidad ? redondear(cantIngresada * factorMultiplicador) : 0;
+
+  const diferencia = clase === "ajuste" && hayCantidad ? redondear(cantTotalBase - stock) : 0;
 
   let tipo: TipoMovimiento | undefined;
   if (clase === "ajuste") {
-    tipo = diferencia > 0 ? tipoAjuste(tipos, "suma") : diferencia < 0 ? tipoAjuste(tipos, "resta") : undefined;
+    tipo =
+      diferencia > 0
+        ? tipoAjuste(tipos, "suma")
+        : diferencia < 0
+          ? tipoAjuste(tipos, "resta")
+          : undefined;
   } else {
     tipo =
       opciones.length === 1
@@ -73,10 +128,16 @@ export default function FormularioMovimiento({
         : opciones.find((t) => String(t.idTipoMovimiento) === idTipo);
   }
 
-  const cantidadMov = clase === "ajuste" ? Math.abs(diferencia) : cant;
+  const cantidadMov = clase === "ajuste" ? Math.abs(diferencia) : cantTotalBase;
   const resultante =
     articulo && hayCantidad
-      ? redondear(clase === "entrada" ? stock + cant : clase === "salida" ? stock - cant : cant)
+      ? redondear(
+          clase === "entrada"
+            ? stock + cantTotalBase
+            : clase === "salida"
+              ? stock - cantTotalBase
+              : cantTotalBase,
+        )
       : null;
 
   const sinTipos = clase !== "ajuste" && opciones.length === 0;
@@ -94,7 +155,9 @@ export default function FormularioMovimiento({
     !enviando;
 
   const estadoRes =
-    resultante !== null && articulo ? calcularEstadoStock(resultante, articulo.stockMinimo) : null;
+    resultante !== null && articulo
+      ? calcularEstadoStock(resultante, articulo.stockMinimo)
+      : null;
 
   async function enviar(e: FormEvent) {
     e.preventDefault();
@@ -103,10 +166,26 @@ export default function FormularioMovimiento({
     setEnviando(true);
     setError(null);
 
-    const detalle =
-      clase === "ajuste"
-        ? `Ajuste por conteo físico (${formatearCantidad(stock)} → ${formatearCantidad(cant)}). ${motivo.trim()}`
-        : motivo.trim();
+    // Preparar descripción detallada del movimiento según el empaque o bandeja
+    let detalleEmpaque = "";
+    if (esSabor) {
+      detalleEmpaque = `${formatearBandejas(cantidadMov, true)}`;
+    } else if (empaqueInfo && factorMultiplicador > 1) {
+      if (modoEmpaque === "caja") {
+        detalleEmpaque = `${cantIngresada} caja(s) [${cantidadMov} uds]`;
+      } else if (modoEmpaque === "paquete") {
+        detalleEmpaque = `${cantIngresada} paquete(s) [${cantidadMov} uds]`;
+      }
+    }
+
+    let detalle = "";
+    if (clase === "ajuste") {
+      const stockTxt = esSabor ? formatearBandejas(stock) : formatearCantidad(stock);
+      const cantTxt = esSabor ? formatearBandejas(cantTotalBase) : formatearCantidad(cantTotalBase);
+      detalle = `Ajuste por conteo físico (${stockTxt} → ${cantTxt}). ${motivo.trim()}`;
+    } else {
+      detalle = detalleEmpaque ? `${detalleEmpaque} · ${motivo.trim()}` : motivo.trim();
+    }
 
     try {
       await onGuardar({
@@ -130,9 +209,14 @@ export default function FormularioMovimiento({
         </div>
 
         <div className={styles.form}>
+          {/* Selección de Artículo */}
           <label className={styles.campo}>
             <span>Artículo</span>
-            <select value={idProducto} onChange={(e) => setIdProducto(e.target.value)} required>
+            <select
+              value={idProducto}
+              onChange={(e) => handleSeleccionarArticulo(e.target.value)}
+              required
+            >
               <option value="">Selecciona un artículo</option>
               {articulos.map((a) => (
                 <option key={a.idProducto} value={a.idProducto}>
@@ -142,6 +226,7 @@ export default function FormularioMovimiento({
             </select>
           </label>
 
+          {/* Tipo de Movimiento (Entrada, Salida, Ajuste) */}
           <div className={styles.campo}>
             <span>Tipo de movimiento</span>
             <div className={styles.tipos}>
@@ -154,6 +239,15 @@ export default function FormularioMovimiento({
                     setClase(o.clase);
                     setIdTipo("");
                     setCantidad("");
+                    if (empaqueInfo) {
+                      setModoEmpaque(
+                        o.clase === "entrada"
+                          ? empaqueInfo.tipo === "conos" || empaqueInfo.tipo === "obleas"
+                            ? "caja"
+                            : "paquete"
+                          : "unidad",
+                      );
+                    }
                   }}
                 >
                   <span aria-hidden>{o.simbolo}</span>
@@ -166,6 +260,7 @@ export default function FormularioMovimiento({
             </p>
           </div>
 
+          {/* Motivo según el tipo */}
           {clase !== "ajuste" && opciones.length > 1 && (
             <label className={styles.campo}>
               <span>Motivo de {clase === "entrada" ? "la entrada" : "la salida"}</span>
@@ -180,27 +275,115 @@ export default function FormularioMovimiento({
             </label>
           )}
 
+          {/* Opciones de Empaque si es envase/utensilio */}
+          {!esSabor && empaqueInfo && clase !== "ajuste" && (
+            <div className={styles.campo}>
+              <span>Modo de ingreso / unidad</span>
+              <div className={styles.modosEmpaque}>
+                {empaqueInfo.unidadesPorCaja && (
+                  <button
+                    type="button"
+                    className={`${styles.modoBtn} ${modoEmpaque === "caja" ? styles.modoBtnActivo : ""}`}
+                    onClick={() => setModoEmpaque("caja")}
+                  >
+                    📦 Por Caja ({empaqueInfo.unidadesPorCaja} uds)
+                  </button>
+                )}
+                {empaqueInfo.unidadesPorPaquete && (
+                  <button
+                    type="button"
+                    className={`${styles.modoBtn} ${modoEmpaque === "paquete" ? styles.modoBtnActivo : ""}`}
+                    onClick={() => setModoEmpaque("paquete")}
+                  >
+                    📦 Por Paquete ({empaqueInfo.unidadesPorPaquete} uds)
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={`${styles.modoBtn} ${modoEmpaque === "unidad" ? styles.modoBtnActivo : ""}`}
+                  onClick={() => setModoEmpaque("unidad")}
+                >
+                  Unidades sueltas
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Cantidad y Unidad */}
           <div className={styles.fila}>
             <label className={styles.campo}>
-              <span>{ETIQUETA_CANTIDAD[clase]}</span>
+              <span>
+                {esSabor
+                  ? clase === "ajuste"
+                    ? "Saldo en bandejas (conteo físico)"
+                    : `Cantidad en bandejas (${clase})`
+                  : modoEmpaque === "caja"
+                    ? `Número de cajas (${clase})`
+                    : modoEmpaque === "paquete"
+                      ? `Número de paquetes (${clase})`
+                      : `Cantidad de unidades (${clase})`}
+              </span>
               <input
                 type="number"
                 min={clase === "ajuste" ? "0" : "0.01"}
-                step="0.01"
+                step={esSabor ? "0.25" : "1"}
                 inputMode="decimal"
                 value={cantidad}
                 onChange={(e) => setCantidad(e.target.value)}
-                placeholder="0"
+                placeholder={esSabor ? "Ej: 0.5 o 1" : "0"}
                 required
               />
             </label>
 
             <div className={styles.campo}>
-              <span>Unidad del artículo</span>
-              <div className={styles.lectura}>{articulo ? unidad : "—"}</div>
+              <span>Unidad de control</span>
+              <div className={styles.lectura}>
+                {articulo ? unidadMostrar : "—"}
+              </div>
             </div>
           </div>
 
+          {/* Fracciones rápidas para sabores (helados y cremoladas) */}
+          {esSabor && (
+            <div className={styles.fraccionesContenedor}>
+              <span className={styles.fraccionesEtiqueta}>
+                Fracciones rápidas de bandeja:
+              </span>
+              <div className={styles.fracciones}>
+                {OPCIONES_FRACCIONES.map((f) => (
+                  <button
+                    key={f.valor}
+                    type="button"
+                    className={`${styles.fraccionBtn} ${
+                      Number(cantidad) === f.valor ? styles.fraccionBtnActiva : ""
+                    }`}
+                    onClick={() => setCantidad(String(f.valor))}
+                  >
+                    {f.etiqueta}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Mensaje de conversión en vivo */}
+          {hayCantidad && (
+            <>
+              {esSabor && (
+                <div className={styles.infoConversion}>
+                  🍨 Cantidad en bandejas: <strong>{formatearBandejas(cantIngresada, true)}</strong>
+                </div>
+              )}
+              {!esSabor && factorMultiplicador > 1 && (
+                <div className={styles.infoConversion}>
+                  📦 Conversión: {cantIngresada} {modoEmpaque}(s) × {factorMultiplicador} uds ={" "}
+                  <strong>{cantTotalBase} unidades</strong> que ingresarán al stock
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Motivo o Referencia */}
           <label className={styles.campo}>
             <span>Motivo / referencia</span>
             <input
@@ -208,11 +391,12 @@ export default function FormularioMovimiento({
               maxLength={200}
               value={motivo}
               onChange={(e) => setMotivo(e.target.value)}
-              placeholder="Ej. Compra de reposición · FC01-0083"
+              placeholder="Ej. Reposición de proveedor · Factura FC01-0083"
               required
             />
           </label>
 
+          {/* Responsable */}
           <div className={styles.campo}>
             <span>Responsable</span>
             <div className={styles.lectura}>
@@ -233,7 +417,9 @@ export default function FormularioMovimiento({
             </p>
           )}
           {clase === "ajuste" && hayCantidad && diferencia === 0 && (
-            <p className={styles.error}>El saldo contado es igual al saldo actual: no hay nada que ajustar.</p>
+            <p className={styles.error}>
+              El saldo contado es igual al saldo actual: no hay nada que ajustar.
+            </p>
           )}
           {insuficiente && <p className={styles.error}>Stock insuficiente para esta salida.</p>}
           {error && <p className={styles.error}>{error}</p>}
@@ -252,6 +438,7 @@ export default function FormularioMovimiento({
         </div>
       </form>
 
+      {/* Panel Lateral de Vista Previa del Saldo */}
       <aside className={styles.lateral}>
         <div className={styles.panel}>
           <h3 className={styles.panelTitulo}>Así quedará el saldo</h3>
@@ -262,15 +449,23 @@ export default function FormularioMovimiento({
                 <div className={styles.avatar}>{articulo.nombre.charAt(0).toUpperCase()}</div>
                 <div>
                   <div className={styles.articuloNombre}>{articulo.nombre}</div>
-                  <div className={styles.articuloUnidad}>Unidad: {unidad}</div>
+                  <div className={styles.articuloUnidad}>
+                    {articulo.categoria} · {unidadMostrar}
+                  </div>
                 </div>
               </div>
 
+              {/* Saldo actual */}
               <div className={styles.filaDato}>
                 <span>Saldo actual</span>
-                <strong>{formatearCantidad(stock)}</strong>
+                <strong>
+                  {esSabor
+                    ? formatearBandejas(stock, true)
+                    : `${formatearCantidad(stock)} uds`}
+                </strong>
               </div>
 
+              {/* Movimiento a registrar */}
               <div className={styles.filaDato}>
                 <span>
                   {clase === "entrada"
@@ -282,26 +477,46 @@ export default function FormularioMovimiento({
                 <strong>
                   {!hayCantidad
                     ? "—"
-                    : clase === "entrada"
-                      ? `+ ${formatearCantidad(cant)}`
-                      : clase === "salida"
-                        ? `− ${formatearCantidad(cant)}`
-                        : diferencia === 0
-                          ? "Sin cambios"
-                          : `${diferencia > 0 ? "+" : "−"} ${formatearCantidad(Math.abs(diferencia))}`}
+                    : esSabor
+                      ? clase === "entrada"
+                        ? `+ ${formatearBandejas(cantTotalBase)}`
+                        : clase === "salida"
+                          ? `− ${formatearBandejas(cantTotalBase)}`
+                          : diferencia === 0
+                            ? "Sin cambios"
+                            : `${diferencia > 0 ? "+" : "−"} ${formatearBandejas(Math.abs(diferencia))}`
+                      : clase === "entrada"
+                        ? `+ ${formatearCantidad(cantTotalBase)} uds`
+                        : clase === "salida"
+                          ? `− ${formatearCantidad(cantTotalBase)} uds`
+                          : diferencia === 0
+                            ? "Sin cambios"
+                            : `${diferencia > 0 ? "+" : "−"} ${formatearCantidad(Math.abs(diferencia))} uds`}
                 </strong>
               </div>
 
+              {/* Nuevo Saldo */}
               <div className={`${styles.nuevo} ${insuficiente ? styles.nuevoError : ""}`}>
-                <span className={styles.nuevoLabel}>Nuevo saldo</span>
+                <span className={styles.nuevoLabel}>Nuevo saldo resultante</span>
                 <div className={styles.nuevoValor}>
-                  {resultante !== null ? `${formatearCantidad(resultante)} ${unidad}` : "—"}
+                  {resultante !== null
+                    ? esSabor
+                      ? formatearBandejas(resultante)
+                      : `${formatearCantidad(resultante)} ${unidadMostrar}`
+                    : "—"}
                 </div>
                 {resultante !== null && (
                   <div className={styles.formula}>
-                    {clase === "entrada" && `${formatearCantidad(stock)} + ${formatearCantidad(cant)} = ${formatearCantidad(resultante)}`}
-                    {clase === "salida" && `${formatearCantidad(stock)} − ${formatearCantidad(cant)} = ${formatearCantidad(resultante)}`}
-                    {clase === "ajuste" && `Conteo físico: ${formatearCantidad(cant)}`}
+                    {esSabor ? (
+                      <span>{formatearBandejas(resultante, true)}</span>
+                    ) : (
+                      <>
+                        <span>{formatearCantidad(resultante)} unidades</span>
+                        {describirStockEmpaque(articulo.nombre, resultante) && (
+                          <span> · ({describirStockEmpaque(articulo.nombre, resultante)})</span>
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -309,13 +524,25 @@ export default function FormularioMovimiento({
               {estadoRes && (
                 <p
                   className={`${styles.estado} ${
-                    estadoRes === "disponible" ? styles.ok : estadoRes === "stock_bajo" ? styles.bajo : styles.agotado
+                    estadoRes === "disponible"
+                      ? styles.ok
+                      : estadoRes === "stock_bajo"
+                        ? styles.bajo
+                        : styles.agotado
                   }`}
                 >
                   {estadoRes === "disponible" &&
-                    `Disponible · Por encima del mínimo de ${formatearCantidad(articulo.stockMinimo)} ${unidad}.`}
+                    `Disponible · Por encima del mínimo de ${
+                      esSabor
+                        ? formatearBandejas(articulo.stockMinimo)
+                        : `${formatearCantidad(articulo.stockMinimo)} ${unidadMostrar}`
+                    }.`}
                   {estadoRes === "stock_bajo" &&
-                    `Stock bajo · En o por debajo del mínimo de ${formatearCantidad(articulo.stockMinimo)} ${unidad}.`}
+                    `Stock bajo · En o por debajo del mínimo de ${
+                      esSabor
+                        ? formatearBandejas(articulo.stockMinimo)
+                        : `${formatearCantidad(articulo.stockMinimo)} ${unidadMostrar}`
+                    }.`}
                   {estadoRes === "agotado" && "Agotado · El saldo quedará en 0."}
                 </p>
               )}
@@ -328,8 +555,8 @@ export default function FormularioMovimiento({
         <div className={styles.aviso}>
           <h3 className={styles.avisoTitulo}>Todo queda en el Kardex</h3>
           <p>
-            El movimiento quedará identificado con su cantidad, motivo y responsable, y se podrá
-            consultar en el historial del artículo.
+            El movimiento quedará identificado con su cantidad, empaque o bandeja, motivo y
+            responsable en la sucursal seleccionada.
           </p>
         </div>
       </aside>

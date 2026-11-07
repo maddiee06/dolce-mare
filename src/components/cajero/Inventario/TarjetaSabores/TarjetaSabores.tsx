@@ -2,6 +2,7 @@ import Link from "next/link";
 import EstadoStockBadge from "../../../../components/cajero/Inventario/EstadoStockBadge";
 import type { GrupoInventario } from "../../../../models/Inventario";
 import { formatearCantidad } from "../../../../utils/estadoStock";
+import { formatearBandejas } from "../../../../utils/formatoBandejas";
 import styles from "./TarjetaSabores.module.scss";
 
 export default function TarjetaSabores({ grupo }: { grupo: GrupoInventario }) {
@@ -12,7 +13,7 @@ export default function TarjetaSabores({ grupo }: { grupo: GrupoInventario }) {
       <header className={styles.cabecera}>
         <div>
           <h2 className={styles.titulo}>{grupo.categoria}</h2>
-          <p className={styles.sub}>Stock y mínimo en L</p>
+          <p className={styles.sub}>Stock y mínimo gestionados por bandejas</p>
         </div>
         <span className={styles.conteo}>
           {n} {n === 1 ? "sabor" : "sabores"}
@@ -22,7 +23,7 @@ export default function TarjetaSabores({ grupo }: { grupo: GrupoInventario }) {
       <div className={styles.scroll}>
         <div className={`${styles.fila} ${styles.encabezado}`}>
           <span>Artículo / unidad</span>
-          <span>Stock</span>
+          <span>Stock actual</span>
           <span>Mínimo</span>
           <span>Estado</span>
           <span>Consulta</span>
@@ -32,10 +33,13 @@ export default function TarjetaSabores({ grupo }: { grupo: GrupoInventario }) {
           <div key={a.idProducto} className={styles.fila}>
             <div>
               <div className={styles.nombre}>{a.nombre}</div>
-              <div className={styles.unidad}>litros (L)</div>
+              <div className={styles.unidad}>Bandejas</div>
             </div>
-            <span className={styles.stock}>{formatearCantidad(a.stockActual)}</span>
-            <span className={styles.minimo}>{formatearCantidad(a.stockMinimo)}</span>
+            <div>
+              <span className={styles.stock}>{formatearBandejas(a.stockActual)}</span>
+              <span className={styles.stockDecimal}>({formatearCantidad(a.stockActual)} bnd)</span>
+            </div>
+            <span className={styles.minimo}>{formatearBandejas(a.stockMinimo)}</span>
             <span>
               <EstadoStockBadge estado={a.estado} />
             </span>

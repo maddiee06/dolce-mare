@@ -12,6 +12,8 @@ import {
   obtenerKardex,
 } from "../../../../services/inventarioApi";
 import { formatearCantidad } from "../../../../utils/estadoStock";
+import { esSaborOBandeja, formatearBandejas } from "../../../../utils/formatoBandejas";
+import { describirStockEmpaque } from "../../../../utils/empaques";
 import { exportarKardexCsv } from "../../../../utils/exportarKardex";
 import type {
   ArticuloInventario,
@@ -113,6 +115,8 @@ function KardexContenido() {
   }
 
   const art = kardex?.articulo;
+  const esSabor = art ? esSaborOBandeja(art.categoria) : false;
+  const unidad = esSabor ? "Bandejas" : (art?.unidadMedida ?? "unidades");
   const enlaceRegistrar = (clase: string) =>
     `/cajero/inventario/kardex/registrar?producto=${idProducto}&tipo=${clase}`;
 
@@ -125,7 +129,7 @@ function KardexContenido() {
             {art ? `Kardex de ${art.nombre}` : "Kardex"}
           </h1>
           <p className="mt-1 text-sm text-text-disabled">
-            Cada entrada y salida, en orden. Consulta el saldo de este artículo.
+            Cada entrada y salida, en orden. Consulta el saldo de este artículo en tu sucursal.
           </p>
         </div>
         <button
@@ -194,11 +198,24 @@ function KardexContenido() {
                   <EstadoStockBadge estado={art.estado} />
                 </div>
                 <div className="mt-0.5 text-xs text-text-disabled">
-                  {art.categoria} · Unidad: {art.unidadMedida} · Mínimo:{" "}
-                  {formatearCantidad(art.stockMinimo)} ·{" "}
+                  {art.categoria} · Unidad: {unidad} · Stock:{" "}
+                  <strong>
+                    {esSabor
+                      ? formatearBandejas(art.stockActual, true)
+                      : `${formatearCantidad(art.stockActual)} uds`}
+                  </strong>
+                  {!esSabor && describirStockEmpaque(art.nombre, art.stockActual) && (
+                    <span className="ml-1 text-text-secondary font-medium">
+                      ({describirStockEmpaque(art.nombre, art.stockActual)})
+                    </span>
+                  )}
+                  {" "}· Mínimo:{" "}
+                  {esSabor
+                    ? formatearBandejas(art.stockMinimo)
+                    : `${formatearCantidad(art.stockMinimo)} ${art.unidadMedida}`} ·{" "}
                   <Link
                     href="/cajero/inventario/kardex"
-                    className="text-text-primary hover:underline"
+                    className="text-text-primary hover:underline font-semibold"
                   >
                     Cambiar artículo
                   </Link>
@@ -239,12 +256,12 @@ function KardexContenido() {
           <ResumenKardex
             resumen={kardex.resumen}
             desde={kardex.desde}
-            unidad={art.unidadMedida}
+            unidad={unidad}
           />
 
           <TablaKardex
             movimientos={kardex.movimientos}
-            unidad={art.unidadMedida}
+            unidad={unidad}
           />
         </>
       )}

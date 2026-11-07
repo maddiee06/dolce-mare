@@ -30,9 +30,9 @@
 
 .fila {
   display: grid;
-  grid-template-columns: 2.2fr 1fr 1fr 1.3fr 1fr;
+  grid-template-columns: 2fr 1.2fr 1fr 1.3fr 1fr;
   align-items: center;
-  min-width: 560px;
+  min-width: 580px;
   gap: 8px;
   padding: 12px 24px;
 }
@@ -58,6 +58,13 @@
   color: var(--color-text-primary);
   font-size: 15px;
   font-weight: 700;
+}
+
+.empaqueEquiv {
+  display: block;
+  font-size: 11px;
+  color: var(--color-text-disabled);
+  font-weight: 500;
 }
 
 .minimo {

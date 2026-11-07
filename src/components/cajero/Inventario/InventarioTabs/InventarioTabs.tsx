@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import SelectorSedeInventario from "../SelectorSedeInventario";
 import styles from "./InventarioTabs.module.scss";
 
 export default function InventarioTabs() {
@@ -24,6 +25,8 @@ export default function InventarioTabs() {
           Kardex
         </Link>
       </div>
+
+      <SelectorSedeInventario />
     </nav>
   );
 }
